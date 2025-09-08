@@ -150,8 +150,17 @@ def create_all_items(world: ExocolonistWorld) -> None:
         world.create_item("Mushwood Log"),
         world.create_item("Crystal Cluster"),
         world.create_item("Strange Device"),
-        world.create_item("Progressive Year"),        
-    ]
+        world.create_item("Progressive Year"),
+        world.create_item("Progressive Year"),
+        world.create_item("Progressive Year"),
+        world.create_item("Progressive Year"),
+        world.create_item("Progressive Year"),
+        world.create_item("Progressive Year"),
+        world.create_item("Progressive Year"),
+        world.create_item("Progressive Year"),
+        world.create_item("Progressive Year"),
+        world.create_item("Progressive Year"),
+        ]
     world.multiworld.local_early_items[world.player]["Progressive Year"] = 1
 
     amount_of_items = len(itempool)
@@ -161,8 +170,6 @@ def create_all_items(world: ExocolonistWorld) -> None:
     world.multiworld.itempool += itempool
     
     
-
-
 def create_item_with_correct_classification(world: ExocolonistWorld, name: str) -> ExocolonistItem:
     classification = ITEM_CLASSIFICATIONS[name]
     return ExocolonistItem(name, classification, ITEM_NAME_TO_ID[name], world.player)
