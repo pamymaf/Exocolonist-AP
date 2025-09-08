@@ -288,11 +288,14 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
     age19.add_locations(age19_locations, ExocolonistLocation)
 
     age20_locations: dict[str, int | None] = {
-        "Ending": world.location_name_to_id["Ending"],
+        
     }
     age20.add_locations(age20_locations, ExocolonistLocation)
     
 
 
 def create_events(world: ExocolonistWorld) -> None:
-    pass
+    age20 = world.get_region("Age 20")
+    age20.add_event(
+        "Ending", "Ending", location_type=ExocolonistLocation, item_type=items.ExocolonistItem
+    )

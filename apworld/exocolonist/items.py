@@ -51,7 +51,7 @@ ITEM_NAME_TO_ID = {
   "Crystal Cluster": 41,
   "Strange Device": 42,
   "Progressive Year": 43,
-  "Experience": 44
+  "Experience": 44,
 }
 
 ITEM_CLASSIFICATIONS = {

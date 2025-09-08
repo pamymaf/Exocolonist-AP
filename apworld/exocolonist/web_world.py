@@ -17,7 +17,7 @@ class ExocolonistWebWorld(WebWorld):
         "English",
         "setup_en.md",
         "setup/en",
-        ["NewSoupVi"],
+        ["pamymaf"],
     )
 
     tutorials = [setup_en]  
