@@ -43,7 +43,7 @@ class Princess_MemoryPatch
         string strippedJob = id.RemoveStart("job_");
         string apJobName = ItemsAndLocationsHandler.internalToAPJobs[strippedJob];
         Plugin.Logger.LogInfo($"Trying to send AP location {apJobName}");
-        ArchipelagoClient.ProcessItemSent(apJobName);
+        ArchipelagoClient.ProcessLocation(apJobName);
         return false;
       } else {
         return true;
@@ -111,7 +111,7 @@ class Princess_LovePatch
     int loveInc = 20; // In case I make the increment user settable in the future
     int currentLove = Princess.GetLove(charaID);
     for (int i=1; i<=currentLove/loveInc; i++) {
-      ArchipelagoClient.ProcessItemSent($"{char.ToUpper(charaID[0]) + charaID.Substring(1)} {i*loveInc}");
+      ArchipelagoClient.ProcessLocation($"{char.ToUpper(charaID[0]) + charaID.Substring(1)} {i*loveInc}");
     }
   }
 

@@ -5,6 +5,8 @@ using Northway.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using System.IO;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
@@ -26,5 +28,11 @@ public static class Helpers
     Princess.SetSkill(skillID, newValue, null);
 
     Plugin.Logger.LogInfo($"Added {value} to {skillID}. Old: {currentValue}. New: {newValue}");
+  }
+
+  public static JObject GetConnectionInfo()
+  {
+    JObject json = JObject.Parse(File.ReadAllText("connectionInfo.json"));
+    return json;
   }
 }

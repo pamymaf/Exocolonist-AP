@@ -5,6 +5,9 @@ using Northway.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
@@ -16,20 +19,27 @@ class Story_ExecutePatch
   [HarmonyPostfix]
   public static void Postfix(Story __instance, Result result, bool undoing = false, bool startStoryOnly = false, bool isEnding = false)
   {
-    Plugin.Logger.LogInfo($"{__instance.storyID} story triggered");
-    if (__instance.storyID == "gamestartintro") {
+    string storyID = __instance.storyID;
+    Plugin.Logger.LogInfo($"{storyID} story triggered");
+
+    if (storyID == "gamestartintro") {
       Plugin.Logger.LogInfo("Connection here");
-      ArchipelagoClient.Connect("localhost", 38281, "Player1", null);
+      JObject json = Helpers.GetConnectionInfo();
+      Plugin.Logger.LogInfo(json.ToString(Formatting.None));
+      ArchipelagoClient.Connect((string)json["ip"], (int)json["port"], (string)json["slot"], null);
       // TODO: Add ap info to main menu. Or at least a file with credentials
       // TODO: Indicate to the user they're connected
-    } else if (__instance.storyID == "visited_colonystrato") {
+    } else if (storyID == "visited_colonystrato") {
       //For future use, tells the client that the game is fully loaded
       //ArchipelagoClient.readyForItems = true; 
-    } else if (__instance.storyID.Contains("explorecollectible")) {
+    } else if (storyID.Contains("explorecollectible")) {
       string id = __instance.storyID.Replace("explorecollectible", "");
       string apID = ItemsAndLocationsHandler.internalToAPcollectibles[id];
-      Plugin.Logger.LogInfo($"Story: {__instance.storyID} ID: {id} AP ID: {apID}");
-      ArchipelagoClient.ProcessItemSent(apID);
+      Plugin.Logger.LogInfo($"Story: {storyID} ID: {id} AP ID: {apID}");
+      ArchipelagoClient.ProcessLocation(apID);
+    } else if(TriggerGoal(storyID)) {
+      Plugin.Logger.LogInfo("Trigger goal here");
+      ArchipelagoClient.SendGoal();
     }
   }
 
@@ -37,7 +47,7 @@ class Story_ExecutePatch
   [HarmonyPostfix]
   public static bool Prefix(Story __instance, Result result, bool undoing = false, bool startStoryOnly = false, bool isEnding = false)
   {
-    Plugin.Logger.LogInfo($"Prefix: {__instance.storyID}");
+    //Plugin.Logger.LogInfo($"Prefix: {__instance.storyID}");
   /*  TODO: Building unlocks. This code will spam the logs and lock the mouse as written
     if (ItemsAndLocationsHandler.internalToAPBuildings.ContainsKey(__instance.storyID)) {
       if (ArchipelagoClient.serverData.receivedBuildings.Contains(__instance.storyID)) {
@@ -60,22 +70,15 @@ class Story_ExecutePatch
     Princess.SetMemory("mem_foundCollectible");
   }
 
-  public static void EndGame()
+  public static bool TriggerGoal(string ending)
   {
-    // Force ending screen
-    Result result = new Result();
-    Story story = Story.FromID("ending_end");
-    story.Execute(result);
-  }
-}
-
-[HarmonyPatch(typeof(StoryCall))]
-class StoryCall_ExecutePatch
-{
-  [HarmonyPatch("endgame")]
-  [HarmonyPostfix]
-  public static void Prefix(Story __instance, Result result, bool undoing = false, bool startStoryOnly = false, bool isEnding = false)
-  {
-    // Victory logic here?
+    if (ending.Contains("archipelago") || ending == "ending_oldsol") {
+      return false;
+    } else if (ending.Contains("ending_")) {
+      // This is where we detect ending type
+      return true;
+    } else {
+      return false;
+    }
   }
 }

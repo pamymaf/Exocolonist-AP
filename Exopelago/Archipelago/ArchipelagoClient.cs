@@ -146,10 +146,16 @@ public class ArchipelagoClient
     }
   }
 
-  public static void ProcessItemSent(string location) {
+  public static void ProcessLocation(string location) 
+  {
     var locationId = session.Locations.GetLocationIdFromName("Exocolonist", location);
-    Plugin.Logger.LogInfo($"Trying to unlock location with name {location} id {locationId}");
+    Plugin.Logger.LogInfo($"Trying to unlock location with name {location} id {locationId.ToString()}");
     session.Locations.CompleteLocationChecks(locationId);
+  }
+
+  public static void SendGoal()
+  {
+    session.SetClientState(ArchipelagoClientState.ClientGoal);
   }
 
   //Not properly used yet, this sets a variable in the server to fetch later
