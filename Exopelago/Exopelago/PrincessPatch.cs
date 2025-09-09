@@ -70,15 +70,18 @@ class Princess_MemoryPatch
 [HarmonyPatch(typeof(PrincessMonth))]
 class Princess_PrincessMonthPatch
 {
-  [HarmonyPatch("UpdateSeasonAge")]
+  [HarmonyPatch("SetMonth")]
   [HarmonyPostfix]
-  public static void Postfix(bool __runOriginal, PrincessMonth __instance, int monthOfGame)
+  public static bool Prefix(int value)
   {
     int maxAge = ArchipelagoClient.serverData.maxAge;
-    Plugin.Logger.LogInfo($"SetAge monthOfGame: {monthOfGame} age: {PrincessMonth.AgeForMonth(monthOfGame)} maxAge: {maxAge}");
-    if (PrincessMonth.AgeForMonth(monthOfGame) > maxAge) {
-      Story_ExecutePatch.EndGame();
+    int maxMonth = (maxAge-10+1)*13+1;
+    Plugin.Logger.LogInfo($"SetMonth prefix maxAge {maxAge} maxMonth {maxMonth} value {value}");
+    if (value >= maxMonth) {
+      Plugin.Logger.LogInfo($"Attempting to end the game");
+      StoryCalls.endgame("archipelagoEnding");
     }
+    return true;
   }
 
   public static int GetAge()

@@ -68,3 +68,14 @@ class Story_ExecutePatch
     story.Execute(result);
   }
 }
+
+[HarmonyPatch(typeof(StoryCall))]
+class StoryCall_ExecutePatch
+{
+  [HarmonyPatch("endgame")]
+  [HarmonyPostfix]
+  public static void Prefix(Story __instance, Result result, bool undoing = false, bool startStoryOnly = false, bool isEnding = false)
+  {
+    // Victory logic here?
+  }
+}
