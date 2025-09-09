@@ -14,6 +14,7 @@ def create_and_connect_regions(world: ExocolonistWorld) -> None:
 
 
 def create_all_regions(world: ExocolonistWorld) -> None:
+    start = Region("Start", world.player, world.multiworld)
     age10 = Region("Age 10", world.player, world.multiworld)
     age11 = Region("Age 11", world.player, world.multiworld)
     age12 = Region("Age 12", world.player, world.multiworld)
@@ -26,12 +27,13 @@ def create_all_regions(world: ExocolonistWorld) -> None:
     age19 = Region("Age 19", world.player, world.multiworld)
     age20 = Region("Age 20", world.player, world.multiworld)
     
-    regions = [age10, age11, age12, age13, age14, age15, age16, age17, age18, age19, age20]
+    regions = [start, age10, age11, age12, age13, age14, age15, age16, age17, age18, age19, age20]
 
     world.multiworld.regions += regions
 
 
 def connect_regions(world: ExocolonistWorld) -> None:
+    start = world.get_region("Start")
     age10 = world.get_region("Age 10")
     age11 = world.get_region("Age 11")
     age12 = world.get_region("Age 12")
@@ -44,6 +46,7 @@ def connect_regions(world: ExocolonistWorld) -> None:
     age19 = world.get_region("Age 19")
     age20 = world.get_region("Age 20")
 
+    start.connect(age10, "Aged to 10")
     age10.connect(age11, "Aged to 11")
     age11.connect(age12, "Aged to 12")
     age12.connect(age13, "Aged to 13")

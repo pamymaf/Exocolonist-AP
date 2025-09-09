@@ -162,6 +162,9 @@ def create_all_items(world: ExocolonistWorld) -> None:
         world.create_item("Progressive Year"),
         ]
     world.multiworld.local_early_items[world.player]["Progressive Year"] = 1
+    world.multiworld.local_early_items[world.player]["Study Life Sciences"] = 1
+    world.multiworld.local_early_items[world.player]["Study Humanities"] = 1
+    world.multiworld.local_early_items[world.player]["Relax in the Lounge"] = 1
 
     amount_of_items = len(itempool)
     amount_of_unfilled_locations = len(world.multiworld.get_unfilled_locations(world.player))

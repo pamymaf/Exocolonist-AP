@@ -32,7 +32,7 @@ class ExocolonistWorld(World):
     location_name_to_id = locations.LOCATION_NAME_TO_ID
     item_name_to_id = items.ITEM_NAME_TO_ID
 
-    origin_region_name = "Age 10"
+    origin_region_name = "Start"
 
     def create_regions(self) -> None:
         regions.create_and_connect_regions(self)

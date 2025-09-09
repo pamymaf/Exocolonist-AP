@@ -53,12 +53,12 @@ LOCATION_NAME_TO_ID = {
     "Mushwood Log": 41,
     "Crystal Cluster": 42,
     "Strange Device": 43,
-    "Marz 20": 44,
-    "Marz 40": 45,
-    "Marz 60": 46,
-    "Marz 80": 47,
-    "Marz 100": 48,
-    "Marz Date": 49,
+    "Mars 20": 44,
+    "Mars 40": 45,
+    "Mars 60": 46,
+    "Mars 80": 47,
+    "Mars 100": 48,
+    "Mars Date": 49,
     "Dys 20": 50,
     "Dys 40": 51,
     "Dys 60": 52,
@@ -118,7 +118,7 @@ LOCATION_NAME_TO_ID = {
     "Adopt Robot": 106,
     "Adopt Unisaur": 107,
     "Become Governor": 108,
-    "Marz Governor": 109,
+    "Mars Governor": 109,
 
 }
 
@@ -133,6 +133,7 @@ def create_all_locations(world: ExocolonistWorld) -> None:
 
 
 def create_regular_locations(world: ExocolonistWorld) -> None:
+    start = world.get_region("Start")
     age10 = world.get_region("Age 10")
     age11 = world.get_region("Age 11")
     age12 = world.get_region("Age 12")
@@ -145,18 +146,22 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
     age19 = world.get_region("Age 19")
     age20 = world.get_region("Age 20")
 
+    start_locations: dict[str, int | None] = {
+        "Relax in the Lounge": world.location_name_to_id["Relax in the Lounge"],
+        "Study Life Sciences": world.location_name_to_id["Study Life Sciences"],
+        "Study Humanities": world.location_name_to_id["Study Humanities"],
+    }
+    start.add_locations(start_locations, ExocolonistLocation)
+
     age10_locations: dict[str, int | None] = {
         "Shovelling Dirt": world.location_name_to_id["Shovelling Dirt"],
         "Xenobotany": world.location_name_to_id["Xenobotany"],
         "Babysitting": world.location_name_to_id["Babysitting"],
-        "Relax in the Lounge": world.location_name_to_id["Relax in the Lounge"],
-        "Study Life Sciences": world.location_name_to_id["Study Life Sciences"],
         "Study Engineering": world.location_name_to_id["Study Engineering"],
-        "Study Humanities": world.location_name_to_id["Study Humanities"],
         "Sportsball": world.location_name_to_id["Sportsball"],
         "Deliver Supplies": world.location_name_to_id["Deliver Supplies"],
         "Sneak Out": world.location_name_to_id["Sneak Out"],
-        "Marz 20": world.location_name_to_id["Marz 20"],
+        "Mars 20": world.location_name_to_id["Mars 20"],
         "Dys 20": world.location_name_to_id["Dys 20"],
         "Cal 20": world.location_name_to_id["Cal 20"],
         "Tammy 20": world.location_name_to_id["Tammy 20"],
@@ -176,7 +181,7 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
         "Play the Photophonor": world.location_name_to_id["Play the Photophonor"],
         "Defense Training": world.location_name_to_id["Defense Training"],
         "Relax on the Walls": world.location_name_to_id["Relax on the Walls"],
-        "Marz 40": world.location_name_to_id["Marz 40"],
+        "Mars 40": world.location_name_to_id["Mars 40"],
         "Dys 40": world.location_name_to_id["Dys 40"],
         "Cal 40": world.location_name_to_id["Cal 40"],
         "Tammy 40": world.location_name_to_id["Tammy 40"],
@@ -189,7 +194,7 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
         "Farming": world.location_name_to_id["Farming"],
         "Relax in the Park": world.location_name_to_id["Relax in the Park"],
         "Depot Clerk": world.location_name_to_id["Depot Clerk"],
-        "Marz 60": world.location_name_to_id["Marz 60"],
+        "Mars 60": world.location_name_to_id["Mars 60"],
         "Dys 60": world.location_name_to_id["Dys 60"],
         "Cal 60": world.location_name_to_id["Cal 60"],
         "Tammy 60": world.location_name_to_id["Tammy 60"],
@@ -204,7 +209,7 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
         "Explore Nearby": world.location_name_to_id["Explore Nearby"],
         "Survey the Plains": world.location_name_to_id["Survey the Plains"],
         "Forage in the Valley": world.location_name_to_id["Forage in the Valley"],
-        "Marz 80": world.location_name_to_id["Marz 80"],
+        "Mars 80": world.location_name_to_id["Mars 80"],
         "Dys 80": world.location_name_to_id["Dys 80"],
         "Cal 80": world.location_name_to_id["Cal 80"],
         "Tammy 80": world.location_name_to_id["Tammy 80"],
@@ -214,7 +219,7 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
 
     age14_locations: dict[str, int | None] = {
         "Tending Animals": world.location_name_to_id["Tending Animals"],
-        "Marz 100": world.location_name_to_id["Marz 100"],
+        "Mars 100": world.location_name_to_id["Mars 100"],
         "Dys 100": world.location_name_to_id["Dys 100"],
         "Cal 100": world.location_name_to_id["Cal 100"],
         "Tammy 100": world.location_name_to_id["Tammy 100"],
@@ -232,7 +237,7 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
         "Survey the Ridge": world.location_name_to_id["Survey the Ridge"],
         "Rebuild": world.location_name_to_id["Rebuild"],
         "Mourn": world.location_name_to_id["Mourn"],
-        "Marz Date": world.location_name_to_id["Marz Date"],
+        "Mars Date": world.location_name_to_id["Mars Date"],
         "Dys Date": world.location_name_to_id["Dys Date"],
         "Cal Date": world.location_name_to_id["Cal Date"],
         "Tammy Date": world.location_name_to_id["Tammy Date"],
@@ -292,7 +297,6 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
     }
     age20.add_locations(age20_locations, ExocolonistLocation)
     
-
 
 def create_events(world: ExocolonistWorld) -> None:
     age20 = world.get_region("Age 20")

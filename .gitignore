@@ -1,1 +1,6 @@
 reference/
+*.zip
+*.apworld
+*.sh
+*.dll
+*.pdb

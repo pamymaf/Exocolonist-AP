@@ -17,6 +17,7 @@ def set_all_rules(world: ExocolonistWorld) -> None:
 
 
 def set_all_entrance_rules(world: ExocolonistWorld) -> None:
+    start_to_age10 = world.get_entrance("Aged to 10")
     age10_to_age11 = world.get_entrance("Aged to 11")
     age11_to_age12 = world.get_entrance("Aged to 12")
     age12_to_age13 = world.get_entrance("Aged to 13")
@@ -40,7 +41,37 @@ def set_all_entrance_rules(world: ExocolonistWorld) -> None:
     set_rule(age19_to_age20, lambda state: state.has("Progressive Year", world.player, 10))
 
 def set_all_location_rules(world: ExocolonistWorld) -> None:
-  pass
+    dys20 = world.get_location("Dys 20")
+    dys40 = world.get_location("Dys 40")
+    dys60 = world.get_location("Dys 60")
+    dys80 = world.get_location("Dys 80")
+    dys100 = world.get_location("Dys 100")
+
+    set_rule(
+        dys20,
+        lambda state: (
+            state.has_any(("Sneak Out", "Explore Nearby", "Forage in the Valley", "Relax on the Walls"), world.player)),
+    )
+    set_rule(
+        dys40,
+        lambda state: (
+            state.has("Progressive Year", world.player, 1) and state.has_any(("Sneak Out", "Explore Nearby", "Forage in the Valley", "Relax on the Walls"), world.player)),
+    )
+    set_rule(
+        dys60,
+        lambda state: (
+            state.has("Progressive Year", world.player, 2) and state.has_any(("Sneak Out", "Explore Nearby", "Forage in the Valley", "Relax on the Walls"), world.player)),
+    )
+    set_rule(
+        dys80,
+        lambda state: (
+            state.has("Progressive Year", world.player, 3) and state.has_any(("Sneak Out", "Explore Nearby", "Forage in the Valley", "Relax on the Walls"), world.player)),
+    )
+    set_rule(
+        dys100,
+        lambda state: (
+            state.has("Progressive Year", world.player, 4) and state.has_any(("Sneak Out", "Explore Nearby", "Forage in the Valley", "Relax on the Walls"), world.player)),
+    )
 
 
 
