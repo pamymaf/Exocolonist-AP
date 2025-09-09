@@ -1,0 +1,115 @@
+using BepInEx;
+using BepInEx.Logging;
+using HarmonyLib;
+using Northway.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Exopelago.Archipelago;
+
+namespace Exopelago;
+
+[HarmonyPatch(typeof(Princess))]
+class Princess_MemoryPatch
+{
+  [HarmonyPatch("SetMemory")]
+  [HarmonyPostfix]
+  public static void Postfix(bool __runOriginal, string id, object value = null)
+  {
+    if (id.StartsWith("job_")){
+      string strippedJob = id.RemoveStart("job_");
+      Plugin.Logger.LogInfo($"Game tried to unlock {id}:");
+    } else {
+    }
+    Plugin.Logger.LogInfo($"Original memory ran: {__runOriginal}");
+  }
+
+  [HarmonyPatch("SetMemory")]
+  [HarmonyPrefix]
+  public static bool Prefix(string id, object value = null)
+  {
+    try {
+      Plugin.Logger.LogInfo($"SetMemory id {id}");
+      if (id.StartsWith("unlockjob_")){
+        string strippedJob = id.RemoveStart("unlockjob_");
+        if (ArchipelagoClient.serverData.receivedJobs.Contains(strippedJob)){
+          Princess.AddMemory($"job_{strippedJob}", "true");
+          Plugin.Logger.LogInfo($"{strippedJob} unlocked.");
+          return false;
+        } else {
+          return false;
+        } 
+      } else if (id.StartsWith("job_")) {
+        string strippedJob = id.RemoveStart("job_");
+        string apJobName = ItemsAndLocationsHandler.internalToAPJobs[strippedJob];
+        Plugin.Logger.LogInfo($"Trying to send AP location {apJobName}");
+        ArchipelagoClient.ProcessItemSent(apJobName);
+        return false;
+      } else {
+        return true;
+      }
+    } catch (Exception e) {
+      // Magic try/catch block
+      // The code works as intended with this here but never prints an error
+      // Thanks Sae for the idea
+      string strippedJob = id.RemoveStart("job_");
+      Plugin.Logger.LogInfo("ERROR");
+      Plugin.Logger.LogInfo(id);
+      Plugin.Logger.LogInfo(strippedJob);
+      Plugin.Logger.LogInfo(e);
+      return true;
+    } 
+  }
+  public static void UnlockJob(string name)
+  {
+    Plugin.Logger.LogInfo($"Attempting to unlock {name}");
+    Princess.SetMemory($"unlockjob_{name}");
+  }
+}
+
+[HarmonyPatch(typeof(PrincessMonth))]
+class Princess_PrincessMonthPatch
+{
+  [HarmonyPatch("UpdateSeasonAge")]
+  [HarmonyPostfix]
+  public static void Postfix(bool __runOriginal, PrincessMonth __instance, int monthOfGame)
+  {
+    int maxAge = ArchipelagoClient.serverData.maxAge;
+    Plugin.Logger.LogInfo($"SetAge monthOfGame: {monthOfGame} age: {PrincessMonth.AgeForMonth(monthOfGame)} maxAge: {maxAge}");
+    if (PrincessMonth.AgeForMonth(monthOfGame) > maxAge) {
+      Story_ExecutePatch.EndGame();
+    }
+  }
+
+  public static int GetAge()
+  {
+    return Princess.age;
+  }
+}
+
+[HarmonyPatch(typeof(Princess))]
+class Princess_PrincessInitPatch
+{
+  [HarmonyPatch("NewGame")]
+  [HarmonyPostfix]
+  public static void Postfix(bool __runOriginal)
+  {
+    // TODO: figure out how to set and get groundhogs here
+  }
+}
+
+[HarmonyPatch(typeof(Princess))]
+class Princess_LovePatch
+{
+  [HarmonyPatch("IncrementLove")]
+  [HarmonyPostfix]
+  public static void Postfix(string charaID, int diffAmount, Result result)
+  {
+    int loveInc = 20; // In case I make the increment user settable in the future
+    int currentLove = Princess.GetLove(charaID);
+    for (int i=1; i<=currentLove/loveInc; i++) {
+      ArchipelagoClient.ProcessItemSent($"{char.ToUpper(charaID[0]) + charaID.Substring(1)} {i*loveInc}");
+    }
+  }
+
+}
