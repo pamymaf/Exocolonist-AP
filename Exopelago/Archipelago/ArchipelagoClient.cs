@@ -95,15 +95,6 @@ public class ArchipelagoClient
   static void OnMessageReceived(LogMessage message)
   {
     Plugin.Logger.LogInfo(message.ToString());
-    switch (message)
-    {
-      case ItemSendLogMessage itemLogMessage:
-        if (itemLogMessage.IsReceiverTheActivePlayer) {
-          ProcessItemReceived(itemLogMessage.Item);
-        }
-        break;
-    }
-
   }
 
   static void ProcessItemReceived(ItemInfo item)

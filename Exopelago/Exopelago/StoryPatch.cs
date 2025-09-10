@@ -22,24 +22,33 @@ class Story_ExecutePatch
     string storyID = __instance.storyID;
     Plugin.Logger.LogInfo($"{storyID} story triggered");
 
-    if (storyID == "gamestartintro") {
-      Plugin.Logger.LogInfo("Connection here");
-      JObject json = Helpers.GetConnectionInfo();
-      Plugin.Logger.LogInfo(json.ToString(Formatting.None));
-      ArchipelagoClient.Connect((string)json["ip"], (int)json["port"], (string)json["slot"], null);
-      // TODO: Add ap info to main menu. Or at least a file with credentials
-      // TODO: Indicate to the user they're connected
-    } else if (storyID == "visited_colonystrato") {
-      //For future use, tells the client that the game is fully loaded
-      //ArchipelagoClient.readyForItems = true; 
-    } else if (storyID.Contains("explorecollectible")) {
-      string id = __instance.storyID.Replace("explorecollectible", "");
-      string apID = ItemsAndLocationsHandler.internalToAPcollectibles[id];
-      Plugin.Logger.LogInfo($"Story: {storyID} ID: {id} AP ID: {apID}");
-      ArchipelagoClient.ProcessLocation(apID);
-    } else if(TriggerGoal(storyID)) {
-      Plugin.Logger.LogInfo("Trigger goal here");
-      ArchipelagoClient.SendGoal();
+    switch (storyID){
+      case "gamestartintro":
+        Plugin.Logger.LogInfo("Connection here");
+        JObject json = Helpers.GetConnectionInfo();
+        Plugin.Logger.LogInfo(json.ToString(Formatting.None));
+        ArchipelagoClient.Connect((string)json["ip"], (int)json["port"], (string)json["slot"], null);
+        // TODO: Add ap info to main menu. Or at least a file with credentials
+        // TODO: Indicate to the user they're connected
+        break;
+
+      case "visited_colonystrato":
+        //For future use, tells the client that the game is fully loaded
+        //ArchipelagoClient.readyForItems = true; 
+        break;
+
+      case string x when x.Contains("explorecollectible"):
+        string id = __instance.storyID.Replace("explorecollectible", "");
+        string apID = ItemsAndLocationsHandler.internalToAPcollectibles[id];
+        Plugin.Logger.LogInfo($"Story: {storyID} ID: {id} AP ID: {apID}");
+        ArchipelagoClient.ProcessLocation(apID);
+        break;
+
+      case string x when TriggerGoal(x):
+        Plugin.Logger.LogInfo("Trigger goal here");
+        ArchipelagoClient.SendGoal();
+        break;
+        
     }
   }
 
