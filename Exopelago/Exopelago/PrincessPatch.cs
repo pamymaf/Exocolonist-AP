@@ -30,24 +30,34 @@ class Princess_MemoryPatch
   {
     try {
       Plugin.Logger.LogInfo($"SetMemory id {id}");
-      if (id.StartsWith("unlockjob_")){
-        string strippedJob = id.RemoveStart("unlockjob_");
-        if (ArchipelagoClient.serverData.receivedJobs.Contains(strippedJob)){
-          Princess.AddMemory($"job_{strippedJob}", "true");
-          Plugin.Logger.LogInfo($"{strippedJob} unlocked.");
+      switch (id){
+        case string x when x.StartsWith("unlockjob_"):
+          string receivedJob = id.RemoveStart("unlockjob_");
+          if (ArchipelagoClient.serverData.receivedJobs.Contains(receivedJob)){
+            Princess.AddMemory($"job_{receivedJob}", "true");
+            Plugin.Logger.LogInfo($"{receivedJob} unlocked.");
+            return false;
+          } else {
+            return false;
+          } 
+
+        case string x when x.StartsWith("job_"):
+          string sentJob = id.RemoveStart("job_");
+          string apJobName = ItemsAndLocationsHandler.internalToAPJobs[sentJob];
+          Plugin.Logger.LogInfo($"Trying to send AP location {apJobName}");
+          ArchipelagoClient.ProcessLocation(apJobName);
           return false;
-        } else {
-          return false;
-        } 
-      } else if (id.StartsWith("job_")) {
-        string strippedJob = id.RemoveStart("job_");
-        string apJobName = ItemsAndLocationsHandler.internalToAPJobs[strippedJob];
-        Plugin.Logger.LogInfo($"Trying to send AP location {apJobName}");
-        ArchipelagoClient.ProcessLocation(apJobName);
-        return false;
-      } else {
-        return true;
+
+        case string x when ItemsAndLocationsHandler.storyEvents.ContainsKey(id):
+          string locationName = ItemsAndLocationsHandler.storyEvents[id];
+          Plugin.Logger.LogInfo($"Trying to send AP location {locationName} with id {id}");
+          ArchipelagoClient.ProcessLocation(locationName);
+          return true;
+
+        default:
+          return true;
       }
+
     } catch (Exception e) {
       // Magic try/catch block
       // The code works as intended with this here but never prints an error

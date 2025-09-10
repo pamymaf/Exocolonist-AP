@@ -101,6 +101,7 @@ public static class ItemsAndLocationsHandler
     {"Medicinal Roots", "roots"},
     {"Yellow Flower", "yellowFlower"},
     {"Strange Device", "device"},
+    {"Cake", "cake"},
   });
 
   public static ReadOnlyDictionary<string, string> internalToAPcollectibles = new (new Dictionary<string, string>{
@@ -110,7 +111,8 @@ public static class ItemsAndLocationsHandler
     {"crystal", "Crystal Cluster"},
     {"roots", "Medicinal Roots"},
     {"yellowFlower", "Yellow Flower"},
-    {"device", "Strange Device"}
+    {"device", "Strange Device"},
+    {"cake", "Cake"},
   });
 
   public static ReadOnlyDictionary<string, string> internalToAPBuildings = new (new Dictionary<string, string>{
@@ -129,5 +131,25 @@ public static class ItemsAndLocationsHandler
     {"Command", "command"},
     {"Geoponics", "geoponics"},
     {"Expeditions", "expeditions"},
+  });
+
+  public static ReadOnlyDictionary<string, string> storyEvents = new (new Dictionary<string, string>{
+    {"saved_tammy", "Save Tammy"},
+    {"saved_tonin", "Save Tonin"},
+    {"saved_eudicot", "Rescue Eudicot"},
+    {"food_saved", "Save Mom"},
+    {"shimmer_cure", "Save Dad"},
+    {"hal_saved", "Save Hal"},
+    {"date_anemone", "Anemone Date"},
+    {"date_cal", "Cal Date"},
+    {"date_dys", "Dys Date"},
+    {"date_marz", "Marz Date"},
+    {"date_nomi", "Nomi Date"},
+    {"date_tammy", "Tammy Date"},
+    {"date_tangent", "Tangent Date"},
+    {"date_rex", "Rex Date"},
+    {"date_vace", "Vace Date"},
+    {"leader_marz", "Marz Governor"},
+    {"leader_player", "Become Governor"},
   });
 }
