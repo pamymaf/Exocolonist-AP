@@ -55,7 +55,7 @@ def set_consumable_rules(world: ExocolonistWorld) -> None:
         set_rule(world.get_location(consumable), lambda state: (state.has_any(explore_jobs, world.player)),)
 
     # This line creates fill errors. Is it too restrictive?
-    set_rule(world.get_location("Strange Device"), lambda state: (state.has("Explore the Ridge", world.player)),)
+    set_rule(world.get_location("Strange Device"), lambda state: (state.has("Survey the Ridge", world.player)),)
 
 
 def set_job_rules(world: ExocolonistWorld) -> None:
