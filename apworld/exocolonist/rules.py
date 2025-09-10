@@ -89,7 +89,7 @@ def set_job_rules(world: ExocolonistWorld) -> None:
     # Photophonor may require gear?
 
     # Study Engineering needs you to work one job there to unlock it
-    engineering_jobs = ("Nursing Assistant", "Study Life Sciences", "Study Humanities", "Robot Repair", "Study Engineering", "Tutoring")
+    engineering_jobs = ("Nursing Assistant", "Study Life Sciences", "Study Humanities", "Robot Repair", "Tutoring")
     set_rule(
         world.get_location("Study Engineering"),
         lambda state: (state.has_any(engineering_jobs, world.player)),
@@ -108,42 +108,41 @@ def set_job_rules(world: ExocolonistWorld) -> None:
 
 def set_character_location_rules(world: ExocolonistWorld) -> None:
     chara_jobs = {
-        "anemone": ("Sportsball", "Lookout Duty", "Defense Training"),
-        "cal": ("Shovelling Dirt", "Farming", "Xenobotany", "Tending Animals"),
-        "dys": ("Sneak Out", "Explore Nearby", "Survey the Plains", "Survey the Ridge", "Relax on the Walls"),
-        "marz": ("Depot Clerk", "Administration", "Leader", "Deliver Supplies"),
-        "nomi": ("Play the Photophonor", "Tutoring", "Robot Repair", "Study Engineering"),
-        "rex": ("Deliver Supplies", "Construction", "Relax in the Lounge"),
-        "tammy": ("Babysitting", "Cooking", "Relax in the Lounge"),
-        "tang": ("Barista", "Study Life Sciences", "Study Humanities", "Nursing Assistant", "Study Engineering"),
-        "vace": ("Guard Duty", "Hunt in the Swamps", "Defense Training"),
+        "Anemone": ("Sportsball", "Lookout Duty", "Defense Training"),
+        "Cal": ("Shovelling Dirt", "Farming", "Xenobotany", "Tending Animals"),
+        "Dys": ("Sneak Out", "Explore Nearby", "Survey the Plains", "Survey the Ridge", "Relax on the Walls"),
+        "Marz": ("Depot Clerk", "Administration", "Leader", "Deliver Supplies"),
+        "Nomi": ("Play the Photophonor", "Tutoring", "Robot Repair", "Study Engineering"),
+        "Rex": ("Deliver Supplies", "Construction", "Relax in the Lounge"),
+        "Tammy": ("Babysitting", "Cooking", "Relax in the Lounge"),
+        "Tang": ("Barista", "Study Life Sciences", "Study Humanities", "Nursing Assistant", "Study Engineering"),
+        "Vace": ("Guard Duty", "Hunt in the Swamps", "Defense Training"),
     }
 
 
-    for chara in ["anemone", "cal", "dys", "marz", "tammy", "tang"]:
-        set_rule(world.get_location(f"{chara.title()} 20"), lambda state: (state.has_any(chara_jobs[chara], world.player)),)
+    for chara in ["Anemone", "Cal", "Dys", "Marz", "Tammy", "Tang"]:
+        set_rule(world.get_location(f"{chara} 20"), lambda state, chara=chara: (state.has_any(chara_jobs[chara], world.player)),)
         for i in range(1,5):
             set_rule(
-                world.get_location(f"{chara.title()} {(i+1)*20}"),
-                lambda state: (state.has_any(chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i)),
+                world.get_location(f"{chara} {(i+1)*20}"),
+                lambda state, chara=chara, i=i: (state.has_any(chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i)),
             )
         set_rule(
-            world.get_location(f"{chara.title()} Date"), 
-            lambda state: (
-                state.has_any(chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, 5)
-                ),
-            )
+            world.get_location(f"{chara} Date"), 
+            lambda state, chara=chara: (
+                state.has_any(chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, 5)),
+        )
 
     # These characters only appear year 5
-    for chara in ["nomi", "rex", "vace"]:
+    for chara in ["Nomi", "Rex", "Vace"]:
         for i in range(0,5):
             set_rule(
-                world.get_location(f"{chara.title()} {(i+1)*20}"),
-                lambda state: (state.has_any(chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i+5)),
+                world.get_location(f"{chara} {(i+1)*20}"),
+                lambda state, chara=chara, i=i: (state.has_any(chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i+5)),
             )
         set_rule(
-            world.get_location(f"{chara.title()} Date"), 
-            lambda state: (
+            world.get_location(f"{chara} Date"), 
+            lambda state, chara=chara, i=i: (
                 state.has_any(chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, 9)
                 ),
             )
