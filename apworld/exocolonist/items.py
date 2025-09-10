@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import random
+
 from typing import TYPE_CHECKING
 
 from BaseClasses import Item, ItemClassification
@@ -52,6 +54,7 @@ ITEM_NAME_TO_ID = {
   "Strange Device": 42,
   "Progressive Year": 43,
   "Experience": 44,
+  "Cake": 45,
 }
 
 ITEM_CLASSIFICATIONS = {
@@ -99,6 +102,7 @@ ITEM_CLASSIFICATIONS = {
   "Strange Device": ItemClassification.useful,
   "Progressive Year": ItemClassification.progression,
   "Experience": ItemClassification.filler,
+  "Cake": ItemClassification.useful,
 }
 
 
@@ -111,7 +115,6 @@ def create_all_items(world: ExocolonistWorld) -> None:
         world.create_item("Shovelling Dirt"),
         world.create_item("Xenobotany"),
         world.create_item("Babysitting"),
-        world.create_item("Relax in the Lounge"),
         world.create_item("Study Life Sciences"),
         world.create_item("Study Engineering"),
         world.create_item("Study Humanities"),
@@ -120,9 +123,7 @@ def create_all_items(world: ExocolonistWorld) -> None:
         world.create_item("Sneak Out"),
         world.create_item("Play the Photophonor"),
         world.create_item("Defense Training"),
-        world.create_item("Relax on the Walls"),
         world.create_item("Farming"),
-        world.create_item("Relax in the Park"),
         world.create_item("Depot Clerk"),
         world.create_item("Cooking"),
         world.create_item("Tutoring"),
@@ -143,13 +144,6 @@ def create_all_items(world: ExocolonistWorld) -> None:
         world.create_item("Explore Glow"),
         world.create_item("Hunt in the Swamps"),
         world.create_item("Leader"),
-        world.create_item("Bobberfruit"),
-        world.create_item("Medicinal Root"),
-        world.create_item("Xeno Egg"),
-        world.create_item("Yellow Flower"),
-        world.create_item("Mushwood Log"),
-        world.create_item("Crystal Cluster"),
-        world.create_item("Strange Device"),
         world.create_item("Progressive Year"),
         world.create_item("Progressive Year"),
         world.create_item("Progressive Year"),
@@ -161,14 +155,25 @@ def create_all_items(world: ExocolonistWorld) -> None:
         world.create_item("Progressive Year"),
         world.create_item("Progressive Year"),
         ]
-    world.multiworld.local_early_items[world.player]["Progressive Year"] = 1
-    world.multiworld.local_early_items[world.player]["Study Life Sciences"] = 1
-    world.multiworld.local_early_items[world.player]["Study Humanities"] = 1
-    world.multiworld.local_early_items[world.player]["Relax in the Lounge"] = 1
+    relax_jobs = [
+        world.create_item("Relax in the Lounge"),
+        world.create_item("Relax on the Walls"),
+        world.create_item("Relax in the Park"),
+        ]
+    starting_relax = random.choice(relax_jobs)
+    world.multiworld.push_precollected(starting_relax)
+
+    relax_jobs = [job for job in relax_jobs if job != starting_relax]
+    world.multiworld.itempool += relax_jobs
+
 
     amount_of_items = len(itempool)
     amount_of_unfilled_locations = len(world.multiworld.get_unfilled_locations(world.player))
-    needed_amount_of_filler = amount_of_unfilled_locations - amount_of_items
+    needed_amount_of_extra = amount_of_unfilled_locations - amount_of_items
+    amount_each_item = needed_amount_of_extra // 8
+    for item in ["Bobberfruit", "Medicinal Root", "Xeno Egg", "Yellow Flower", "Mushwood Log", "Crystal Cluster", "Strange Device", "Cake"]:
+        itempool += [world.create_item(item) for _ in range(amount_each_item)]
+    needed_amount_of_filler = needed_amount_of_extra % 8
     itempool += [world.create_item("Experience") for _ in range(needed_amount_of_filler)]
     world.multiworld.itempool += itempool
     
