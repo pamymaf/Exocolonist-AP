@@ -103,18 +103,18 @@ public class Helpers
 
   public static void DisplayAPStory(string sender = null, string item = null)
   {
-    //System.Threading.SpinWait.SpinUntil( () => readyForItems );
 
     Plugin.Logger.LogInfo($"Attempting to display AP story");
-
-    if (ArchipelagoClient.authenticated){
-      Story apStory = Story.FromID("apConnected");
-      Result apResult = new Result();
-      apStory.Execute(apResult);
-    } else {
-      Story apStory = Story.FromID("apNotConnected");
-      Result apResult = new Result();
-      apStory.Execute(apResult);
+    if (readyForItems){
+      if (sender == null){
+        if (ArchipelagoClient.authenticated){
+          PlayerText.Show("AP connected");
+        } else {
+          PlayerText.Show("AP not connected");
+        }
+      } else {
+        PlayerText.Show($"{sender} sent you {item}");
+      }
     }
     
   }

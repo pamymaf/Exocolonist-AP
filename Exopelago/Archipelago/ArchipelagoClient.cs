@@ -115,7 +115,7 @@ public class ArchipelagoClient
       object value = descriptor.GetValue(item);
       Console.WriteLine("{0}={1}", name, value);
     }
-    //Exopelago.Helpers.DisplayAPStory(item.Player.Name, item.ItemName);
+    Exopelago.Helpers.DisplayAPStory(item.Player.Name, item.ItemName);
     var itemName = item.ItemName;
     if (ItemsAndLocationsHandler.apToInternalJobs.ContainsKey(itemName)) {
       var internalName = ItemsAndLocationsHandler.apToInternalJobs[itemName];

@@ -37,12 +37,9 @@ class Story_ExecutePatch
           {"apSeed", ArchipelagoClient.session.RoomState.Seed},
         };
         Helpers.AddSaveData(apData);
+        Helpers.firstMapLoad = true;
         break;
-
-      //case "contentWarnings":
-      //  Helpers.DisplayAPStory();
-      //  break;
-
+        
       case string x when x.Contains("explorecollectible"):
         string id = __instance.storyID.Replace("explorecollectible", "");
         string apID = ItemsAndLocationsHandler.internalToAPcollectibles[id];

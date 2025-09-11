@@ -16,8 +16,11 @@ class Player_ExecutePatch
   [HarmonyPostfix]
   public static void Postfix(bool startingOrLoadingGame, bool returningHome)
   {
+    Helpers.readyForItems = true;
     Plugin.Logger.LogInfo("Map loaded");
+    if (Helpers.firstMapLoad){
+      Helpers.DisplayAPStory();
+    }
     Helpers.firstMapLoad = false;
-    Helpers.DisplayAPStory();
   }
 }
