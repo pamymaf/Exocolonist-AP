@@ -18,7 +18,7 @@ class Princess_MemoryPatch
   {
     if (id.StartsWith("job_")){
       string strippedJob = id.RemoveStart("job_");
-      Plugin.Logger.LogInfo($"Game tried to unlock {id}:");
+      Plugin.Logger.LogInfo($"Game tried to unlock {id}");
     } else {
     }
     Plugin.Logger.LogInfo($"Original memory ran: {__runOriginal}");
@@ -29,52 +29,21 @@ class Princess_MemoryPatch
   public static bool Prefix(string id, object value = null)
   {
     try {
-      Plugin.Logger.LogInfo($"SetMemory id {id}");
-      switch (id){
-        case string x when x.StartsWith("unlockjob_"):
-          string receivedJob = id.RemoveStart("unlockjob_");
-          if (ArchipelagoClient.serverData.receivedJobs.Contains(receivedJob)){
-            Princess.AddMemory($"job_{receivedJob}", "true");
-            Plugin.Logger.LogInfo($"{receivedJob} unlocked.");
-            return false;
-          } else {
-            return false;
-          } 
-
-        case string x when x.StartsWith("job_"):
-          string sentJob = id.RemoveStart("job_");
-          string apJobName = ItemsAndLocationsHandler.internalToAPJobs[sentJob];
-          Plugin.Logger.LogInfo($"Trying to send AP location {apJobName}");
-          ArchipelagoClient.ProcessLocation(apJobName);
-          return false;
-
-        case string x when ItemsAndLocationsHandler.storyEvents.ContainsKey(id):
-          string locationName = ItemsAndLocationsHandler.storyEvents[id];
-          Plugin.Logger.LogInfo($"Trying to send AP location {locationName} with id {id}");
-          ArchipelagoClient.ProcessLocation(locationName);
-          return true;
-
-        default:
-          return true;
-      }
-
+      Plugin.Logger.LogInfo($"SetMemory prefix id {id}");
+      return Helpers.ProcessMemory(id);
     } catch (Exception e) {
       // Magic try/catch block
       // The code works as intended with this here but never prints an error
       // Thanks Sae for the idea
-      string strippedJob = id.RemoveStart("job_");
+      //string strippedJob = id.RemoveStart("job_");
       Plugin.Logger.LogInfo("ERROR");
       Plugin.Logger.LogInfo(id);
-      Plugin.Logger.LogInfo(strippedJob);
+      //Plugin.Logger.LogInfo(strippedJob);
       Plugin.Logger.LogInfo(e);
       return true;
     } 
   }
-  public static void UnlockJob(string name)
-  {
-    Plugin.Logger.LogInfo($"Attempting to unlock {name}");
-    Princess.SetMemory($"unlockjob_{name}");
-  }
+
 }
 
 [HarmonyPatch(typeof(PrincessMonth))]
@@ -92,11 +61,6 @@ class Princess_PrincessMonthPatch
       StoryCalls.endgame("archipelagoEnding");
     }
     return true;
-  }
-
-  public static int GetAge()
-  {
-    return Princess.age;
   }
 }
 

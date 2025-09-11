@@ -11,7 +11,7 @@ namespace Exopelago.Archipelago;
 
 public class ArchipelagoData
 {
-  public string Uri = "archipelago.gg";
+  public string uri = "archipelago.gg";
   public int port = 38281;
   public string slotName = "";
   public string password = "";
@@ -44,7 +44,7 @@ public class ArchipelagoData
 
   public void RaiseAge()
   {
-    int currentAge = Exopelago.Princess_PrincessMonthPatch.GetAge();
+    int currentAge = Exopelago.Helpers.GetAge();
     Plugin.Logger.LogInfo($"Current max age: {currentAge}");
     int newMaxAge = maxAge + 1;
     maxAge = newMaxAge;

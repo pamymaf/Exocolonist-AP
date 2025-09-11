@@ -27,9 +27,17 @@ class Story_ExecutePatch
         Plugin.Logger.LogInfo("Connection here");
         JObject json = Helpers.GetConnectionInfo();
         Plugin.Logger.LogInfo(json.ToString(Formatting.None));
-        ArchipelagoClient.Connect((string)json["ip"], (int)json["port"], (string)json["slot"], null);
-        // TODO: Add ap info to main menu. Or at least a file with credentials
+        ArchipelagoClient.Connect((string)json["ip"], (string)json["port"], (string)json["slot"], (string)json["pass"]);
+        // TODO: Add ap info to main menu
         // TODO: Indicate to the user they're connected
+        Dictionary<string, string> apData = new () {
+          {"apServer", (string)json["ip"]},
+          {"apPort", (string)json["port"]},
+          {"apSlot", (string)json["slot"]},
+          {"apPass", (string)json["pass"]},
+          {"apSeed", ArchipelagoClient.session.RoomState.Seed},
+        };
+        Helpers.AddSaveData(apData);
         break;
 
       case "visited_colonystrato":
@@ -70,14 +78,7 @@ class Story_ExecutePatch
     return true;
   }
 
-  public static void GiveCollectible(string collectible) 
-  {
-    // Gives collectible without popup
-    Plugin.Logger.LogInfo($"Attempting to give {collectible}");
-    CardData cardData = CardData.FromID(collectible);
-    PrincessCards.AddCard(cardData);
-    Princess.SetMemory("mem_foundCollectible");
-  }
+
 
   public static bool TriggerGoal(string ending)
   {
