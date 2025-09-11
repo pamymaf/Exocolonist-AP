@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import random
-
 from typing import TYPE_CHECKING
 
 from BaseClasses import Item, ItemClassification
@@ -46,7 +44,7 @@ ITEM_NAME_TO_ID = {
   "Hunt in the Swamps": 34,
   "Leader": 35,
   "Bobberfruit": 36,
-  "Medicinal Root": 37,
+  "Medicinal Roots": 37,
   "Xeno Egg": 38,
   "Yellow Flower": 39,
   "Mushwood Log": 40,
@@ -94,7 +92,7 @@ ITEM_CLASSIFICATIONS = {
   "Hunt in the Swamps": ItemClassification.progression,
   "Leader": ItemClassification.progression,
   "Bobberfruit": ItemClassification.useful,
-  "Medicinal Root": ItemClassification.useful,
+  "Medicinal Roots": ItemClassification.useful,
   "Xeno Egg": ItemClassification.useful,
   "Yellow Flower": ItemClassification.useful,
   "Mushwood Log": ItemClassification.useful,
@@ -160,7 +158,7 @@ def create_all_items(world: ExocolonistWorld) -> None:
         world.create_item("Relax on the Walls"),
         world.create_item("Relax in the Park"),
         ]
-    starting_relax = random.choice(relax_jobs)
+    starting_relax = world.random.choice(relax_jobs)
     world.multiworld.push_precollected(starting_relax)
 
     relax_jobs = [job for job in relax_jobs if job != starting_relax]
@@ -171,7 +169,7 @@ def create_all_items(world: ExocolonistWorld) -> None:
     amount_of_unfilled_locations = len(world.multiworld.get_unfilled_locations(world.player))
     needed_amount_of_extra = amount_of_unfilled_locations - amount_of_items
     amount_each_item = needed_amount_of_extra // 8
-    for item in ["Bobberfruit", "Medicinal Root", "Xeno Egg", "Yellow Flower", "Mushwood Log", "Crystal Cluster", "Strange Device", "Cake"]:
+    for item in ["Bobberfruit", "Medicinal Roots", "Xeno Egg", "Yellow Flower", "Mushwood Log", "Crystal Cluster", "Strange Device", "Cake"]:
         itempool += [world.create_item(item) for _ in range(amount_each_item)]
     needed_amount_of_filler = needed_amount_of_extra % 8
     itempool += [world.create_item("Experience") for _ in range(needed_amount_of_filler)]

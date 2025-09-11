@@ -51,7 +51,7 @@ def set_consumable_rules(world: ExocolonistWorld) -> None:
     explore_jobs = ("Sneak Out", "Explore Nearby", "Survey the Plains", "Forage in the Valley")
     
     # First year is xeno egg, log, crystal with no explore
-    for consumable in ["Bobberfruit", "Medicinal Root", "Yellow Flower"]:
+    for consumable in ["Bobberfruit", "Medicinal Roots", "Yellow Flower"]:
         set_rule(world.get_location(consumable), lambda state: (state.has_any(explore_jobs, world.player)),)
 
     # This line creates fill errors. Is it too restrictive?
@@ -101,49 +101,63 @@ def set_job_rules(world: ExocolonistWorld) -> None:
         lambda state: (state.has_any(skills_to_job["biology"], world.player)),
     )
 
+    # Farming is unlocked when you do geoponics jobs
+    set_rule(
+        world.get_location("Farming"),
+        lambda state: (state.has_any(("Shovelling Dirt", "Xenobotany"), world.player)),
+    )
 
+    # Relax in the Park is unlocked when you do geoponics jobs
+    set_rule(
+        world.get_location("Relax in the Park"),
+        lambda state: (state.has_any(("Shovelling Dirt", "Xenobotany", "Farming"), world.player))
+    )
+
+def set_special_event_rules(world: ExocolonistWorld) -> None:
+    pass
 
 
 
 
 def set_character_location_rules(world: ExocolonistWorld) -> None:
-    chara_jobs = {
-        "Anemone": ("Sportsball", "Lookout Duty", "Defense Training"),
-        "Cal": ("Shovelling Dirt", "Farming", "Xenobotany", "Tending Animals"),
-        "Dys": ("Sneak Out", "Explore Nearby", "Survey the Plains", "Survey the Ridge", "Relax on the Walls"),
-        "Marz": ("Depot Clerk", "Administration", "Leader", "Deliver Supplies"),
-        "Nomi": ("Play the Photophonor", "Tutoring", "Robot Repair", "Study Engineering"),
-        "Rex": ("Deliver Supplies", "Construction", "Relax in the Lounge"),
-        "Tammy": ("Babysitting", "Cooking", "Relax in the Lounge"),
-        "Tang": ("Barista", "Study Life Sciences", "Study Humanities", "Nursing Assistant", "Study Engineering"),
-        "Vace": ("Guard Duty", "Hunt in the Swamps", "Defense Training"),
-    }
-
-
-    for chara in ["Anemone", "Cal", "Dys", "Marz", "Tammy", "Tang"]:
-        set_rule(world.get_location(f"{chara} 20"), lambda state, chara=chara: (state.has_any(chara_jobs[chara], world.player)),)
+    for chara in ["Anemone", "Cal", "Marz", "Tammy", "Tang"]:
+        set_rule(world.get_location(f"{chara} 20"), lambda state, chara=chara: (state.has_any(world.chara_jobs[chara], world.player)),)
         for i in range(1,5):
             set_rule(
                 world.get_location(f"{chara} {(i+1)*20}"),
-                lambda state, chara=chara, i=i: (state.has_any(chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i)),
+                lambda state, chara=chara, i=i: (state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i)),
             )
         set_rule(
-            world.get_location(f"{chara} Date"), 
+            world.get_location(f"Date {chara}"), 
             lambda state, chara=chara: (
-                state.has_any(chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, 5)),
+                state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, 5)),
         )
+    
+    # Dys has an extra requirement, we need bravery or toughness 20 for his jobs
+    set_rule(world.get_location(f"Dys 20"), lambda state: (state.has_any(world.chara_jobs["Dys"], world.player) and (state.has_any(world.skills_to_job["bravery"], world.player) or state.has_any(world.skills_to_job["toughness"], world.player))),)
+    for i in range(1,5):
+        set_rule(
+            world.get_location(f"Dys {(i+1)*20}"),
+            lambda state, i=i: (state.has_any(world.chara_jobs["Dys"], world.player) and state.has("Progressive Year", world.player, i) and (state.has_any(world.skills_to_job["bravery"], world.player) or state.has_any(world.skills_to_job["toughness"], world.player))),
+        )
+    set_rule(
+        world.get_location(f"Date Dys"), 
+        lambda state: (
+            state.has_any(world.chara_jobs["Dys"], world.player) and state.has("Progressive Year", world.player, 5) and (state.has_any(world.skills_to_job["bravery"], world.player) or state.has_any(world.skills_to_job["toughness"], world.player))),
+    )
+
 
     # These characters only appear year 5
     for chara in ["Nomi", "Rex", "Vace"]:
         for i in range(0,5):
             set_rule(
                 world.get_location(f"{chara} {(i+1)*20}"),
-                lambda state, chara=chara, i=i: (state.has_any(chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i+5)),
+                lambda state, chara=chara, i=i: (state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i+5)),
             )
         set_rule(
-            world.get_location(f"{chara} Date"), 
+            world.get_location(f"Date {chara}"), 
             lambda state, chara=chara, i=i: (
-                state.has_any(chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, 9)
+                state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, 9)
                 ),
             )
 
