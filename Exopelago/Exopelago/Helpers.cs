@@ -11,8 +11,11 @@ using Exopelago.Archipelago;
 
 namespace Exopelago;
 
-public static class Helpers
+public class Helpers
 {
+  public static bool readyForItems = false;
+  public static bool firstMapLoad = true;
+
   //Not used yet
   public static void AddSkillPoints(string skillID, int value)
   {
@@ -49,19 +52,16 @@ public static class Helpers
     switch (id) {
       case string x when x.StartsWith("unlockjob_"):
         string receivedJob = id.RemoveStart("unlockjob_");
-        if (ArchipelagoClient.serverData.receivedJobs.Contains(receivedJob)){
-          if (!Princess.cards.Contains(receivedJob)){
-            GiveCard(receivedJob);
-          }
-          Princess.AddMemory($"job_{receivedJob}", "true");
-          Plugin.Logger.LogInfo($"{receivedJob} unlocked.");
-          return false;
-        } else {
-          return false;
+        if (!Princess.cards.Contains(receivedJob)){
+          GiveCard(receivedJob);
         }
+        Princess.AddMemory($"job_{receivedJob}", "true");
+        Plugin.Logger.LogInfo($"{receivedJob} unlocked.");
+        return false;
 
       case string x when x.StartsWith("job_"):
         string sentJob = id.RemoveStart("job_");
+        // If not in 
         string apJobName = ItemsAndLocationsHandler.internalToAPJobs[sentJob];
         Plugin.Logger.LogInfo($"Trying to send AP location {apJobName}");
         ArchipelagoClient.ProcessLocation(apJobName);
@@ -99,5 +99,23 @@ public static class Helpers
   public static int GetAge()
   {
     return Princess.age;
+  }
+
+  public static void DisplayAPStory(string sender = null, string item = null)
+  {
+    //System.Threading.SpinWait.SpinUntil( () => readyForItems );
+
+    Plugin.Logger.LogInfo($"Attempting to display AP story");
+
+    if (ArchipelagoClient.authenticated){
+      Story apStory = Story.FromID("apConnected");
+      Result apResult = new Result();
+      apStory.Execute(apResult);
+    } else {
+      Story apStory = Story.FromID("apNotConnected");
+      Result apResult = new Result();
+      apStory.Execute(apResult);
+    }
+    
   }
 }

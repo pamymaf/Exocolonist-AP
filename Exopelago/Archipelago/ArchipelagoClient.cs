@@ -30,15 +30,6 @@ public class ArchipelagoClient
 
   public static bool readyForItems = false;
 
-  public static void GetItems(ArchipelagoSession session) {
-    session.Items.ItemReceived += (receivedItemsHelper) => {
-    var itemReceivedName = receivedItemsHelper.PeekItem();
-
-    // ... Handle item receipt here
-    ProcessItemReceived(itemReceivedName);
-    receivedItemsHelper.DequeueItem();
-    };
-  }
 
   public static void RefreshUnlocks() {
     foreach (ItemInfo item in session.Items.AllItemsReceived) {
@@ -47,6 +38,16 @@ public class ArchipelagoClient
         ProcessItemReceived(item);
       }
     }
+  }
+
+  public static void GetItems(ArchipelagoSession session) {
+    session.Items.ItemReceived += (receivedItemsHelper) => {
+    var itemReceivedName = receivedItemsHelper.PeekItem();
+
+    // ... Handle item receipt here
+    ProcessItemReceived(itemReceivedName);
+    receivedItemsHelper.DequeueItem();
+    };
   }
 
   public static void Connect(string server, string port, string user, string pass)
@@ -91,6 +92,7 @@ public class ArchipelagoClient
     }
     
     var loginSuccess = (LoginSuccessful)result;
+    authenticated = true;
     Plugin.Logger.LogInfo("Successfully connected!");
   }
 
@@ -113,14 +115,7 @@ public class ArchipelagoClient
       object value = descriptor.GetValue(item);
       Console.WriteLine("{0}={1}", name, value);
     }
-    // Not working yet, need to set up Exoloader deps for custom story
-    //if (readyForItems){
-    //  Princess.SetMemory("mem_lastPlayerRec", item.Player);
-    //  Princess.SetMemory("mem_lastItemRec", item.ItemName);
-    //  Story apStory = Story.FromID("apReceived");
-    //  Result apResult = new Result();
-    //  apStory.Execute(apResult);
-    //}
+    //Exopelago.Helpers.DisplayAPStory(item.Player.Name, item.ItemName);
     var itemName = item.ItemName;
     if (ItemsAndLocationsHandler.apToInternalJobs.ContainsKey(itemName)) {
       var internalName = ItemsAndLocationsHandler.apToInternalJobs[itemName];

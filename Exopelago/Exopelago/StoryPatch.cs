@@ -21,7 +21,6 @@ class Story_ExecutePatch
   {
     string storyID = __instance.storyID;
     Plugin.Logger.LogInfo($"{storyID} story triggered");
-
     switch (storyID){
       case "gamestartintro":
         Plugin.Logger.LogInfo("Connection here");
@@ -37,14 +36,12 @@ class Story_ExecutePatch
           {"apPass", (string)json["pass"]},
           {"apSeed", ArchipelagoClient.session.RoomState.Seed},
         };
-        Helpers.GiveCard("testJob");
         Helpers.AddSaveData(apData);
         break;
 
-      case "visited_colonystrato":
-        //For future use, tells the client that the game is fully loaded
-        //ArchipelagoClient.readyForItems = true; 
-        break;
+      //case "contentWarnings":
+      //  Helpers.DisplayAPStory();
+      //  break;
 
       case string x when x.Contains("explorecollectible"):
         string id = __instance.storyID.Replace("explorecollectible", "");
@@ -57,26 +54,18 @@ class Story_ExecutePatch
         Plugin.Logger.LogInfo("Trigger goal here");
         ArchipelagoClient.SendGoal();
         break;
-        
     }
+
+    
   }
 
   [HarmonyPatch("Execute")]
   [HarmonyPostfix]
   public static bool Prefix(Story __instance, Result result, bool undoing = false, bool startStoryOnly = false, bool isEnding = false)
   {
-    //Plugin.Logger.LogInfo($"Prefix: {__instance.storyID}");
-  /*  TODO: Building unlocks. This code will spam the logs and lock the mouse as written
-    if (ItemsAndLocationsHandler.internalToAPBuildings.ContainsKey(__instance.storyID)) {
-      if (ArchipelagoClient.serverData.receivedBuildings.Contains(__instance.storyID)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    */
-    // TODO: Building rando
-    return true;
+    Plugin.Logger.LogInfo($"Prefix: {__instance.storyID}");
+    string storyID = __instance.storyID;
+    return true;   
   }
 
 

@@ -16,16 +16,6 @@ class Map_ExecutePatch
   [HarmonyPostfix]
   public static void Postfix()
   {
-    //Doesn't work
-    Plugin.Logger.LogInfo("Map loaded");
-    if (ArchipelagoClient.authenticated) {
-      Story apStory = Story.FromID("apConnected");
-      Result apResult = new Result();
-      apStory.Execute(apResult);
-    } else if (!ArchipelagoClient.authenticated) {
-      Story apStory = Story.FromID("apNotConnected");
-      Result apResult = new Result();
-      apStory.Execute(apResult);
-    }
+
   }
 }
