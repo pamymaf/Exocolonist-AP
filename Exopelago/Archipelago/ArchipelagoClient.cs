@@ -131,7 +131,7 @@ public class ArchipelagoClient
     else if (ItemsAndLocationsHandler.apToInternalCollectibles.ContainsKey(itemName)){
       var internalName = ItemsAndLocationsHandler.apToInternalCollectibles[itemName];
       Plugin.Logger.LogInfo($"Attempting to unlock {itemName} - {internalName}");
-      Exopelago.Helpers.GiveCollectible(internalName);
+      Exopelago.Helpers.GiveCard(internalName);
     } 
     else if (itemName == "Progressive Year") {
       Plugin.Logger.LogInfo($"Attempting to add a progressive year");

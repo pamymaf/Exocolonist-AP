@@ -37,6 +37,7 @@ class Story_ExecutePatch
           {"apPass", (string)json["pass"]},
           {"apSeed", ArchipelagoClient.session.RoomState.Seed},
         };
+        Helpers.GiveCard("testJob");
         Helpers.AddSaveData(apData);
         break;
 

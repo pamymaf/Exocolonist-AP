@@ -1,0 +1,36 @@
+ID	Name	Location	Age	Requirements	Skill 1	Sk1	Skill 2	Sk2	Love Who		Kudos	Stress	Ultimate	Default BG	ExpeditionBiome	Relax	X early game	X primary
+construction	Construction	Command	15	Toughness 30 (anywhere repeat newship)	Engineering	3	Toughness	2	rex		10	15	kudos+5	construction			TRUE	
+delivery	Deliver Supplies	Command	10		Organization	2	Perception	1	marz, rex		5	10	kudos+5	depot				
+depot	Depot Clerk	Command	12	Age 12 and Low rebel / Mars Love 3 (mars)	Organization	2	Persuasion	2	marz		9	10	kudos+5	depot			TRUE	
+leader	Leader	Command	19	voted in, age 19	Persuasion	3	Bravery	3	marz		25	15	stress-5	bridge			TRUE	TRUE
+assistant	Administration	Command	15	Worked bridge x20, rebellion < 40 or pers 80	Persuasion	3	Organization	3	marz		8	10	kudos+5	bridge			TRUE	
+nurse	Nursing Assistant	Engineering	16	Bio 50 (eng repeat age 16)	Biology	3	Empathy	3	tang		13	15	kudos+5	medbay			TRUE	
+studyBiology	Study Life Sciences	Engineering	10		Biology	2	Reasoning	1	tang		0	15	reasoning+1	classroom				
+studyWriting	Study Humanities	Engineering	10		Creativity	2	Persuasion	2	tang		0	15	reasoning+1	classroom				
+robotRepair	Robot Repair	Engineering	15	Engineering 50, new ship	Engineering	3	Creativity	2	nomi		16	10	kudos+5	workshop			TRUE	
+studyPhysics	Study Engineering	Engineering	10		Engineering	1	Reasoning	2	tang, nomi		0	15	reasoning+1	classroom				
+tutoring	Tutoring	Engineering	13	Reasoning 30	Reasoning	3	Empathy	1	nomi		12	10	kudos+5	classroom			TRUE	
+rebuild	Rebuild	Engineering	15		Toughness	3	Organization	3			5	10		destroyed			TRUE	TRUE
+mourn	Mourn	Engineering	15								0	-100		destroyed		TRUE	TRUE	TRUE
+hunt	Hunt in the Swamps	Expeditions	17	Animals or Hunting skill challenge	Animals	3	Combat	2	vace					swamp	swamp		TRUE	TRUE
+sneak	Sneak Out	Expeditions	10		Bravery	2	Perception	1	dys					nearby	nearby		TRUE	TRUE
+exploreNearby	Explore Nearby	Expeditions	13	Age 13 (birthday)	Bravery	2	Perception	1	dys					nearby	nearby		TRUE	TRUE
+exploreGlow	Explore Glow	Expeditions	16	Perk (60% perception)	Bravery	2	Perception	1						glow	nearby		TRUE	TRUE
+survey	Survey the Plains	Expeditions	13	Age 13 (birthday)	Perception	3	Animals	1	dys					plains	plains		TRUE	TRUE
+forage	Forage in the Valley	Expeditions	13	Perception 30 (survey) or Starve 14-pollen-1	Perception	2	Biology	2						valley	valley		TRUE	TRUE
+artifacts	Survey the Ridge	Expeditions	15	Find thumper while surveying in plains	Perception	2	Engineering	2	dys					ridge	ridge		TRUE	TRUE
+sportsball	Sportsball	Garrison	10		Bravery	2	Toughness	1	anemone		0	10	stress-5	garrison				
+defenseTraining	Defense Training	Garrison	11	Age 11 (birthday)	Combat	2	Animals	1	anemone, vace		0	15	stress-5	garrison				
+guardDuty	Guard Duty	Garrison	15	Bravery 10 and Combat 30 	Combat	3	Bravery	2	vace		18	20	kudos+5	garrison			TRUE	
+lookoutDuty	Lookout Duty	Garrison	13	Perception 20	Perception	3	Animals	1	anemone		5	10	kudos+5	walls				
+relaxWalls	Relax on the Walls	Garrison	11	Age 11 (vertumna)					dys		0	-100		walls		TRUE	TRUE	TRUE
+tendAnimals	Tending Animals	Geoponics	14	Captured monster (exp or attack)	Animals	3	Empathy	2	cal		10	10	animals+1	barn			TRUE	
+analyzePlants	Xenobotany	Geoponics	10	Perk (30% biology)	Biology	2	Organization	2	cal		15	10	biology+1	greenhouse				
+farm	Farming	Geoponics	12	Biology 20 (geo)	Biology	2	Toughness	2	cal		10	10	kudos+5	garden				
+shovel	Shovelling Dirt	Geoponics	10		Toughness	3			cal		5	15	kudos+5	greenhouse				
+relaxPark	Relax in the Park	Geoponics	12	Geoponics x20 (geoponics)							0	-100		garden		TRUE	TRUE	TRUE
+photophonor	Play the Photophonor	Quarters	11	Buy or get a photophonor	Creativity	3	Bravery	1	nomi		0	5	kudos+5	bedroom			TRUE	
+cooking	Cooking	Quarters	13	Organization 20	Creativity	2	Empathy	2	tammy		7	10	kudos+5	cafeteria				
+babysitting	Babysitting	Quarters	10		Empathy	2	Creativity	1	tammy		7	10	kudos+5	creche				
+barista	Barista	Quarters	16	Perk (60% empathy) and bar built (16 hog)	Empathy	3	Creativity	3	tang		18	15	stress-5	cafe			TRUE	
+relaxLounge	Relax in the Lounge	Quarters	10						tammy, rex		0	-100		quarters		TRUE		TRUE

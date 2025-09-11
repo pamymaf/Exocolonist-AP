@@ -50,8 +50,8 @@ public static class Helpers
       case string x when x.StartsWith("unlockjob_"):
         string receivedJob = id.RemoveStart("unlockjob_");
         if (ArchipelagoClient.serverData.receivedJobs.Contains(receivedJob)){
-          if (receivedJob == "photophonor") {
-            GiveCollectible("photophonor");
+          if (!Princess.cards.Contains(receivedJob)){
+            GiveCard(receivedJob);
           }
           Princess.AddMemory($"job_{receivedJob}", "true");
           Plugin.Logger.LogInfo($"{receivedJob} unlocked.");
@@ -78,7 +78,7 @@ public static class Helpers
     }
   }
 
-  public static void GiveCollectible(string collectible) 
+  public static void GiveCard(string collectible) 
   {
     // Gives collectible without popup
     Plugin.Logger.LogInfo($"Attempting to give {collectible}");
