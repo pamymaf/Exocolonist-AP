@@ -22,7 +22,6 @@ public class ArchipelagoClient
   public const string ModVersion = "0.1.0";
 
   public static bool authenticated;
-  public static bool hasConnected;
   private static bool attemptingConnection;
   public static bool offline;
   public static ArchipelagoData serverData = new ();
@@ -30,6 +29,16 @@ public class ArchipelagoClient
   public static ArchipelagoSession session;
 
   public static bool readyForItems = false;
+
+
+  public static void RefreshUnlocks() {
+    foreach (ItemInfo item in session.Items.AllItemsReceived) {
+      if (!ItemsAndLocationsHandler.apToInternalCollectibles.ContainsKey(item.ItemName)) {
+        Plugin.Logger.LogInfo($"RefreshUnlocks: {item.ItemName}");
+        ProcessItemReceived(item);
+      }
+    }
+  }
 
   public static void GetItems(ArchipelagoSession session) {
     session.Items.ItemReceived += (receivedItemsHelper) => {
@@ -41,11 +50,11 @@ public class ArchipelagoClient
     };
   }
 
-  public static void Connect(string server, int port, string user, string pass)
+  public static void Connect(string server, string port, string user, string pass)
   {
     // Called whenever a new game starts
     serverData.StartNewSeed();
-    session = ArchipelagoSessionFactory.CreateSession(server, port);
+    session = ArchipelagoSessionFactory.CreateSession(server, Int32.Parse(port));
 
     // Must go BEFORE a successful connection attempt
     GetItems(session);
@@ -58,7 +67,6 @@ public class ArchipelagoClient
       // handle TryConnectAndLogin attempt here and save the returned object to `result`
       result = session.TryConnectAndLogin("Exocolonist", user, ItemsHandlingFlags.AllItems);
       attemptingConnection = false;
-      hasConnected = true;
   }
     catch (Exception e)
     {
@@ -84,6 +92,7 @@ public class ArchipelagoClient
     }
     
     var loginSuccess = (LoginSuccessful)result;
+    authenticated = true;
     Plugin.Logger.LogInfo("Successfully connected!");
   }
 
@@ -95,15 +104,6 @@ public class ArchipelagoClient
   static void OnMessageReceived(LogMessage message)
   {
     Plugin.Logger.LogInfo(message.ToString());
-    switch (message)
-    {
-      case ItemSendLogMessage itemLogMessage:
-        if (itemLogMessage.IsReceiverTheActivePlayer) {
-          ProcessItemReceived(itemLogMessage.Item);
-        }
-        break;
-    }
-
   }
 
   static void ProcessItemReceived(ItemInfo item)
@@ -115,25 +115,18 @@ public class ArchipelagoClient
       object value = descriptor.GetValue(item);
       Console.WriteLine("{0}={1}", name, value);
     }
-    // Not working yet, need to set up Exoloader deps for custom story
-    //if (readyForItems){
-    //  Princess.SetMemory("mem_lastPlayerRec", item.Player);
-    //  Princess.SetMemory("mem_lastItemRec", item.ItemName);
-    //  Story apStory = Story.FromID("apReceived");
-    //  Result apResult = new Result();
-    //  apStory.Execute(apResult);
-    //}
+    Exopelago.Helpers.DisplayAPStory(item.Player.Name, item.ItemName);
     var itemName = item.ItemName;
     if (ItemsAndLocationsHandler.apToInternalJobs.ContainsKey(itemName)) {
       var internalName = ItemsAndLocationsHandler.apToInternalJobs[itemName];
       serverData.receivedJobs.Add(internalName);
       Plugin.Logger.LogInfo($"Attempting to unlock {itemName} - {internalName}");
-      Exopelago.Princess_MemoryPatch.UnlockJob(internalName);
+      Exopelago.Helpers.UnlockJob(internalName);
     } 
     else if (ItemsAndLocationsHandler.apToInternalCollectibles.ContainsKey(itemName)){
       var internalName = ItemsAndLocationsHandler.apToInternalCollectibles[itemName];
       Plugin.Logger.LogInfo($"Attempting to unlock {itemName} - {internalName}");
-      Exopelago.Story_ExecutePatch.GiveCollectible(internalName);
+      Exopelago.Helpers.GiveCard(internalName);
     } 
     else if (itemName == "Progressive Year") {
       Plugin.Logger.LogInfo($"Attempting to add a progressive year");
@@ -155,7 +148,8 @@ public class ArchipelagoClient
 
   public static void SendGoal()
   {
-    session.SetClientState(ArchipelagoClientState.ClientGoal);
+    // Move into wherever send goal is
+    session.SetGoalAchieved();
   }
 
   //Not properly used yet, this sets a variable in the server to fetch later

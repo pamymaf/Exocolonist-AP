@@ -34,6 +34,35 @@ class ExocolonistWorld(World):
 
     origin_region_name = "Start"
 
+    skills_to_job = {
+        "empathy": ("Babysitting", "Barista", "Tending Animals", "Nursing Assistant", "Cooking"),
+        "persuasion": ("Administration", "Leader", "Study Humanities", "Depot Clerk"),
+        "creativity": ("Play the Photophonor", "Cooking", "Study Humanities", "Barista", "Robot Repair"),
+        "bravery": ("Sportsball", "Sneak Out", "Explore Nearby", "Guard Duty"), # Not adding Explore Glow as that can only happen once a year
+        
+        "reasoning": ("Tutoring", "Study Engineering"),
+        "organizing": ("Deliver Supplies", "Depot Clerk", "Xenobotany", "Administration"), # Not adding Rebuild as that is hard coded to year 15 only
+        "engineering": ("Robot Repair", "Study Engineering", "Construction", "Survey the Ridge"),
+        "biology": ("Nursing Assistant", "Xenobotany", "Study Life Sciences", "Farming", "Forage in the Valley"),
+
+        "toughness": ("Shovelling Dirt", "Farming"), # Not adding Rebuild as that is hard coded to year 15 only
+        "perception": ("Survey the Plains", "Forage in the Valley", "Survey the Ridge"),
+        "combat": ("Defense Training", "Guard Duty", "Hunt in the Swamps"),
+        "animals": ("Hunt in the Swamps", "Tending Animals"),
+    }
+
+    chara_jobs = {
+        "Anemone": ("Sportsball", "Lookout Duty", "Defense Training"),
+        "Cal": ("Shovelling Dirt", "Farming", "Xenobotany", "Tending Animals"),
+        "Dys": ("Sneak Out", "Explore Nearby", "Survey the Plains", "Survey the Ridge", "Relax on the Walls"),
+        "Marz": ("Depot Clerk", "Administration", "Leader", "Deliver Supplies"),
+        "Nomi": ("Play the Photophonor", "Tutoring", "Robot Repair", "Study Engineering"),
+        "Rex": ("Deliver Supplies", "Construction", "Relax in the Lounge"),
+        "Tammy": ("Babysitting", "Cooking", "Relax in the Lounge"),
+        "Tang": ("Barista", "Study Life Sciences", "Study Humanities", "Nursing Assistant", "Study Engineering"),
+        "Vace": ("Guard Duty", "Hunt in the Swamps", "Defense Training"),
+    }
+
     def create_regions(self) -> None:
         regions.create_and_connect_regions(self)
         locations.create_all_locations(self)

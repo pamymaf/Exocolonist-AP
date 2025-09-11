@@ -21,54 +21,51 @@ class Story_ExecutePatch
   {
     string storyID = __instance.storyID;
     Plugin.Logger.LogInfo($"{storyID} story triggered");
+    switch (storyID){
+      case "gamestartintro":
+        Plugin.Logger.LogInfo("Connection here");
+        JObject json = Helpers.GetConnectionInfo();
+        Plugin.Logger.LogInfo(json.ToString(Formatting.None));
+        ArchipelagoClient.Connect((string)json["ip"], (string)json["port"], (string)json["slot"], (string)json["pass"]);
+        // TODO: Add ap info to main menu
+        // TODO: Indicate to the user they're connected
+        Dictionary<string, string> apData = new () {
+          {"apServer", (string)json["ip"]},
+          {"apPort", (string)json["port"]},
+          {"apSlot", (string)json["slot"]},
+          {"apPass", (string)json["pass"]},
+          {"apSeed", ArchipelagoClient.session.RoomState.Seed},
+        };
+        Helpers.AddSaveData(apData);
+        Helpers.firstMapLoad = true;
+        break;
+        
+      case string x when x.Contains("explorecollectible"):
+        string id = __instance.storyID.Replace("explorecollectible", "");
+        string apID = ItemsAndLocationsHandler.internalToAPcollectibles[id];
+        Plugin.Logger.LogInfo($"Story: {storyID} ID: {id} AP ID: {apID}");
+        ArchipelagoClient.ProcessLocation(apID);
+        break;
 
-    if (storyID == "gamestartintro") {
-      Plugin.Logger.LogInfo("Connection here");
-      JObject json = Helpers.GetConnectionInfo();
-      Plugin.Logger.LogInfo(json.ToString(Formatting.None));
-      ArchipelagoClient.Connect((string)json["ip"], (int)json["port"], (string)json["slot"], null);
-      // TODO: Add ap info to main menu. Or at least a file with credentials
-      // TODO: Indicate to the user they're connected
-    } else if (storyID == "visited_colonystrato") {
-      //For future use, tells the client that the game is fully loaded
-      //ArchipelagoClient.readyForItems = true; 
-    } else if (storyID.Contains("explorecollectible")) {
-      string id = __instance.storyID.Replace("explorecollectible", "");
-      string apID = ItemsAndLocationsHandler.internalToAPcollectibles[id];
-      Plugin.Logger.LogInfo($"Story: {storyID} ID: {id} AP ID: {apID}");
-      ArchipelagoClient.ProcessLocation(apID);
-    } else if(TriggerGoal(storyID)) {
-      Plugin.Logger.LogInfo("Trigger goal here");
-      ArchipelagoClient.SendGoal();
+      case string x when TriggerGoal(x):
+        Plugin.Logger.LogInfo("Trigger goal here");
+        ArchipelagoClient.SendGoal();
+        break;
     }
+
+    
   }
 
   [HarmonyPatch("Execute")]
   [HarmonyPostfix]
   public static bool Prefix(Story __instance, Result result, bool undoing = false, bool startStoryOnly = false, bool isEnding = false)
   {
-    //Plugin.Logger.LogInfo($"Prefix: {__instance.storyID}");
-  /*  TODO: Building unlocks. This code will spam the logs and lock the mouse as written
-    if (ItemsAndLocationsHandler.internalToAPBuildings.ContainsKey(__instance.storyID)) {
-      if (ArchipelagoClient.serverData.receivedBuildings.Contains(__instance.storyID)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    */
-    // TODO: Building rando
-    return true;
+    Plugin.Logger.LogInfo($"Prefix: {__instance.storyID}");
+    string storyID = __instance.storyID;
+    return true;   
   }
 
-  public static void GiveCollectible(string collectible) 
-  {
-    // Gives collectible without popup
-    Plugin.Logger.LogInfo($"Attempting to give {collectible}");
-    CardData cardData = CardData.FromID(collectible);
-    PrincessCards.AddCard(cardData);
-    Princess.SetMemory("mem_foundCollectible");
-  }
+
 
   public static bool TriggerGoal(string ending)
   {

@@ -11,8 +11,11 @@ using Exopelago.Archipelago;
 
 namespace Exopelago;
 
-public static class Helpers
+public class Helpers
 {
+  public static bool readyForItems = false;
+  public static bool firstMapLoad = true;
+
   //Not used yet
   public static void AddSkillPoints(string skillID, int value)
   {
@@ -34,5 +37,85 @@ public static class Helpers
   {
     JObject json = JObject.Parse(File.ReadAllText("connectionInfo.json"));
     return json;
+  }
+  
+  // We do this so we can intercept SetMemory and use a special prefix to detect it's AP unlocking it, not the game
+  public static void UnlockJob(string name)
+  {
+    Plugin.Logger.LogInfo($"Attempting to unlock {name}");
+    Princess.SetMemory($"unlockjob_{name}");
+  }
+
+  // Called from SetMemory prefix, needs to return a bool on if the memory should be set
+  public static bool ProcessMemory(string id)
+  {
+    switch (id) {
+      case string x when x.StartsWith("unlockjob_"):
+        string receivedJob = id.RemoveStart("unlockjob_");
+        if (!Princess.cards.Contains(receivedJob)){
+          GiveCard(receivedJob);
+        }
+        Princess.AddMemory($"job_{receivedJob}", "true");
+        Plugin.Logger.LogInfo($"{receivedJob} unlocked.");
+        return false;
+
+      case string x when x.StartsWith("job_"):
+        string sentJob = id.RemoveStart("job_");
+        // If not in 
+        string apJobName = ItemsAndLocationsHandler.internalToAPJobs[sentJob];
+        Plugin.Logger.LogInfo($"Trying to send AP location {apJobName}");
+        ArchipelagoClient.ProcessLocation(apJobName);
+        return false;
+
+      case string x when ItemsAndLocationsHandler.storyEvents.ContainsKey(id):
+        string locationName = ItemsAndLocationsHandler.storyEvents[id];
+        Plugin.Logger.LogInfo($"Trying to send AP location {locationName} with id {id}");
+        ArchipelagoClient.ProcessLocation(locationName);
+        return true;
+
+      default:
+        return true;
+    }
+  }
+
+  public static void GiveCard(string collectible) 
+  {
+    // Gives collectible without popup
+    Plugin.Logger.LogInfo($"Attempting to give {collectible}");
+    CardData cardData = CardData.FromID(collectible);
+    PrincessCards.AddCard(cardData);
+    Princess.SetMemory("mem_foundCollectible");
+  }
+
+  public static void AddSaveData(Dictionary<string, string> data)
+  {
+    Princess.SetMemory(data["apServer"]);
+    Princess.SetMemory(data["apPort"]);
+    Princess.SetMemory(data["apSlot"]);
+    Princess.SetMemory(data["apPass"]);
+    Princess.SetMemory(data["apSeed"]);
+  }
+
+  public static int GetAge()
+  {
+    return Princess.age;
+  }
+
+  public static void DisplayAPStory(string sender = null, string item = null)
+  {
+
+    Plugin.Logger.LogInfo($"Attempting to display AP story");
+    if (readyForItems){
+      if (sender == null){
+        if (ArchipelagoClient.authenticated){
+          PlayerText.Show("AP connected");
+        } else {
+          PlayerText.Show("AP not connected");
+        }
+      } else {
+        PlayerText.Show($"{sender} sent you {item}");
+      }
+    }
+    
   }
 }

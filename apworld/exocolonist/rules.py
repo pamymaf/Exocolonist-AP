@@ -41,37 +41,125 @@ def set_all_entrance_rules(world: ExocolonistWorld) -> None:
     set_rule(age19_to_age20, lambda state: state.has("Progressive Year", world.player, 10))
 
 def set_all_location_rules(world: ExocolonistWorld) -> None:
-    dys20 = world.get_location("Dys 20")
-    dys40 = world.get_location("Dys 40")
-    dys60 = world.get_location("Dys 60")
-    dys80 = world.get_location("Dys 80")
-    dys100 = world.get_location("Dys 100")
+    set_character_location_rules(world)
+    set_consumable_rules(world)
+    set_job_rules(world)
 
+
+def set_consumable_rules(world: ExocolonistWorld) -> None:
+    # Explore the Ridge and Explore Glow are Special
+    explore_jobs = ("Sneak Out", "Explore Nearby", "Survey the Plains", "Forage in the Valley")
+    
+    # First year is xeno egg, log, crystal with no explore
+    for consumable in ["Bobberfruit", "Medicinal Roots", "Yellow Flower"]:
+        set_rule(world.get_location(consumable), lambda state: (state.has_any(explore_jobs, world.player)),)
+
+    # This line creates fill errors. Is it too restrictive?
+    set_rule(world.get_location("Strange Device"), lambda state: (state.has("Survey the Ridge", world.player)),)
+
+
+def set_job_rules(world: ExocolonistWorld) -> None:
+    # Jobs are listed if they have that as the primary skill
+    # OR the secondary is at least +2
+    skills_to_job = {
+        "empathy": ("Babysitting", "Barista", "Tending Animals", "Nursing Assistant", "Cooking"),
+        "persuasion": ("Administration", "Leader", "Study Humanities", "Depot Clerk"),
+        "creativity": ("Play the Photophonor", "Cooking", "Study Humanities", "Barista", "Robot Repair"),
+        "bravery": ("Sportsball", "Sneak Out", "Explore Nearby", "Guard Duty"), # Not adding Explore Glow as that can only happen once a year
+        
+        "reasoning": ("Tutoring", "Study Engineering"),
+        "organizing": ("Deliver Supplies", "Depot Clerk", "Xenobotany", "Administration"), # Not adding Rebuild as that is hard coded to year 15 only
+        "engineering": ("Robot Repair", "Study Engineering", "Construction", "Survey the Ridge"),
+        "biology": ("Nursing Assistant", "Xenobotany", "Study Life Sciences", "Farming", "Forage in the Valley"),
+
+        "toughness": ("Shovelling Dirt", "Farming"), # Not adding Rebuild as that is hard coded to year 15 only
+        "perception": ("Survey the Plains", "Forage in the Valley", "Survey the Ridge"),
+        "combat": ("Defense Training", "Guard Duty", "Hunt in the Swamps"),
+        "animals": ("Hunt in the Swamps", "Tending Animals"),
+    }
+    
+    # Explore jobs require you to pass a check that requires 20 bravery or 20 toughness
+    explore_jobs = ("Sneak Out", "Explore Nearby", "Survey the Plains", "Forage in the Valley", "Survey the Ridge", "Explore Glow")
+    for job in explore_jobs:
+        set_rule(
+            world.get_location(job),
+            lambda state: (state.has_any(skills_to_job["bravery"], world.player) or state.has_any(skills_to_job["toughness"], world.player)),
+        )
+
+    # Photophonor may require gear?
+
+    # Study Engineering needs you to work one job there to unlock it
+    engineering_jobs = ("Nursing Assistant", "Study Life Sciences", "Study Humanities", "Robot Repair", "Tutoring")
     set_rule(
-        dys20,
-        lambda state: (
-            state.has_any(("Sneak Out", "Explore Nearby", "Forage in the Valley", "Relax on the Walls"), world.player)),
+        world.get_location("Study Engineering"),
+        lambda state: (state.has_any(engineering_jobs, world.player)),
     )
+
+    # Xenobotany requires 34 biology
     set_rule(
-        dys40,
-        lambda state: (
-            state.has("Progressive Year", world.player, 1) and state.has_any(("Sneak Out", "Explore Nearby", "Forage in the Valley", "Relax on the Walls"), world.player)),
+        world.get_location("Xenobotany"),
+        lambda state: (state.has_any(skills_to_job["biology"], world.player)),
     )
+
+    # Farming is unlocked when you do geoponics jobs
     set_rule(
-        dys60,
-        lambda state: (
-            state.has("Progressive Year", world.player, 2) and state.has_any(("Sneak Out", "Explore Nearby", "Forage in the Valley", "Relax on the Walls"), world.player)),
+        world.get_location("Farming"),
+        lambda state: (state.has_any(("Shovelling Dirt", "Xenobotany"), world.player)),
     )
+
+    # Relax in the Park is unlocked when you do geoponics jobs
     set_rule(
-        dys80,
-        lambda state: (
-            state.has("Progressive Year", world.player, 3) and state.has_any(("Sneak Out", "Explore Nearby", "Forage in the Valley", "Relax on the Walls"), world.player)),
+        world.get_location("Relax in the Park"),
+        lambda state: (state.has_any(("Shovelling Dirt", "Xenobotany", "Farming"), world.player))
     )
+
+def set_special_event_rules(world: ExocolonistWorld) -> None:
+    pass
+
+
+
+
+def set_character_location_rules(world: ExocolonistWorld) -> None:
+    for chara in ["Anemone", "Cal", "Marz", "Tammy", "Tang"]:
+        set_rule(world.get_location(f"{chara} 20"), lambda state, chara=chara: (state.has_any(world.chara_jobs[chara], world.player)),)
+        for i in range(1,5):
+            set_rule(
+                world.get_location(f"{chara} {(i+1)*20}"),
+                lambda state, chara=chara, i=i: (state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i)),
+            )
+        set_rule(
+            world.get_location(f"Date {chara}"), 
+            lambda state, chara=chara: (
+                state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, 5)),
+        )
+    
+    # Dys has an extra requirement, we need bravery or toughness 20 for his jobs
+    set_rule(world.get_location(f"Dys 20"), lambda state: (state.has_any(world.chara_jobs["Dys"], world.player) and (state.has_any(world.skills_to_job["bravery"], world.player) or state.has_any(world.skills_to_job["toughness"], world.player))),)
+    for i in range(1,5):
+        set_rule(
+            world.get_location(f"Dys {(i+1)*20}"),
+            lambda state, i=i: (state.has_any(world.chara_jobs["Dys"], world.player) and state.has("Progressive Year", world.player, i) and (state.has_any(world.skills_to_job["bravery"], world.player) or state.has_any(world.skills_to_job["toughness"], world.player))),
+        )
     set_rule(
-        dys100,
+        world.get_location(f"Date Dys"), 
         lambda state: (
-            state.has("Progressive Year", world.player, 4) and state.has_any(("Sneak Out", "Explore Nearby", "Forage in the Valley", "Relax on the Walls"), world.player)),
+            state.has_any(world.chara_jobs["Dys"], world.player) and state.has("Progressive Year", world.player, 5) and (state.has_any(world.skills_to_job["bravery"], world.player) or state.has_any(world.skills_to_job["toughness"], world.player))),
     )
+
+
+    # These characters only appear year 5
+    for chara in ["Nomi", "Rex", "Vace"]:
+        for i in range(0,5):
+            set_rule(
+                world.get_location(f"{chara} {(i+1)*20}"),
+                lambda state, chara=chara, i=i: (state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i+5)),
+            )
+        set_rule(
+            world.get_location(f"Date {chara}"), 
+            lambda state, chara=chara, i=i: (
+                state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, 9)
+                ),
+            )
 
 
 

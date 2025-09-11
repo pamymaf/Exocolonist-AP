@@ -16,7 +16,7 @@ class MainMenu_ExecutePatch
   [HarmonyPostfix]
   public static void Postfix(Job __instance)
   {
-    if (ArchipelagoClient.hasConnected){
+    if (ArchipelagoClient.authenticated){
       Plugin.Logger.LogInfo("Main menu opened, disconnect from AP");
       ArchipelagoClient.Disconnect();
     }
