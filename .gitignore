@@ -5,3 +5,5 @@ reference/
 *.dll
 *.pdb
 Exopelago/obj
+settings.json
+make-cards.py

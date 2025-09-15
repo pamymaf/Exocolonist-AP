@@ -1,0 +1,438 @@
+//PATCH RIDGE BOSS TO GIVE AN OUT
+ 
+// chara_other
+@replace|dadMonth1|~set mem_job_relaxLounge = true||0|0
+{
+  ~set mem_sendjob_relaxLounge = true
+}
+@replace|dadMonth1|~set mem_job_studyBiology = true||0|0
+{
+  ~set mem_sendjob_studyBiology = true
+}
+@replace|dadMonth1|~set mem_job_studyWriting = true||0|0
+{
+  ~set mem_sendjob_studyWriting = true
+}
+@replace|dadTendAnimalsUnlock|~set mem_job_tendAnimals = true||0|0
+{
+  ~set mem_sendjob_tendAnimals = true
+}
+@replace|dadTendAnimalsUnlock|~set mem_job_tendAnimals = true||0|0
+{
+  ~set mem_sendjob_tendAnimals = true
+}
+
+
+// chara_anemone
+@replace|anemoneSportsballUnlock|~set mem_job_sportsball = true||0|0
+{
+  ~set mem_sendjob_sportsball = true
+}
+@replace|anemoneSportsballUnlock|~set mem_job_sportsball = true||0|0
+{
+  ~set mem_sendjob_sportsball = true
+}
+@replace|anemoneSportsballUnlockOlder|~set mem_job_sportsball = true||0|0
+{
+  ~set mem_sendjob_sportsball = true
+}
+
+@replace|anemoneSportsballUnlockOlder|~if !mem_job_sportsball||0|0
+{
+  ~if !mem_sendjob_sportsball = true
+}
+
+
+// chara_cal
+@replace|calParkUnlock|~set mem_job_relaxPark||0|0
+{
+  ~set mem_sendjob_relaxPark
+}
+
+
+// chara_dys
+@replace|dysQuestSneak|~set mem_job_sneak = true||0|0
+{
+  ~set mem_sendjob_sneak = true
+}
+@replace|dysSneak|~set mem_job_sneak = true||0|0
+{
+  ~set mem_sendjob_sneak = true
+}
+@replace|dysBffs|~set mem_job_sneak = true||0|0
+{
+  ~set mem_sendjob_sneak = true
+}
+
+@replace|dysQuestSneak|~if !mem_job_survey||0|0
+{
+  ~if !mem_sendjob_survey
+}
+@replace|dysSneak|~if !mem_job_sneak||0|0
+{
+  ~if !mem_sendjob_sneak
+}
+@replace|dysSneak|~if !mem_job_survey||0|0
+{
+  ~if !mem_sendjob_survey
+}
+
+
+// chara_marz
+@replace|marzDepotUnlock|~set mem_job_depot = true||0|0
+{
+  ~set mem_sendjob_depot = true
+}
+@replace|marzDepotUnlock|~set mem_job_depot = true||0|0
+{
+  ~set mem_sendjob_depot = true
+}
+@replace|marzAssistantUnlock|~set mem_job_assistant = true||0|0
+{
+  ~set mem_sendjob_assistant = true
+}
+
+@replace|marzTammyDead|~if !mem_job_delivery||0|0
+{
+  ~if !mem_sendjob_delivery
+}
+@replace|marzDepotUnlock|~if !mem_job_depot||0|0
+{
+  ~if !mem_sendjob_depot
+}
+@replace|marzAssistantUnlock|~if !mem_job_assistant||0|0
+{
+  ~if !mem_sendjob_assistant
+}
+@replace|marzRepeat|~if !mem_job_depot||0|0
+{
+  ~if !mem_sendjob_depot
+}
+
+
+// chara_tammy
+@replace|tammyBabysittingUnlock|~set mem_job_babysitting = true||0|0
+{
+  ~set mem_sendjob_babysitting = true
+}
+
+
+// command
+@replace|commandDeliveryUnlock|~set mem_job_delivery||0|0
+{
+  ~set mem_sendjob_delivery = true
+}
+@replace|commandConstructionUnlock|~set mem_job_construction||0|0
+{
+  ~set mem_sendjob_construction = true
+}
+@replace|commandAssistantUnlock|~set mem_job_assistant = true||0|0
+{
+  ~set mem_sendjob_assistant = true
+}
+@replace|commandAssistantUnlock|~set mem_job_assistant = true||0|0
+{
+  ~set mem_sendjob_assistant = true
+}
+
+@replace|command|~if !mem_job_delivery||0|0
+{
+  ~if !mem_sendjob_delivery
+}
+@replace|command|~if !mem_job_assistant||0|0
+{
+  ~if !mem_sendjob_assistant
+}
+@replace|command|~if !mem_job_construction||0|0
+{
+  ~if !mem_sendjob_construction
+}
+@replace|commandConstructionUnlock|~if !mem_job_construction||0|0
+{
+  ~if !mem_sendjob_construction
+}
+@replace|commandAssistantUnlock|~if !mem_job_assistant||0|0
+{
+  ~if !mem_sendjob_assistant
+}
+
+
+// engineering
+@replace|engineeringPhysicsUnlock|~set mem_job_studyPhysics||0|0
+{
+  ~set mem_sendjob_studyPhysics = true
+}
+@replace|engineeringTutoringUnlock|~set mem_job_tutoring = true||0|0
+{
+  ~set mem_sendjob_tutoring = true
+}
+@replace|engineeringTutoringUnlock|~set mem_job_tutoring = true||0|0
+{
+  ~set mem_sendjob_tutoring = true
+}
+@replace|engineeringRobotUnlock|~set mem_job_robotRepair = true||0|0
+{
+  ~set mem_sendjob_robotRepair = true
+}
+@replace|engineeringNurseUnlock|~set mem_job_nurse = true||0|0
+{
+  ~set mem_sendjob_nurse = true
+}
+
+@replace|engineering|~if !mem_job_studyPhysics||0|0
+{
+  ~if !mem_sendjob_studyPhysics
+}
+@replace|engineering|~if !mem_job_tutoring||0|0
+{
+  ~if !mem_sendjob_tutoring
+}
+@replace|engineering|~if !mem_job_robotRepair||0|0
+{
+  ~if !mem_sendjob_robotRepair
+}
+@replace|engineering|~if !mem_job_nurse||0|0
+{
+  ~if !mem_sendjob_nurse
+}
+@replace|engineeringTutoringUnlock|~if !mem_job_tutoring||0|0
+{
+  ~if !mem_sendjob_tutoring
+}
+@replace|engineeringRobotUnlock|~if !mem_job_robotRepair||0|0
+{
+  ~if !mem_sendjob_robotRepair
+}
+
+
+// artifacts
+@replace|artifactsBoss3Pyramid|~set mem_job_exploreGlow = true||0|0
+{
+  ~set mem_sendjob_exploreGlow = true
+}
+// Softlock protection in case you get here without 30 perception needed
+@insert|artifactsBoss1Cave|** Try to find a way in deeper|0
+{
+  ** Retreat
+  ~call keep
+}
+
+// forage
+@replace|forageBristleslug|~set mem_job_tendAnimals||0|0
+{
+  ~set mem_sendjob_tendAnimals = true
+}
+@replace|forageFloatcows|~set mem_job_tendAnimals||0|0
+{
+  ~set mem_sendjob_tendAnimals = true
+}
+@replace|forageBossHive|~set mem_job_tendAnimals||0|0
+{
+  ~set mem_sendjob_tendAnimals = true
+}
+
+
+// hunt
+@replace|huntUnisaurChill|~set mem_job_tendAnimals||0|0
+{
+  ~set mem_sendjob_tendAnimals = true
+}
+@replace|huntUltimateStart|~set mem_job_artifacts = true||0|0
+{
+  ~set mem_sendjob_artifacts = true
+}
+@replace|huntUltimateStart|~set mem_job_artifacts = true||0|0
+{
+  ~set mem_sendjob_artifacts = true
+}
+
+
+// expeditions
+@replace|expeditionsUnlock|~set mem_job_sneak = true||0|0
+{
+  ~set mem_sendjob_sneak = true
+}
+@replace|expeditionsUnlockForage|~set mem_job_forage = true||0|0
+{
+  ~set mem_sendjob_forage = true
+}
+@replace|surveyUnlockArtifactsStart|~set mem_job_artifacts = true||0|0
+{
+  ~set mem_sendjob_artifacts = true
+}
+@replace|exploreUnlockHunt|~set mem_job_hunt = true||0|0
+{
+  ~set mem_sendjob_hunt = true
+}
+@replace|exploreUnlockHunt|~set mem_job_hunt = true||0|0
+{
+  ~set mem_sendjob_hunt = true
+}
+
+@replace|expeditions|~if !mem_job_forage||0|0
+{
+  ~if !mem_sendjob_forage
+}
+@replace|expeditions|~if !mem_job_hunt||0|0
+{
+  ~if !mem_sendjob_hunt
+}
+@replace|expeditionsUnlock|~if !mem_job_survey||0|0
+{
+  ~if !mem_sendjob_survey
+}
+@replace|expeditionsUnlock|~if !mem_job_sneak||0|0
+{
+  ~if !mem_sendjob_sneak
+}
+@replace|expeditionsUnlock|~if !mem_job_survey||0|0
+{
+  ~if !mem_sendjob_survey
+}
+@replace|expeditionsUnlockForage|~if !mem_job_forage||0|0
+{
+  ~if !mem_sendjob_forage
+}
+@replace|surveyUnlockArtifactsStart|~if !mem_job_artifacts||0|0
+{
+  ~if !mem_sendjob_artifacts
+}
+@replace|exploreUnlockHunt|~if !mem_job_hunt||0|0
+{
+  ~if !mem_sendjob_hunt
+}
+
+
+// garrison
+@replace|garrisonLookoutDutyUnlock|~set mem_job_lookoutDuty = true||0|0
+{
+  ~set mem_sendjob_lookoutDuty = true
+}
+@replace|garrisonGuardDutyUnlock|~set mem_job_guardDuty = true||0|0
+{
+  ~set mem_sendjob_guardDuty = true
+}
+@replace|relaxWallsUnlockSneak|~set mem_job_sneak = true||0|0
+{
+  ~set mem_sendjob_sneak = true
+}
+
+@replace|garrisonLookoutDutyUnlock|~if mem_job_lookoutDuty = false||0|0
+{
+  ~if !mem_sendjob_lookoutDuty
+}
+@replace|garrison|~if !mem_job_lookoutDuty||0|0
+{
+  ~if !mem_sendjob_lookoutDuty
+}
+@replace|garrison|~if !mem_job_guardDuty||0|0
+{
+  ~if !mem_sendjob_guardDuty
+}
+@replace|relaxWallsUnlockSneak|~if !mem_job_sneak||0|0
+{
+  ~if !mem_sendjob_sneak
+}
+@replace|relaxWallsUnlockSneak|~if !mem_job_survey||0|0
+{
+  ~if !mem_sendjob_survey
+}
+
+
+// geoponics
+@replace|geoponicsAnalyzePlantsUnlock|~set mem_job_analyzePlants = true||0|0
+{
+  ~set mem_sendjob_analyzePlants = true
+}
+@replace|geoponicsFarmingUnlock|~set mem_job_farm = true||0|0
+{
+  ~set mem_sendjob_farm = true
+}
+
+@replace|geoponics|~if !mem_job_analyzePlants||0|0
+{
+  ~if !mem_sendjob_analyzePlants
+}
+@replace|geoponics|~if !mem_job_farm||0|0
+{
+  ~if !mem_sendjob_farm
+}
+@replace|geoponicsFarmingUnlock|~if !mem_job_farm||0|0
+{
+  ~if !mem_sendjob_farm
+}
+
+
+// quarters
+@replace|quarters|~set mem_job_photophonor||0|0
+{
+  ~set mem_sendjob_photophonor = true
+}
+@replace|quartersCookingUnlock|~set mem_job_cooking = true||0|0
+{
+  ~set mem_sendjob_cooking = true
+}
+@replace|quartersBaristaUnlock|~set mem_job_barista = true||0|0
+{
+  ~set mem_sendjob_barista = true
+}
+
+@replace|quarters|~if !mem_job_cooking||0|0
+{
+  ~if !mem_sendjob_cooking
+}
+@replace|quartersCookingUnlock|~if !mem_job_cooking||0|0
+{
+  ~if !mem_sendjob_cooking
+}
+@replace|quartersBaristaUnlock|~if !mem_job_barista||0|0
+{
+  ~if !mem_sendjob_barista
+}
+
+
+// location_priority
+@replace|main_month1|~set mem_job_relaxLounge = true||0|0
+{
+  ~set mem_sendjob_relaxLounge = true
+}
+@replace|main_month1|~set mem_job_studyBiology = true||0|0
+{
+  ~set mem_sendjob_studyBiology = true
+}
+@replace|main_month1|~set mem_job_studyWriting = true||0|0
+{
+  ~set mem_sendjob_studyWriting = true
+}
+@replace|main_month1|~set mem_job_shovel = true||0|0
+{
+  ~set mem_sendjob_shovel = true
+}
+@replace|main_birthday11|~set mem_job_defenseTraining||0|0
+{
+  ~set mem_sendjob_defenseTraining = true
+}
+@replace|main_vertumnalia11|~set mem_job_relaxWalls = true||0|0
+{
+  ~set mem_sendjob_relaxWalls = true
+}
+@replace|main_birthday12|~set mem_job_photophonor||0|0
+{
+  ~set mem_sendjob_photophonor = true
+}
+@replace|main_starveStart|~set mem_job_forage = true||0|0
+{
+  ~set mem_sendjob_forage = true
+}
+@replace|main_starveStart|~set mem_job_forage = true||0|0
+{
+  ~set mem_sendjob_forage = true
+}
+@replace|main_starveStart|~set mem_job_forage = true||0|0
+{
+  ~set mem_sendjob_forage = true
+}
+@replace|main_vertumnalia09|~set mem_job_leader = true||0|0
+{
+  ~set mem_sendjob_leader = true
+}
