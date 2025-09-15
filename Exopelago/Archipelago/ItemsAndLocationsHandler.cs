@@ -110,7 +110,7 @@ public static class ItemsAndLocationsHandler
     {"fruit", "Bobberfruit"},
     {"crystal", "Crystal Cluster"},
     {"roots", "Medicinal Roots"},
-    {"yellowFlower", "Yellow Flower"},
+    {"flower", "Yellow Flower"},
     {"device", "Strange Device"},
     {"cake", "Cake"},
   });
@@ -135,11 +135,11 @@ public static class ItemsAndLocationsHandler
 
   public static ReadOnlyDictionary<string, string> storyEvents = new (new Dictionary<string, string>{
     {"saved_tammy", "Save Tammy"},
-    {"saved_tonin", "Save Tonin"},
-    {"saved_eudicot", "Rescue Eudicot"},
-    {"food_saved", "Save Mom"},
-    {"shimmer_cure", "Save Dad"},
-    {"hal_saved", "Save Hal"},
+    {"savedtonin", "Save Tonin"},
+    {"savedeudicot", "Save Eudicot"},
+    {"foodsaved", "Save Mom"},
+    {"shimmercure", "Save Dad"},
+    {"halsaved", "Save Hal"},
     {"date_anemone", "Anemone Date"},
     {"date_cal", "Cal Date"},
     {"date_dys", "Dys Date"},

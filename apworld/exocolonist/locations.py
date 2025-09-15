@@ -118,11 +118,11 @@ LOCATION_NAME_TO_ID = {
     "Date Tang": 143,
     # Add apce between categories just in case
     "Save Tammy": 154,
-    "Rescue Tammy": 155,
-    "Rescue Tonin": 156,
+    "Save Tonin": 156,
     "Save Mom": 157,
     "Save Dad": 158,
-    "Rescue Eudicot": 159,
+    "Save Eudicot": 159,
+    "Save Hal": 160,
     # Add space between categories just in case
     "Adopt Vriki": 180,
     "Adopt Hopeye": 181,
@@ -130,7 +130,6 @@ LOCATION_NAME_TO_ID = {
     "Adopt Unisaur": 183,
     "Become Governor": 184,
     "Marz Governor": 185,
-
 }
 
 
@@ -186,11 +185,11 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
         "Mushwood Log": world.location_name_to_id["Mushwood Log"],
         "Crystal Cluster": world.location_name_to_id["Crystal Cluster"],
         "Strange Device": world.location_name_to_id["Strange Device"],
+        "Adopt Robot": world.location_name_to_id["Adopt Robot"],
     }
     age10.add_locations(age10_locations, ExocolonistLocation)
 
     age11_locations: dict[str, int | None] = {
-        "Play the Photophonor": world.location_name_to_id["Play the Photophonor"],
         "Defense Training": world.location_name_to_id["Defense Training"],
         "Relax on the Walls": world.location_name_to_id["Relax on the Walls"],
         "Marz 40": world.location_name_to_id["Marz 40"],
@@ -199,11 +198,14 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
         "Tammy 40": world.location_name_to_id["Tammy 40"],
         "Tang 40": world.location_name_to_id["Tang 40"],
         "Anemone 40": world.location_name_to_id["Anemone 40"],
-        "Rescue Tonin": world.location_name_to_id["Rescue Tonin"],
+        "Save Tonin": world.location_name_to_id["Save Tonin"],
+        "Save Hal": world.location_name_to_id["Save Hal"],
+        "Adopt Hopeye": world.location_name_to_id["Adopt Hopeye"],
     }
     age11.add_locations(age11_locations, ExocolonistLocation)
 
     age12_locations: dict[str, int | None] = {
+        "Play the Photophonor": world.location_name_to_id["Play the Photophonor"],
         "Farming": world.location_name_to_id["Farming"],
         "Relax in the Park": world.location_name_to_id["Relax in the Park"],
         "Depot Clerk": world.location_name_to_id["Depot Clerk"],
@@ -213,6 +215,8 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
         "Tammy 60": world.location_name_to_id["Tammy 60"],
         "Tang 60": world.location_name_to_id["Tang 60"],
         "Anemone 60": world.location_name_to_id["Anemone 60"],
+        "Adopt Vriki": world.location_name_to_id["Adopt Vriki"],
+        "Adopt Unisaur": world.location_name_to_id["Adopt Unisaur"],
     }
     age12.add_locations(age12_locations, ExocolonistLocation)
 
@@ -241,7 +245,7 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
         "Tang 100": world.location_name_to_id["Tang 100"],
         "Anemone 100": world.location_name_to_id["Anemone 100"],
         "Save Mom": world.location_name_to_id["Save Mom"],
-        "Rescue Eudicot": world.location_name_to_id["Rescue Eudicot"],
+        "Save Eudicot": world.location_name_to_id["Save Eudicot"],
     }
     age14.add_locations(age14_locations, ExocolonistLocation)
 

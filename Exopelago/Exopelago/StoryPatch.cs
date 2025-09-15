@@ -23,21 +23,8 @@ class Story_ExecutePatch
     Plugin.Logger.LogInfo($"{storyID} story triggered");
     switch (storyID){
       case "gamestartintro":
-        Plugin.Logger.LogInfo("Connection here");
-        JObject json = Helpers.GetConnectionInfo();
-        Plugin.Logger.LogInfo(json.ToString(Formatting.None));
-        ArchipelagoClient.Connect((string)json["ip"], (string)json["port"], (string)json["slot"], (string)json["pass"]);
-        // TODO: Add ap info to main menu
-        // TODO: Indicate to the user they're connected
-        Dictionary<string, string> apData = new () {
-          {"apServer", (string)json["ip"]},
-          {"apPort", (string)json["port"]},
-          {"apSlot", (string)json["slot"]},
-          {"apPass", (string)json["pass"]},
-          {"apSeed", ArchipelagoClient.session.RoomState.Seed},
-        };
-        Helpers.AddSaveData(apData);
-        Helpers.firstMapLoad = true;
+        JObject json = Helpers.GetConnectionInfoNewGame();
+        Helpers.Connect(json);
         break;
         
       case string x when x.Contains("explorecollectible"):

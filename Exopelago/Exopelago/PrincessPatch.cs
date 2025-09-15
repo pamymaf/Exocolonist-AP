@@ -90,3 +90,40 @@ class Princess_LovePatch
   }
 
 }
+
+[HarmonyPatch(typeof(PrincessCards))]
+class Princess_PrincessCardPatch
+{
+  [HarmonyPatch("AddCard")]
+  [HarmonyPostfix]
+  public static bool Prefix(CardData cardData, Result result)
+  {
+    Plugin.Logger.LogInfo($"Adding {cardData.cardName} to the deck");
+    switch (cardData.cardName) {
+      case "Vriki":
+        Plugin.Logger.LogInfo("Received Vriki card");
+        ArchipelagoClient.ProcessLocation("Adopt Vriki");
+        break;
+
+      case "Vacubot":
+        Plugin.Logger.LogInfo("Received Robot card");
+        ArchipelagoClient.ProcessLocation("Adopt Robot");
+        break;
+
+      case "Hopeye":
+        Plugin.Logger.LogInfo("Received Hopeye card");
+        ArchipelagoClient.ProcessLocation("Adopt Hopeye");
+        break;
+
+      case "Unisaur":
+        Plugin.Logger.LogInfo("Received Unisaur card");
+        ArchipelagoClient.ProcessLocation("Adopt Unisaur");
+        break;
+      
+      default:
+        break;
+    }
+    return true;
+  }
+
+}

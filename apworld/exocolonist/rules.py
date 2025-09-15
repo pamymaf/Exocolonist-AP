@@ -44,6 +44,7 @@ def set_all_location_rules(world: ExocolonistWorld) -> None:
     set_character_location_rules(world)
     set_consumable_rules(world)
     set_job_rules(world)
+    set_special_event_rules(world)
 
 
 def set_consumable_rules(world: ExocolonistWorld) -> None:
@@ -52,99 +53,331 @@ def set_consumable_rules(world: ExocolonistWorld) -> None:
     
     # First year is xeno egg, log, crystal with no explore
     for consumable in ["Bobberfruit", "Medicinal Roots", "Yellow Flower"]:
-        set_rule(world.get_location(consumable), lambda state: (state.has_any(explore_jobs, world.player)),)
-
-    # This line creates fill errors. Is it too restrictive?
-    set_rule(world.get_location("Strange Device"), lambda state: (state.has("Survey the Ridge", world.player)),)
-
-
-def set_job_rules(world: ExocolonistWorld) -> None:
-    # Jobs are listed if they have that as the primary skill
-    # OR the secondary is at least +2
-    skills_to_job = {
-        "empathy": ("Babysitting", "Barista", "Tending Animals", "Nursing Assistant", "Cooking"),
-        "persuasion": ("Administration", "Leader", "Study Humanities", "Depot Clerk"),
-        "creativity": ("Play the Photophonor", "Cooking", "Study Humanities", "Barista", "Robot Repair"),
-        "bravery": ("Sportsball", "Sneak Out", "Explore Nearby", "Guard Duty"), # Not adding Explore Glow as that can only happen once a year
-        
-        "reasoning": ("Tutoring", "Study Engineering"),
-        "organizing": ("Deliver Supplies", "Depot Clerk", "Xenobotany", "Administration"), # Not adding Rebuild as that is hard coded to year 15 only
-        "engineering": ("Robot Repair", "Study Engineering", "Construction", "Survey the Ridge"),
-        "biology": ("Nursing Assistant", "Xenobotany", "Study Life Sciences", "Farming", "Forage in the Valley"),
-
-        "toughness": ("Shovelling Dirt", "Farming"), # Not adding Rebuild as that is hard coded to year 15 only
-        "perception": ("Survey the Plains", "Forage in the Valley", "Survey the Ridge"),
-        "combat": ("Defense Training", "Guard Duty", "Hunt in the Swamps"),
-        "animals": ("Hunt in the Swamps", "Tending Animals"),
-    }
-    
-    # Explore jobs require you to pass a check that requires 20 bravery or 20 toughness
-    explore_jobs = ("Sneak Out", "Explore Nearby", "Survey the Plains", "Forage in the Valley", "Survey the Ridge", "Explore Glow")
-    for job in explore_jobs:
         set_rule(
-            world.get_location(job),
-            lambda state: (state.has_any(skills_to_job["bravery"], world.player) or state.has_any(skills_to_job["toughness"], world.player)),
+            world.get_location(consumable), 
+            lambda state: (
+                state.has("Progressive Year", world.player, 1) and 
+                state.has_any(explore_jobs, world.player) and 
+                (
+                    state.has_any(world.skills_to_job["bravery"], world.player) or 
+                    state.has_any(world.skills_to_job["toughness"], world.player)
+                )
+            ),
         )
 
-    # Photophonor may require gear?
+    set_rule(
+        world.get_location("Strange Device"), 
+        lambda state: (
+            state.has("Progressive Year", world.player, 1) and 
+            state.has("Survey the Ridge", world.player) and 
+            (
+                state.has_any(world.skills_to_job["bravery"], world.player) or 
+                state.has_any(world.skills_to_job["toughness"], world.player)
+            )
+        ),
+    )
 
-    # Study Engineering needs you to work one job there to unlock it
-    engineering_jobs = ("Nursing Assistant", "Study Life Sciences", "Study Humanities", "Robot Repair", "Tutoring")
+
+def set_job_rules(world: ExocolonistWorld) -> None:    
+    # Explore jobs require you to pass a check that requires 20 bravery or 20 toughness
+    for job in world.building_jobs["expeditions"]:
+        # Explore Glow requires the ridge and 30 bravery
+        if job == "Explore Glow":
+            set_rule(
+                world.get_location("Explore Glow"),
+                lambda state: (
+                    state.has("Survey the Ridge", world.player) and
+                    state.has_any(world.skills_to_job["bravery"], world.player)
+                )
+            )
+        else:
+            set_rule(
+                world.get_location(job),
+                lambda state: (
+                    state.has_any(world.skills_to_job["bravery"], world.player) or 
+                    state.has_any(world.skills_to_job["toughness"], world.player)
+                ),
+            )
+
+
+
+    ###
+    # Engineering
+    # Study Engineering needs you to work one basic job there to unlock it
+    basic_engineering_jobs = ("Study Life Sciences", "Study Humanities")
     set_rule(
         world.get_location("Study Engineering"),
-        lambda state: (state.has_any(engineering_jobs, world.player)),
+        lambda state: (
+            state.has_any(basic_engineering_jobs, world.player)
+        ),
+    )
+    ###
+
+    ###
+    # Command
+    # Requires 30 friendship with Marz
+    set_rule(
+        world.get_location("Depot Clerk"),
+        lambda state: (
+            state.has_any(world.chara_jobs["Marz"], world.player)
+        ),
+    )
+    ###
+
+    ###
+    # Garrison
+    # Guard Duty requires 10 bravery and 30 combat
+    set_rule(
+        world.get_location("Guard Duty"),
+        lambda state: (
+            state.has_any(world.building_jobs["garrison"], world.player) and
+            state.has_any(world.skills_to_job["bravery"], world.player) and
+            state.has_any(world.skills_to_job["combat"], world.player)
+        )
+    )
+    ###
+
+    ###
+    # Geoponics
+    # Tending Animals needs an explore job
+    set_rule(
+        world.get_location("Tending Animals"),
+        lambda state: {
+            state.has_any(world.building_jobs["geoponics"], world.player) and
+            state.has_any(("Hunt in the Swamps", "Forage in the Valley", "Survey the plains"), world.player)
+        }
     )
 
     # Xenobotany requires 34 biology
     set_rule(
         world.get_location("Xenobotany"),
-        lambda state: (state.has_any(skills_to_job["biology"], world.player)),
-    )
-
-    # Farming is unlocked when you do geoponics jobs
-    set_rule(
-        world.get_location("Farming"),
-        lambda state: (state.has_any(("Shovelling Dirt", "Xenobotany"), world.player)),
+        lambda state: (
+            state.has_any(world.skills_to_job["biology"], world.player)
+        ),
     )
 
     # Relax in the Park is unlocked when you do geoponics jobs
     set_rule(
         world.get_location("Relax in the Park"),
-        lambda state: (state.has_any(("Shovelling Dirt", "Xenobotany", "Farming"), world.player))
+        lambda state: (
+            state.has_any(world.building_jobs["geoponics"], world.player)
+        ),
     )
 
-def set_special_event_rules(world: ExocolonistWorld) -> None:
-    pass
 
+    job_reqs = [
+        {   
+            "name": "Tutoring",
+            "building": "engineering",
+            "skill": "reasoning",
+            "threshold": 30
+        },
+        {
+            "name": "Robot Repair",
+            "building": "engineering",
+            "skill": "engineering",
+            "threshold": 50
+        },
+        {
+            "name": "Nursing Assistant",
+            "building": "engineering",
+            "skill": "biology",
+            "threshold": 50
+        },
+        {
+            "name": "Construction",
+            "building": "command",
+            "skill": "toughness",
+            "threshold": 30
+        },
+        {
+            "name": "Lookout Duty",
+            "building": "garrison",
+            "skill": "perception",
+            "threshold": 20
+        },
+        {
+            "name": "Farming",
+            "building": "geoponics",
+            "skill": "biology",
+            "threshold": 20
+        },
+        {
+            "name": "Cooking",
+            "building": "quarters",
+            "skill": "organizing",
+            "threshold": 20
+        },
+        {
+            "name": "Barista",
+            "building": "quarters",
+            "skill": "empathy",
+            "threshold": 67
+        }
+    ]
+
+    for job in job_reqs:
+        set_rule(
+            world.get_location(job["name"]),
+            lambda state: (
+                state.has_any(world.building_jobs[job["building"]], world.player) and
+                state.has_any(world.skills_to_job[job["skill"]], world.player)
+            ),
+        )
+
+
+
+
+
+def set_special_event_rules(world: ExocolonistWorld) -> None:
+    # Tonin
+    # Can be saved by sneaking out and finding his boss event with bravery 15 check
+    # If you win it, you save him. If you lose you can reload or begin again
+    set_rule(
+        world.get_location("Save Tonin"),
+        lambda state: (
+            state.has("Sneak Out", world.player) and 
+            (
+                state.has_any(world.skills_to_job["bravery"], world.player) or 
+                state.has_any(world.skills_to_job["toughness"], world.player)
+            )
+        ),
+    )
+
+    # Hal
+    # Can only be saved year 11 and seeing him die restarting, and poisoning his drink or
+    # By passing combat check while sneaking out age 11
+    set_rule(
+        world.get_location("Save Hal"),
+        lambda state: (
+            state.has_any(world.skills_to_job["combat"], world.player) and
+            state.has("Sneak Out", world.player)
+        ),
+    )
+
+    # Eudicot
+    # Can save her by doing lookout duty during glow 14
+    # Or passing 25 bravery check and combat battle
+    set_rule(
+        world.get_location("Save Eudicot"),
+        lambda state: (
+            state.has_any(world.skills_to_job["combat"], world.player) and 
+            state.has_any(world.skills_to_job["bravery"], world.player)
+        ),
+    )
+
+    # Vriki
+    # Logic will assume you're getting it via the glow event
+    # Requires bravery 15 and perception 10 in year 12
+    set_rule(
+        world.get_location("Adopt Vriki"),
+        lambda state: (
+            state.has_any(world.skills_to_job["perception"], world.player) and 
+            state.has_any(world.skills_to_job["bravery"], world.player)
+        ),
+    )
+
+    # Hopeye
+    set_rule(
+        world.get_location("Adopt Hopeye"),
+        lambda state: (
+            (
+                state.has("Sneak Out", world.player) or 
+                state.has("Explore Nearby", world.player)
+            ) and (
+                state.has_any(world.skills_to_job["bravery"], world.player) or 
+                state.has_any(world.skills_to_job["toughness"], world.player)
+            ) and 
+            state.has_any(world.skills_to_job["animals"], world.player) 
+        ),
+    )
+
+    # Robot
+    set_rule(
+        world.get_location("Adopt Robot"),
+        lambda state: (
+            state.has("Robot Repair", world.player)
+        ),
+    )
+
+    # Unisaur
+    # Need to capture one while hunting (animals 40 check), then tend animals to tame it
+    set_rule(
+        world.get_location("Adopt Unisaur"),
+        lambda state: (
+            (
+                state.has_any(world.skills_to_job["bravery"], world.player) or 
+                state.has_any(world.skills_to_job["toughness"], world.player)
+            ) and
+            state.has_any(world.skills_to_job["animals"], world.player) and
+            state.has("Hunt in the Swamps", world.player) and
+            state.has("Tending Animals", world.player)
+        ),
+    )
 
 
 
 def set_character_location_rules(world: ExocolonistWorld) -> None:
     for chara in ["Anemone", "Cal", "Marz", "Tammy", "Tang"]:
-        set_rule(world.get_location(f"{chara} 20"), lambda state, chara=chara: (state.has_any(world.chara_jobs[chara], world.player)),)
+        set_rule(
+            world.get_location(f"{chara} 20"), 
+            lambda state, chara=chara: (
+                state.has_any(world.chara_jobs[chara], world.player)
+            ),
+        )
         for i in range(1,5):
             set_rule(
                 world.get_location(f"{chara} {(i+1)*20}"),
-                lambda state, chara=chara, i=i: (state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i)),
+                lambda state, chara=chara, i=i: (
+                    state.has_any(world.chara_jobs[chara], world.player) and 
+                    state.has("Progressive Year", world.player, i)
+                ),
             )
         set_rule(
             world.get_location(f"Date {chara}"), 
             lambda state, chara=chara: (
-                state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, 5)),
+                state.has_any(world.chara_jobs[chara], world.player) and 
+                state.has("Progressive Year", world.player, 5)
+            ),
         )
     
     # Dys has an extra requirement, we need bravery or toughness 20 for his jobs
-    set_rule(world.get_location(f"Dys 20"), lambda state: (state.has_any(world.chara_jobs["Dys"], world.player) and (state.has_any(world.skills_to_job["bravery"], world.player) or state.has_any(world.skills_to_job["toughness"], world.player))),)
-    for i in range(1,5):
+    # Sym is found in exploration jobs, so combining the two
+    for chara in ["Dys", "Sym"]
         set_rule(
-            world.get_location(f"Dys {(i+1)*20}"),
-            lambda state, i=i: (state.has_any(world.chara_jobs["Dys"], world.player) and state.has("Progressive Year", world.player, i) and (state.has_any(world.skills_to_job["bravery"], world.player) or state.has_any(world.skills_to_job["toughness"], world.player))),
+            world.get_location(f"{chara} 20"), 
+            lambda state: (
+                state.has_any(world.chara_jobs[chara], world.player) and 
+                (
+                    state.has_any(world.skills_to_job["bravery"], world.player) or 
+                    state.has_any(world.skills_to_job["toughness"], world.player)
+                )
+            ),
         )
-    set_rule(
-        world.get_location(f"Date Dys"), 
-        lambda state: (
-            state.has_any(world.chara_jobs["Dys"], world.player) and state.has("Progressive Year", world.player, 5) and (state.has_any(world.skills_to_job["bravery"], world.player) or state.has_any(world.skills_to_job["toughness"], world.player))),
-    )
+
+        for i in range(1,5):
+            set_rule(
+                world.get_location(f"{chara} {(i+1)*20}"),
+                lambda state, i=i: (
+                    state.has_any(world.chara_jobs[chara], world.player) and 
+                    state.has("Progressive Year", world.player, i) and 
+                    (
+                        state.has_any(world.skills_to_job["bravery"], world.player) or 
+                        state.has_any(world.skills_to_job["toughness"], world.player)
+                    )
+                ),
+            )
+        set_rule(
+            world.get_location(f"Date {chara}"), 
+            lambda state: (
+                state.has_any(world.chara_jobs[chara], world.player) and 
+                state.has("Progressive Year", world.player, 5) and 
+                (
+                    state.has_any(world.skills_to_job["bravery"], world.player) or 
+                    state.has_any(world.skills_to_job["toughness"], world.player)
+                )
+            ),
+        )
 
 
     # These characters only appear year 5
@@ -152,14 +385,18 @@ def set_character_location_rules(world: ExocolonistWorld) -> None:
         for i in range(0,5):
             set_rule(
                 world.get_location(f"{chara} {(i+1)*20}"),
-                lambda state, chara=chara, i=i: (state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, i+5)),
+                lambda state, chara=chara, i=i: (
+                    state.has_any(world.chara_jobs[chara], world.player) and 
+                    state.has("Progressive Year", world.player, i+5)
+                ),
             )
         set_rule(
             world.get_location(f"Date {chara}"), 
             lambda state, chara=chara, i=i: (
-                state.has_any(world.chara_jobs[chara], world.player) and state.has("Progressive Year", world.player, 9)
-                ),
-            )
+                state.has_any(world.chara_jobs[chara], world.player) and 
+                state.has("Progressive Year", world.player, 9)
+            ),
+        )
 
 
 

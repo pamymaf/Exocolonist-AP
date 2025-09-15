@@ -34,11 +34,12 @@ class ExocolonistWorld(World):
 
     origin_region_name = "Start"
 
-    skills_to_job = {
+    skills_to_job: dict[str, tuple] = {
         "empathy": ("Babysitting", "Barista", "Tending Animals", "Nursing Assistant", "Cooking"),
         "persuasion": ("Administration", "Leader", "Study Humanities", "Depot Clerk"),
         "creativity": ("Play the Photophonor", "Cooking", "Study Humanities", "Barista", "Robot Repair"),
-        "bravery": ("Sportsball", "Sneak Out", "Explore Nearby", "Guard Duty"), # Not adding Explore Glow as that can only happen once a year
+        "bravery": ("Sportsball", "Guard Duty"), # Not adding Explore Glow as that can only happen once a year
+        # These jobs give bravery, but also require bravery, so excluding them:  "Sneak Out", "Explore Nearby",
         
         "reasoning": ("Tutoring", "Study Engineering"),
         "organizing": ("Deliver Supplies", "Depot Clerk", "Xenobotany", "Administration"), # Not adding Rebuild as that is hard coded to year 15 only
@@ -51,7 +52,16 @@ class ExocolonistWorld(World):
         "animals": ("Hunt in the Swamps", "Tending Animals"),
     }
 
-    chara_jobs = {
+    building_jobs: dict[str, tuple] = {
+        "garrison": ("Sportsball", "Defense Training", "Guard Duty", "Lookout Duty", "Relax on the Walls"),
+        "engineering": ("Nursing Assistant", "Study Life Sciences", "Study Humanitites", "Robot Repair", "Study Engineering", "Tutoring"),
+        "quarters": ("Play the Photophonor", "Cooking", "Babysitting", "Barista", "Relax in the Lounge"),
+        "command": ("Leader", "Construction", "Deliver Supplies", "Depot Clerk", "Administration"),
+        "geoponics": ("Tending Animals", "Xenobotany", "Farming", "Shovelling Dirt", "Relax in the Park"),
+        "expeditions": ("Hunt in the Swamps", "Sneak Out", "Explore Nearby", "Explore Glow", "Survey the Plains", "Forage in the Valley", "Survey the Ridge"),
+    }
+
+    chara_jobs: dict[str, tuple] = {
         "Anemone": ("Sportsball", "Lookout Duty", "Defense Training"),
         "Cal": ("Shovelling Dirt", "Farming", "Xenobotany", "Tending Animals"),
         "Dys": ("Sneak Out", "Explore Nearby", "Survey the Plains", "Survey the Ridge", "Relax on the Walls"),
@@ -61,6 +71,7 @@ class ExocolonistWorld(World):
         "Tammy": ("Babysitting", "Cooking", "Relax in the Lounge"),
         "Tang": ("Barista", "Study Life Sciences", "Study Humanities", "Nursing Assistant", "Study Engineering"),
         "Vace": ("Guard Duty", "Hunt in the Swamps", "Defense Training"),
+        "Sym": ("Sneak Out", "Explore Nearby", "Survey the Plains", "Survey the Ridge"),
     }
 
     def create_regions(self) -> None:

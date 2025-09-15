@@ -53,7 +53,6 @@ public class ArchipelagoClient
   public static void Connect(string server, string port, string user, string pass)
   {
     // Called whenever a new game starts
-    serverData.StartNewSeed();
     session = ArchipelagoSessionFactory.CreateSession(server, Int32.Parse(port));
 
     // Must go BEFORE a successful connection attempt
@@ -67,7 +66,8 @@ public class ArchipelagoClient
       // handle TryConnectAndLogin attempt here and save the returned object to `result`
       result = session.TryConnectAndLogin("Exocolonist", user, ItemsHandlingFlags.AllItems);
       attemptingConnection = false;
-  }
+      serverData.StartNewSeed();
+    }
     catch (Exception e)
     {
       result = new LoginFailure(e.GetBaseException().Message);
@@ -87,6 +87,7 @@ public class ArchipelagoClient
       {
           errorMessage += $"\n    {error}";
       }
+      Plugin.Logger.LogInfo("Error");
       Plugin.Logger.LogInfo(errorMessage);
       return;
     }
@@ -116,6 +117,7 @@ public class ArchipelagoClient
       Console.WriteLine("{0}={1}", name, value);
     }
     Exopelago.Helpers.DisplayAPStory(item.Player.Name, item.ItemName);
+
     var itemName = item.ItemName;
     if (ItemsAndLocationsHandler.apToInternalJobs.ContainsKey(itemName)) {
       var internalName = ItemsAndLocationsHandler.apToInternalJobs[itemName];

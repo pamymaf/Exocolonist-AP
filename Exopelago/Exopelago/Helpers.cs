@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System.IO;
 using Exopelago.Archipelago;
 
@@ -33,12 +34,40 @@ public class Helpers
     Plugin.Logger.LogInfo($"Added {value} to {skillID}. Old: {currentValue}. New: {newValue}");
   }
 
-  public static JObject GetConnectionInfo()
+  public static JObject GetConnectionInfoNewGame()
   {
     JObject json = JObject.Parse(File.ReadAllText("connectionInfo.json"));
     return json;
   }
+
+  public static JObject GetConnectionInfoSaveGame()
+  {
+    JObject json = new JObject();
+    json["ip"] = Princess.GetMemory("apServer");
+    json["port"] = Princess.GetMemory("apPort");
+    json["slot"] = Princess.GetMemory("apSlot");
+    json["pass"] = Princess.GetMemory("apPass");
+    json["seed"] = Princess.GetMemory("apSeed");
+    return json;
+  }
   
+  public static void Connect(JObject json) {
+    Plugin.Logger.LogInfo("Connection here");
+    Plugin.Logger.LogInfo(json.ToString(Formatting.None));
+    ArchipelagoClient.Connect((string)json["ip"], (string)json["port"], (string)json["slot"], (string)json["pass"]);
+    // TODO: Add ap info to main menu
+    Dictionary<string, string> apData = new () {
+      {"apServer", (string)json["ip"]},
+      {"apPort", (string)json["port"]},
+      {"apSlot", (string)json["slot"]},
+      {"apPass", (string)json["pass"]},
+      {"apSeed", ArchipelagoClient.session.RoomState.Seed},
+    };
+    Helpers.AddSaveData(apData);
+    Helpers.firstMapLoad = true;
+}
+
+
   // We do this so we can intercept SetMemory and use a special prefix to detect it's AP unlocking it, not the game
   public static void UnlockJob(string name)
   {
@@ -52,7 +81,7 @@ public class Helpers
     switch (id) {
       case string x when x.StartsWith("unlockjob_"):
         string receivedJob = id.RemoveStart("unlockjob_");
-        if (!Princess.cards.Contains(receivedJob)){
+        if (!Princess.cards.Contains(receivedJob.ToLower())){
           GiveCard(receivedJob);
         }
         Princess.AddMemory($"job_{receivedJob}", "true");
@@ -60,17 +89,29 @@ public class Helpers
         return false;
 
       case string x when x.StartsWith("job_"):
-        string sentJob = id.RemoveStart("job_");
-        // If not in 
-        string apJobName = ItemsAndLocationsHandler.internalToAPJobs[sentJob];
+        //string sendjob = id.RemoveStart("job_");
+        //string apJobName = ItemsAndLocationsHandler.internalToAPJobs[sendjob];
+        Plugin.Logger.LogInfo($"Game tried to set {id}");
+        //ArchipelagoClient.ProcessLocation(apJobName);
+        return false;
+
+      case string x when x.StartsWith("sendjob_"):
+        string sendjob = id.RemoveStart("sendjob_");
+        string apJobName = ItemsAndLocationsHandler.internalToAPJobs[sendjob];
         Plugin.Logger.LogInfo($"Trying to send AP location {apJobName}");
         ArchipelagoClient.ProcessLocation(apJobName);
-        return false;
+        return true;
 
       case string x when ItemsAndLocationsHandler.storyEvents.ContainsKey(id):
         string locationName = ItemsAndLocationsHandler.storyEvents[id];
         Plugin.Logger.LogInfo($"Trying to send AP location {locationName} with id {id}");
         ArchipelagoClient.ProcessLocation(locationName);
+        return true;
+
+      case "couldsurvey":
+        string specialLocation = ItemsAndLocationsHandler.internalToAPJobs["explorenearby"];
+        Plugin.Logger.LogInfo($"Trying to send AP location {specialLocation} with id {id}");
+        ArchipelagoClient.ProcessLocation(specialLocation);
         return true;
 
       default:
@@ -89,11 +130,11 @@ public class Helpers
 
   public static void AddSaveData(Dictionary<string, string> data)
   {
-    Princess.SetMemory(data["apServer"]);
-    Princess.SetMemory(data["apPort"]);
-    Princess.SetMemory(data["apSlot"]);
-    Princess.SetMemory(data["apPass"]);
-    Princess.SetMemory(data["apSeed"]);
+    Princess.SetMemory("apServer", data["apServer"]);
+    Princess.SetMemory("apPort", data["apPort"]);
+    Princess.SetMemory("apSlot", data["apSlot"]);
+    Princess.SetMemory("apPass", data["apPass"]);
+    Princess.SetMemory("apSeed", data["apSeed"]);
   }
 
   public static int GetAge()

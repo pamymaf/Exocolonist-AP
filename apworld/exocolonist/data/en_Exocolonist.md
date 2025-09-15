@@ -1,3 +1,0 @@
-# Exocolonist
-
-TODO
