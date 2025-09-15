@@ -82,10 +82,12 @@ class Princess_LovePatch
   [HarmonyPostfix]
   public static void Postfix(string charaID, int diffAmount, Result result)
   {
-    int loveInc = 20; // In case I make the increment user settable in the future
-    int currentLove = Princess.GetLove(charaID);
-    for (int i=1; i<=currentLove/loveInc; i++) {
-      ArchipelagoClient.ProcessLocation($"{char.ToUpper(charaID[0]) + charaID.Substring(1)} {i*loveInc}");
+    if (ArchipelagoClient.serverData.friendsanity){
+      int loveInc = 20; // In case I make the increment user settable in the future
+      int currentLove = Princess.GetLove(charaID);
+      for (int i=1; i<=currentLove/loveInc; i++) {
+        ArchipelagoClient.ProcessLocation($"{char.ToUpper(charaID[0]) + charaID.Substring(1)} {i*loveInc}");
+      }
     }
   }
 

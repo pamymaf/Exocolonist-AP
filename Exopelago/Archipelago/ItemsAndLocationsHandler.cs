@@ -133,23 +133,28 @@ public static class ItemsAndLocationsHandler
     {"Expeditions", "expeditions"},
   });
 
-  public static ReadOnlyDictionary<string, string> storyEvents = new (new Dictionary<string, string>{
+  public static Dictionary<string, string> nonDateEvents = new () {
     {"saved_tammy", "Save Tammy"},
     {"savedtonin", "Save Tonin"},
     {"savedeudicot", "Save Eudicot"},
     {"foodsaved", "Save Mom"},
     {"shimmercure", "Save Dad"},
     {"halsaved", "Save Hal"},
-    {"date_anemone", "Anemone Date"},
-    {"date_cal", "Cal Date"},
-    {"date_dys", "Dys Date"},
-    {"date_marz", "Marz Date"},
-    {"date_nomi", "Nomi Date"},
-    {"date_tammy", "Tammy Date"},
-    {"date_tangent", "Tangent Date"},
-    {"date_rex", "Rex Date"},
-    {"date_vace", "Vace Date"},
     {"leader_marz", "Marz Governor"},
     {"leader_player", "Become Governor"},
-  });
+  };
+
+  public static Dictionary<string, string> dateEvents = new () {
+    {"date_anemone", "Date Anemone"},
+    {"date_cal", "Date Cal"},
+    {"date_dys", "Date Dys"},
+    {"date_marz", "Date Marz"},
+    {"date_nomi", "Date Nomi"},
+    {"date_tammy", "Date Tammy"},
+    {"date_tangent", "Date Tangent"},
+    {"date_rex", "Date Rex"},
+    {"date_vace", "Date Vace"},
+  };
+
+  public static ReadOnlyDictionary<string, string> storyEvents;
 }

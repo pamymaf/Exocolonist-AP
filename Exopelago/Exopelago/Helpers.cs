@@ -78,6 +78,9 @@ public class Helpers
   // Called from SetMemory prefix, needs to return a bool on if the memory should be set
   public static bool ProcessMemory(string id)
   {
+    if (!ArchipelagoClient.authenticated) {
+      return true;
+    }
     switch (id) {
       case string x when x.StartsWith("unlockjob_"):
         string receivedJob = id.RemoveStart("unlockjob_");

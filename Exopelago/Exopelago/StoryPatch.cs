@@ -56,11 +56,23 @@ class Story_ExecutePatch
 
   public static bool TriggerGoal(string ending)
   {
-    if (ending.Contains("archipelago") || ending == "ending_oldsol") {
+    if (ending.Contains("archipelago") || ending == "ending_oldsol" || ending == "ending_end") {
       return false;
     } else if (ending.Contains("ending_")) {
-      // This is where we detect ending type
-      return true;
+      string endingName = ending.Replace("ending_", "");
+      // Any ending
+      if (ArchipelagoClient.serverData.ending == "any") {
+        return true;
+      } 
+      // No hobbyist/rebel
+      else if (ArchipelagoClient.serverData.ending == "no_slacker" && endingName != "hobbyist" && endingName != "rebel") {
+        return true;
+      }
+      // Only special endings
+      else if (ArchipelagoClient.serverData.ending == "special" && endingName.Contains("special")) {
+        return true;
+      }
+      return false;
     } else {
       return false;
     }
