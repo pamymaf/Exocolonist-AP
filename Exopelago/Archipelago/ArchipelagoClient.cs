@@ -42,11 +42,11 @@ public class ArchipelagoClient
 
   public static void GetItems(ArchipelagoSession session) {
     session.Items.ItemReceived += (receivedItemsHelper) => {
-    var itemReceivedName = receivedItemsHelper.PeekItem();
+      var itemReceivedName = receivedItemsHelper.PeekItem();
 
-    // ... Handle item receipt here
-    ProcessItemReceived(itemReceivedName);
-    receivedItemsHelper.DequeueItem();
+      // ... Handle item receipt here
+      ProcessItemReceived(itemReceivedName);
+      receivedItemsHelper.DequeueItem();
     };
   }
 
@@ -66,6 +66,11 @@ public class ArchipelagoClient
       // handle TryConnectAndLogin attempt here and save the returned object to `result`
       result = session.TryConnectAndLogin("Exocolonist", user, ItemsHandlingFlags.AllItems);
       attemptingConnection = false;
+      authenticated = true;
+      serverData.uri = server;
+      serverData.port = port;
+      serverData.slotName = user;
+      serverData.password = pass;
       serverData.StartNewSeed();
     }
     catch (Exception e)
@@ -87,24 +92,35 @@ public class ArchipelagoClient
       {
           errorMessage += $"\n    {error}";
       }
-      Plugin.Logger.LogInfo("Error");
+      Plugin.Logger.LogInfo("Connection error");
       Plugin.Logger.LogInfo(errorMessage);
       return;
     }
     
     var loginSuccess = (LoginSuccessful)result;
-    authenticated = true;
     Plugin.Logger.LogInfo("Successfully connected!");
   }
 
   public static void Disconnect()
   {
+    authenticated = false;
     session.Socket.DisconnectAsync();
   }
 
   static void OnMessageReceived(LogMessage message)
   {
     Plugin.Logger.LogInfo(message.ToString());
+
+    switch (message) {
+      case ItemSendLogMessage itemSendLogMessage:
+        var receiver = itemSendLogMessage.Receiver;
+        var sender = itemSendLogMessage.Sender;
+        var networkItem = itemSendLogMessage.Item;
+        if (sender.Name == serverData.slotName) {
+          Exopelago.Helpers.DisplayAPStory("you", receiver.Name, networkItem.ItemName);
+        }
+        break;
+    }
   }
 
   static void ProcessItemReceived(ItemInfo item)
@@ -116,7 +132,7 @@ public class ArchipelagoClient
       object value = descriptor.GetValue(item);
       Console.WriteLine("{0}={1}", name, value);
     }
-    Exopelago.Helpers.DisplayAPStory(item.Player.Name, item.ItemName);
+    Exopelago.Helpers.DisplayAPStory(item.Player.Name, "you", item.ItemName);
 
     var itemName = item.ItemName;
     if (ItemsAndLocationsHandler.apToInternalJobs.ContainsKey(itemName)) {
@@ -138,13 +154,16 @@ public class ArchipelagoClient
       var internalName = ItemsAndLocationsHandler.apToInternalBuildings[itemName];
       Plugin.Logger.LogInfo($"Attempting to unlock {itemName} - {internalName}");
       serverData.receivedJobs.Add(internalName);
+    } else if (itemName.Contains("Perk")) {
+      string skill = itemName.Replace("Progressive ", "").Replace(" Perk", "").ToLower();
+      ArchipelagoClient.serverData.receivedPerk[skill]++;
+      Exopelago.Helpers.UnlockPerk(skill);
     }
   }
 
   public static void ProcessLocation(string location) 
   {
     var locationId = session.Locations.GetLocationIdFromName("Exocolonist", location);
-    Plugin.Logger.LogInfo($"Trying to unlock location with name {location} id {locationId.ToString()}");
     session.Locations.CompleteLocationChecks(locationId);
   }
 

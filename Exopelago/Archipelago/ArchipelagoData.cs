@@ -13,7 +13,7 @@ namespace Exopelago.Archipelago;
 public class ArchipelagoData
 {
   public string uri = "archipelago.gg";
-  public int port = 38281;
+  public string port = "38281";
   public string slotName = "";
   public string password = "";
   public int index;
@@ -33,6 +33,7 @@ public class ArchipelagoData
   public Dictionary<string, string> groundhogs;
   public Dictionary<string, int> receivedFriendship;
   public List<string> receivedBuildings;
+  public Dictionary<string, int> receivedPerk;
   public int maxAge = 10;
 
   public void StartNewSeed()
@@ -46,10 +47,10 @@ public class ArchipelagoData
     receivedFriendship = new ();
     maxAge = 10;
     var slotData = ArchipelagoClient.session.DataStorage.GetSlotData();
-    if (Convert.ToInt32(slotData["friendsanity"]) == 1) {
+    if (Convert.ToString(slotData["friendsanity"]) == "1") {
       friendsanity = true;
     }
-    if (Convert.ToInt32(slotData["datesanity"]) == 1) {
+    if (Convert.ToString(slotData["datesanity"]) == "1") {
       datesanity = true;
       ItemsAndLocationsHandler.storyEvents = new (
         ItemsAndLocationsHandler.nonDateEvents.Concat(ItemsAndLocationsHandler.dateEvents).ToDictionary(x=>x.Key, x=>x.Value)
@@ -72,6 +73,20 @@ public class ArchipelagoData
         ending = "any";
         break;
     }
+    receivedPerk = new () {
+      {"empathy", 0},
+      {"creativity", 0},
+      {"persuasion", 0},
+      {"bravery", 0},
+      {"reasoning", 0},
+      {"engineering", 0},
+      {"organization", 0},
+      {"biology", 0},
+      {"toughness", 0},
+      {"combat", 0},
+      {"perception", 0},
+      {"animals", 0},
+    };
 
 
 
@@ -81,13 +96,12 @@ public class ArchipelagoData
       (str) => str += "}"
     );
 
-    Plugin.Logger.LogInfo(pretty);
+    Plugin.Logger.LogInfo($"Settings: {pretty}");
   }
 
   public void RaiseAge()
   {
     int currentAge = Exopelago.Helpers.GetAge();
-    Plugin.Logger.LogInfo($"Current max age: {currentAge}");
     int newMaxAge = maxAge + 1;
     maxAge = newMaxAge;
   }

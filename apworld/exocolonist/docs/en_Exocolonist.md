@@ -6,9 +6,21 @@ Exocolonist is a game about growing up on an alien planet and is a visual novel 
 
 ## Locations
 
-Each job you unlock, every multiple of 20 friendship for every character, every character you can date, and special events are locations.
+Every job you can unlock is a location.
 
-### Special events?
+### Friendsanity
+
+If enabled, each multiple of 20 friendship points for each character is a check.
+
+### Datesanity
+
+If enabled, dating each character is a check.
+
+### Perksanity
+
+If enabled, each skill perk is a check. Additionally, skills will be locked so you cannot progress past a perk you don't have. As an example, if you have perception perk 1 you can level your perception to 66. But if you have no perks, you can only level the skill to 33.
+
+### Special events
 
 Right now the special events are
   - Save Tammy
@@ -17,7 +29,13 @@ Right now the special events are
   - Save Mom
   - Save Dad
   - Save Hal
+  - Adopt Vriki
+  - Adopt Hopeye
+  - Adopt Robot
+  - Adopt Unisaur
+  - Become Governor
+  - Help Marz become Governor
 
 ## Items
 
-You can receive job unlocks and consumables to use in card battles or as gifts for characters
+You can receive job unlocks and consumables to use in card battles or as gifts for characters. If perksanity is enabled, you will also receive progressive skill perks.

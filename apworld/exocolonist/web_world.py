@@ -7,18 +7,18 @@ from worlds.AutoWorld import WebWorld
 
 # For our game to display correctly on the website, we need to define a WebWorld subclass.
 class ExocolonistWebWorld(WebWorld):
-    game = "Exocolonist"
+  game = "Exocolonist"
 
-    theme = "grassFlowers"
+  theme = "grassFlowers"
 
-    setup_en = Tutorial(
-        "Multiworld Setup Guide",
-        "A guide to setting up Exocolonist for MultiWorld.",
-        "English",
-        "setup_en.md",
-        "setup/en",
-        ["pamymaf"],
-    )
+  setup_en = Tutorial(
+    "Multiworld Setup Guide",
+    "A guide to setting up Exocolonist for MultiWorld.",
+    "English",
+    "setup_en.md",
+    "setup/en",
+    ["pamymaf"],
+  )
 
-    tutorials = [setup_en]  
+  tutorials = [setup_en]  
 

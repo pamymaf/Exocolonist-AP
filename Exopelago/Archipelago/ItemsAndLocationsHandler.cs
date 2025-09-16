@@ -156,5 +156,5 @@ public static class ItemsAndLocationsHandler
     {"date_vace", "Date Vace"},
   };
 
-  public static ReadOnlyDictionary<string, string> storyEvents;
+  public static ReadOnlyDictionary<string, string> storyEvents = new (new Dictionary<string, string>());
 }

@@ -71,7 +71,7 @@ public class Helpers
   // We do this so we can intercept SetMemory and use a special prefix to detect it's AP unlocking it, not the game
   public static void UnlockJob(string name)
   {
-    Plugin.Logger.LogInfo($"Attempting to unlock {name}");
+    Plugin.Logger.LogInfo($"Attempting to unlock job {name}");
     Princess.SetMemory($"unlockjob_{name}");
   }
 
@@ -92,10 +92,7 @@ public class Helpers
         return false;
 
       case string x when x.StartsWith("job_"):
-        //string sendjob = id.RemoveStart("job_");
-        //string apJobName = ItemsAndLocationsHandler.internalToAPJobs[sendjob];
         Plugin.Logger.LogInfo($"Game tried to set {id}");
-        //ArchipelagoClient.ProcessLocation(apJobName);
         return false;
 
       case string x when x.StartsWith("sendjob_"):
@@ -145,7 +142,7 @@ public class Helpers
     return Princess.age;
   }
 
-  public static void DisplayAPStory(string sender = null, string item = null)
+  public static void DisplayAPStory(string sender = null, string receiver = null, string item = null)
   {
 
     Plugin.Logger.LogInfo($"Attempting to display AP story");
@@ -157,9 +154,22 @@ public class Helpers
           PlayerText.Show("AP not connected");
         }
       } else {
-        PlayerText.Show($"{sender} sent you {item}");
+        PlayerText.Show($"{sender} sent {receiver} {item}");
       }
     }
-    
+  }
+
+  public static void UnlockPerk(string skill)
+  {
+    Plugin.Logger.LogInfo($"UnlockPerk {skill}");
+    int maxPerk = ArchipelagoClient.serverData.receivedPerk[skill];
+    Plugin.Logger.LogInfo($"maxPerk {maxPerk}");
+    if (maxPerk == 1) {
+      Princess.AddMemory($"unlockskillperk_{skill}1");
+    } else if (maxPerk == 2) {
+      Princess.AddMemory($"unlockskillperk_{skill}2");
+    } else if (maxPerk == 3) {
+      Princess.AddMemory($"unlockskillperk_{skill}3");
+    }
   }
 }

@@ -24,6 +24,7 @@ class Story_ExecutePatch
     switch (storyID){
       case "gamestartintro":
         JObject json = Helpers.GetConnectionInfoNewGame();
+        Plugin.Logger.LogInfo("New game, attempting connection");
         Helpers.Connect(json);
         break;
         
