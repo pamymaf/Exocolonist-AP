@@ -2,8 +2,8 @@
 
 ## Requirements
 
-[Exoloader]()
-[Exopelago]()
+[Exoloader](https://github.com/Pandemonium14/ExoLoader/releases)
+[Exopelago](https://github.com/pamymaf/Exocolonist-AP/releases)
 
 ## Instructions
 
