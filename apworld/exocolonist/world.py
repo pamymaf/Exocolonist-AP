@@ -34,7 +34,7 @@ class ExocolonistWorld(World):
 
   origin_region_name = "Start"
 
-  skills_to_job: dict[str, tuple] = {
+  skills_to_job: dict[str, tuple[str, ...]] = {
     "empathy": ("Babysitting", "Barista", "Tending Animals", "Nursing Assistant", "Cooking"),
     "persuasion": ("Administration", "Leader", "Study Humanities", "Depot Clerk"),
     "creativity": ("Play the Photophonor", "Cooking", "Study Humanities", "Barista", "Robot Repair"),
@@ -54,7 +54,7 @@ class ExocolonistWorld(World):
     "animals": ("Hunt in the Swamps", "Tending Animals"),
   }
 
-  building_jobs: dict[str, tuple] = {
+  building_jobs: dict[str, tuple[str, ...]] = {
     "garrison": ("Sportsball", "Defense Training", "Guard Duty", "Lookout Duty", "Relax on the Walls"),
     "engineering": ("Nursing Assistant", "Study Life Sciences", "Study Humanitites", "Robot Repair", "Study Engineering", "Tutoring"),
     "quarters": ("Play the Photophonor", "Cooking", "Babysitting", "Barista", "Relax in the Lounge"),
@@ -63,7 +63,7 @@ class ExocolonistWorld(World):
     "expeditions": ("Hunt in the Swamps", "Sneak Out", "Explore Nearby", "Explore Glow", "Survey the Plains", "Forage in the Valley", "Survey the Ridge"),
   }
 
-  chara_jobs: dict[str, tuple] = {
+  chara_jobs: dict[str, tuple[str, ...]] = {
     "Anemone": ("Sportsball", "Lookout Duty", "Defense Training"),
     "Cal": ("Shovelling Dirt", "Farming", "Xenobotany", "Tending Animals"),
     "Dys": ("Sneak Out", "Explore Nearby", "Survey the Plains", "Survey the Ridge", "Relax on the Walls"),

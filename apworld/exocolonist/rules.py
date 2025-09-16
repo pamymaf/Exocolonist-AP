@@ -395,17 +395,17 @@ def set_skills_rules(world):
   for skill in ["Empathy", "Creativity", "Persuasion", "Bravery", "Reasoning", "Engineering", "Organization", "Biology", "Toughness", "Combat", "Perception", "Animals"]:
     set_rule(
       world.get_location(f"{skill} Perk 1"),
-      lambda state, skill=skill: {
-        state.has_any(world.skills_to_job[skill.lower()], world.player),
-      }
+      lambda state, skill=skill: (
+        state.has_any(world.skills_to_job[skill.lower()], world.player)
+      )
     )
     for i in range(2,4):
       set_rule(
         world.get_location(f"{skill} Perk {i}"),
-        lambda state, skill=skill, i=i: {
-          state.has_any(world.skills_to_job[skill.lower()], world.player) and
-          state.has(f"Progressive {skill} Perk", world.player, i-1),
-        }
+        lambda state, jobs=world.skills_to_job[skill.lower()], i=i: (
+          state.has_any(jobs, world.player) and
+          state.has(f"Progressive {skill} Perk", world.player, i-1)
+        )
       )
 
 def set_victory_condition(world: ExocolonistWorld) -> None:
