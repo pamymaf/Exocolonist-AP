@@ -385,7 +385,7 @@ def set_dates_rules(world: ExocolonistWorld) -> None:
   for chara in ["Nomi", "Rex", "Vace"]:
     set_rule(
       world.get_location(f"Date {chara}"), 
-      lambda state, chara=chara, i=i: (
+      lambda state, chara=chara: (
         state.has_any(world.chara_jobs[chara], world.player)
       ),
     )
