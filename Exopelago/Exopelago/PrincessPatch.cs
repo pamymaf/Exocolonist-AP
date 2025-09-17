@@ -22,7 +22,7 @@ class Princess_SetMemoryPatch
       Plugin.Logger.LogInfo($"Game tried to unlock {id}");
     } else {
     }
-    Plugin.Logger.LogInfo($"Original memory ran: {__runOriginal}");
+    Plugin.Logger.LogInfo($"{id} memory ran: {__runOriginal}");
   }
 
   [HarmonyPatch("SetMemory")]
@@ -40,6 +40,7 @@ class Princess_SetMemoryPatch
       Plugin.Logger.LogInfo(id);
       Plugin.Logger.LogInfo(e);
       return true;
+      // This then calls AddMemory
     } 
   }
 }
@@ -53,19 +54,23 @@ class Princess_AddMemoryPatch
   public static bool Prefix(string id, object value = null)
   {
     try {
-      if (id.StartsWith("skillperk_")) {
-        string perkID = id.Replace("skillperk_", "");
-        string perk = perkID.Insert(perkID.Length - 1, " Perk ");
-        string location = CultureInfo.CurrentCulture.TextInfo.ToTitleCase($"{perk}".ToLower());
-        Plugin.Logger.LogInfo($"AddMemory location {id}");
-        ArchipelagoClient.ProcessLocation(location);
-        return false;
-      } else if (id.StartsWith("unlockskillperk_")) {
-        string perkID = id.Replace("unlock", "");
-        Princess.memories.AddSafe(perkID, "true");
-        Plugin.Logger.LogInfo($"AddMemory AddSafe {perkID}");
-        Plugin.Logger.LogInfo($"Trying to unlock {perkID}");
-        return false;
+      if (ArchipelagoClient.serverData.perksanity){
+        if (id.StartsWith("skillperk_")) {
+          string perkID = id.Replace("skillperk_", "");
+          string perk = perkID.Insert(perkID.Length - 1, " Perk ");
+          string location = CultureInfo.CurrentCulture.TextInfo.ToTitleCase($"{perk}".ToLower());
+          Plugin.Logger.LogInfo($"AddMemory location {id}");
+          ArchipelagoClient.ProcessLocation(location);
+          return false;
+        } else if (id.StartsWith("unlockskillperk_")) {
+          string perkID = id.Replace("unlock", "");
+          Princess.memories.AddSafe(perkID, "true");
+          Plugin.Logger.LogInfo($"AddMemory AddSafe {perkID}");
+          Plugin.Logger.LogInfo($"Trying to unlock {perkID}");
+          return false;
+        } else {
+          return true;
+        }
       } else {
         return true;
       }
@@ -87,7 +92,7 @@ class Princess_AddMemoryPatch
 class Princess_PrincessMonthPatch
 {
   [HarmonyPatch("SetMonth")]
-  [HarmonyPostfix]
+  [HarmonyPrefix]
   public static bool Prefix(int value)
   {
     int maxAge = ArchipelagoClient.serverData.maxAge;
@@ -106,37 +111,41 @@ class Princess_PrincessMonthPatch
 class Princess_SkillPatch
 {
   [HarmonyPatch("SetSkill")]
-  [HarmonyPostfix]
+  [HarmonyPrefix]
   public static bool Prefix(string skillID, int value, Result result)
   {
     Skill skill = Skill.FromID(skillID);
     int current = skill.value;
     try {
-      if (skillID != "stress" && skillID != "rebellion" && skillID != "kudos") {
-        switch (value) {
-          case >= 100:
-            Princess.AddMemory($"skillperk_{skillID}3");
-            break;
-          case >= 67:
-            Princess.AddMemory($"skillperk_{skillID}2");
-            break;
-          case >= 34:
-            Princess.AddMemory($"skillperk_{skillID}1");
-            break;
-        }
+      if (ArchipelagoClient.serverData.perksanity){
+        if (skillID != "stress" && skillID != "rebellion" && skillID != "kudos") {
+          switch (value) {
+            case >= 100:
+              Princess.AddMemory($"skillperk_{skillID}3");
+              break;
+            case >= 67:
+              Princess.AddMemory($"skillperk_{skillID}2");
+              break;
+            case >= 34:
+              Princess.AddMemory($"skillperk_{skillID}1");
+              break;
+          }
 
-        if (value >= 34 && !skill.HasSkillPerkLevel(1)) {
-          Princess.SetSkill(skillID, 33, result);
-          return false;
-        } else if (value >= 67 && !skill.HasSkillPerkLevel(2)) {
-          Princess.SetSkill(skillID, 66, result);
-          return false;
-        } else if (value >= 100 && !skill.HasSkillPerkLevel(3)) {
-          Princess.SetSkill(skillID, 99, result);
-          return false;
-        } else {
-          return true;
+          if (value >= 34 && !skill.HasSkillPerkLevel(1)) {
+            Princess.SetSkill(skillID, 33, result);
+            return false;
+          } else if (value >= 67 && !skill.HasSkillPerkLevel(2)) {
+            Princess.SetSkill(skillID, 66, result);
+            return false;
+          } else if (value >= 100 && !skill.HasSkillPerkLevel(3)) {
+            Princess.SetSkill(skillID, 99, result);
+            return false;
+          } else {
+            return true;
+          }
         }
+      } else {
+        return true;
       }
     } catch (Exception e) {
       // Magic try/catch block
@@ -172,7 +181,7 @@ class Princess_LovePatch
 class Princess_PrincessCardPatch
 {
   [HarmonyPatch("AddCard")]
-  [HarmonyPostfix]
+  [HarmonyPrefix]
   public static bool Prefix(CardData cardData, Result result)
   {
     Plugin.Logger.LogInfo($"Adding {cardData.cardName} to the deck");

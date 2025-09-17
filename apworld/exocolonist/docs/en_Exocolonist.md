@@ -36,6 +36,11 @@ Right now the special events are
   - Become Governor
   - Help Marz become Governor
 
+
 ## Items
 
 You can receive job unlocks and consumables to use in card battles or as gifts for characters. If perksanity is enabled, you will also receive progressive skill perks.
+
+### Progressive Years
+
+In order to age up you will need to receive a progressive year. For example, if you only have 3 progressive years the game will end (but not goal) when you age up to 14.

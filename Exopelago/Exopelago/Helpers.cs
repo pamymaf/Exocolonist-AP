@@ -92,7 +92,6 @@ public class Helpers
         return false;
 
       case string x when x.StartsWith("job_"):
-        Plugin.Logger.LogInfo($"Game tried to set {id}");
         return false;
 
       case string x when x.StartsWith("sendjob_"):

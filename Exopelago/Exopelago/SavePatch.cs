@@ -15,7 +15,7 @@ namespace Exopelago;
 class Save_ExecutePatch
 {
   [HarmonyPatch("Load")]
-  [HarmonyPostfix]
+  [HarmonyPrefix]
   public static void Prefix(Savegame __instance)
   {
   }

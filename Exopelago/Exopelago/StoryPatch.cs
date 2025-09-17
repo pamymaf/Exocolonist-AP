@@ -31,7 +31,7 @@ class Story_ExecutePatch
       case string x when x.Contains("explorecollectible"):
         string id = __instance.storyID.Replace("explorecollectible", "");
         string apID = ItemsAndLocationsHandler.internalToAPcollectibles[id];
-        Plugin.Logger.LogInfo($"Story: {storyID} ID: {id} AP ID: {apID}");
+        Plugin.Logger.LogInfo($"Collectible {storyID} ID: {id} AP ID: {apID}");
         ArchipelagoClient.ProcessLocation(apID);
         break;
 
@@ -45,10 +45,9 @@ class Story_ExecutePatch
   }
 
   [HarmonyPatch("Execute")]
-  [HarmonyPostfix]
+  [HarmonyPrefix]
   public static bool Prefix(Story __instance, Result result, bool undoing = false, bool startStoryOnly = false, bool isEnding = false)
   {
-    Plugin.Logger.LogInfo($"Prefix: {__instance.storyID}");
     string storyID = __instance.storyID;
     return true;   
   }

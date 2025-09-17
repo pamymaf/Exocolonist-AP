@@ -13,9 +13,15 @@ namespace Exopelago;
 class Perk_MenuPatch
 {
   [HarmonyPatch("ShowPerk")]
-  [HarmonyPostfix]
+  [HarmonyPrefix]
   public static bool Prefix(Skill skill, int perkLevel)
   {
-    return false;
+    if (ArchipelagoClient.serverData.perksanity) {
+      Plugin.Logger.LogInfo("Blocking perk popup");
+      return false;
+    } else {
+      Plugin.Logger.LogInfo("Showing perk popup");
+      return true;
+    }
   }
 }

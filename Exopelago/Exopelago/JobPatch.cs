@@ -16,7 +16,6 @@ class Job_ExecutePatch
   [HarmonyPostfix]
   public static void Postfix(Job __instance)
   {
-    Plugin.Logger.LogInfo("Doing job:");
-    Plugin.Logger.LogInfo($"  {__instance.jobID}");
+    Plugin.Logger.LogInfo($"Doing job {__instance.jobID}");
   }
 }

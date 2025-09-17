@@ -35,6 +35,7 @@ public class ArchipelagoData
   public List<string> receivedBuildings;
   public Dictionary<string, int> receivedPerk;
   public int maxAge = 10;
+  public bool perksanity = false;
 
   public void StartNewSeed()
   {
@@ -73,20 +74,23 @@ public class ArchipelagoData
         ending = "any";
         break;
     }
-    receivedPerk = new () {
-      {"empathy", 0},
-      {"creativity", 0},
-      {"persuasion", 0},
-      {"bravery", 0},
-      {"reasoning", 0},
-      {"engineering", 0},
-      {"organization", 0},
-      {"biology", 0},
-      {"toughness", 0},
-      {"combat", 0},
-      {"perception", 0},
-      {"animals", 0},
-    };
+    if (Convert.ToString(slotData["perksanity"]) == "1") {
+      perksanity = true;
+      receivedPerk = new () {
+        {"empathy", 0},
+        {"creativity", 0},
+        {"persuasion", 0},
+        {"bravery", 0},
+        {"reasoning", 0},
+        {"engineering", 0},
+        {"organization", 0},
+        {"biology", 0},
+        {"toughness", 0},
+        {"combat", 0},
+        {"perception", 0},
+        {"animals", 0},
+      };
+    }
 
 
 
