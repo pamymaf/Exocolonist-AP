@@ -141,19 +141,41 @@ public class Helpers
     return Princess.age;
   }
 
-  public static void DisplayAPStory(string sender = null, string receiver = null, string item = null)
-  {
 
-    Plugin.Logger.LogInfo($"Attempting to display AP story");
+  public static void DisplayConnectionMessage() {
     if (readyForItems){
-      if (sender == null){
-        if (ArchipelagoClient.authenticated){
-          PlayerText.Show("AP connected");
-        } else {
-          PlayerText.Show("AP not connected");
-        }
+      if (ArchipelagoClient.authenticated){
+        PlayerText.Show("AP connected");
       } else {
-        PlayerText.Show($"{sender} sent {receiver} {item}");
+        PlayerText.Show("AP not connected");
+      }
+    }
+  }
+
+
+  public static void DisplayAPHint(string sender, string receiver, string item, string location) {
+    if (readyForItems){
+      string slotName = ArchipelagoClient.serverData.slotName;
+      if (sender == slotName && receiver == slotName) {
+        PlayerText.Show($"Your {item} is at {location} in your world");
+      } else if (sender == slotName) {
+        PlayerText.Show($"{receiver}'s {item} is at {location} in your world");
+      } else if (receiver == slotName) {
+        PlayerText.Show($"Your {item} is at {location} in {sender}'s world");
+      }
+    }
+  }
+
+
+  public static void DisplayAPItem(string sender, string receiver, string item) {
+    if (readyForItems){
+      string slotName = ArchipelagoClient.serverData.slotName;
+      if (sender == slotName && receiver == slotName) {
+        PlayerText.Show($"You sent yourself {item}");
+      } else if (sender == slotName) {
+        PlayerText.Show($"You sent {receiver} {item}");
+      } else if (receiver == slotName) {
+        PlayerText.Show($"{sender} sent you {item}");
       }
     }
   }
@@ -170,5 +192,41 @@ public class Helpers
     } else if (maxPerk == 3) {
       Princess.AddMemory($"unlockskillperk_{skill}3");
     }
+  }
+
+
+  public static void ReplaceHogs() {
+    var hogs = ArchipelagoClient.GetAllHogs();
+
+    string pretty = Groundhogs.instance.groundhogs.Aggregate(
+      "{", 
+      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
+      (str) => str += "}"
+    );
+    Plugin.Logger.LogInfo($"ReplaceHogs: {pretty}");
+
+
+    Groundhogs.instance.groundhogs = new StringDictionary();
+
+
+    pretty = Groundhogs.instance.groundhogs.Aggregate(
+      "{", 
+      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
+      (str) => str += "}"
+    );
+    Plugin.Logger.LogInfo($"ReplaceHogs: {pretty}");
+
+
+    Plugin.Logger.LogInfo("Replacing all hogs");
+    foreach (var hog in hogs) {
+      Groundhogs.instance.groundhogs.Set(hog.Key, hog.Value);
+    }
+
+    pretty = Groundhogs.instance.groundhogs.Aggregate(
+      "{", 
+      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
+      (str) => str += "}"
+    );
+    Plugin.Logger.LogInfo($"ReplaceHogs: {pretty}");
   }
 }

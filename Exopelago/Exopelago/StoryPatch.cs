@@ -26,6 +26,7 @@ class Story_ExecutePatch
         JObject json = Helpers.GetConnectionInfoNewGame();
         Plugin.Logger.LogInfo("New game, attempting connection");
         Helpers.Connect(json);
+        Helpers.ReplaceHogs();
         break;
         
       case string x when x.Contains("explorecollectible"):

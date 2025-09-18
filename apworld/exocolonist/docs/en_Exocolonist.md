@@ -1,6 +1,6 @@
 # Exocolonist
 
-Exocolonist is a game about growing up on an alien planet and is a visual novel card battler time loop game. You have 10 years to survive, hopefully making friendships and lasting memories along the way.
+Exocolonist is a visual novel card battler time loop game about growing up on an alien planet. You have 10 years to survive, hopefully making friendships and lasting memories along the way.
 
 # What's randomized?
 

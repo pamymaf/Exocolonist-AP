@@ -112,12 +112,20 @@ public class ArchipelagoClient
     Plugin.Logger.LogInfo(message.ToString());
 
     switch (message) {
+      case HintItemSendLogMessage hintItemSendLogMessage:
+        var hintReceiver = hintItemSendLogMessage.Receiver;
+        var hintSender = hintItemSendLogMessage.Sender;
+        var hintNetworkItem = hintItemSendLogMessage.Item;
+        if (hintSender.Name == serverData.slotName || hintReceiver.Name == serverData.slotName) {
+          Exopelago.Helpers.DisplayAPHint(hintSender.Name, hintReceiver.Name, hintNetworkItem.ItemName,hintNetworkItem.LocationDisplayName);
+        }
+        break;
       case ItemSendLogMessage itemSendLogMessage:
         var receiver = itemSendLogMessage.Receiver;
         var sender = itemSendLogMessage.Sender;
         var networkItem = itemSendLogMessage.Item;
         if (sender.Name == serverData.slotName) {
-          Exopelago.Helpers.DisplayAPStory("you", receiver.Name, networkItem.ItemName);
+          Exopelago.Helpers.DisplayAPItem(sender.Name, receiver.Name, networkItem.ItemName);
         }
         break;
     }
@@ -130,11 +138,10 @@ public class ArchipelagoClient
     {
       string name = descriptor.Name;
       object value = descriptor.GetValue(item);
-      Console.WriteLine("{0}={1}", name, value);
+      Plugin.Logger.LogInfo($"{name}={value}");
     }
-    Exopelago.Helpers.DisplayAPStory(item.Player.Name, "you", item.ItemName);
-
     var itemName = item.ItemName;
+
     if (ItemsAndLocationsHandler.apToInternalJobs.ContainsKey(itemName)) {
       var internalName = ItemsAndLocationsHandler.apToInternalJobs[itemName];
       serverData.receivedJobs.Add(internalName);
@@ -154,7 +161,8 @@ public class ArchipelagoClient
       var internalName = ItemsAndLocationsHandler.apToInternalBuildings[itemName];
       Plugin.Logger.LogInfo($"Attempting to unlock {itemName} - {internalName}");
       serverData.receivedJobs.Add(internalName);
-    } else if (itemName.Contains("Perk")) {
+    } 
+    else if (itemName.Contains("Perk")) {
       string skill = itemName.Replace("Progressive ", "").Replace(" Perk", "").ToLower();
       ArchipelagoClient.serverData.receivedPerk[skill]++;
       Exopelago.Helpers.UnlockPerk(skill);
@@ -173,26 +181,52 @@ public class ArchipelagoClient
     session.SetGoalAchieved();
   }
 
-  //Not properly used yet, this sets a variable in the server to fetch later
-  public static bool SetHog(string hog, string value)
+  public static string GetHog(string hog)
+  {
+    var output = session.DataStorage["hog"].To<Dictionary<string, string>>();
+    string pretty = output.Aggregate(
+      "{", 
+      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
+      (str) => str += "}"
+    );
+    Plugin.Logger.LogInfo($"GetHog: {pretty}");
+    if (output.ContainsKey(hog)) {
+      Plugin.Logger.LogInfo($"Returning! {output[hog]}");
+      return output[hog];
+    } else {
+      return null;
+    }
+  } 
+
+
+  public static void SetHog(string hog, string value)
   {
     //Plugin.Logger.LogInfo(session.DataStorage["hog"]);
-    session.DataStorage["hog"] = JObject.FromObject(new Dictionary<string, string>{{"one", "two"},{"three", "four"}});
     var output = session.DataStorage["hog"].To<Dictionary<string, string>>();
-    var pretty = output.Aggregate(
-      "{", 
-      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
-      (str) => str += "}"
-    );
-    //Plugin.Logger.LogInfo(pretty);
-    session.DataStorage["hog"] += Operation.Update(new Dictionary<string, string>{{"three", "five"}});
+    if (output == null) {
+      session.DataStorage["hog"] = JObject.FromObject(new Dictionary<string, string>{});
+      output = session.DataStorage["hog"].To<Dictionary<string, string>>();
+    }
+    session.DataStorage["hog"] += Operation.Update(new Dictionary<string, string>{{hog, value}});
     output = session.DataStorage["hog"].To<Dictionary<string, string>>();
-    pretty = output.Aggregate(
+    string pretty = output.Aggregate(
       "{", 
       (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
       (str) => str += "}"
     );
-    //Plugin.Logger.LogInfo(pretty);
-    return true;
+    Plugin.Logger.LogInfo($"SetHog: {pretty}");
+  }
+
+
+  public static Dictionary<string, string> GetAllHogs()
+  {
+    var output = session.DataStorage["hog"].To<StringDictionary>();
+    string pretty = output.Aggregate(
+      "{", 
+      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
+      (str) => str += "}"
+    );
+    Plugin.Logger.LogInfo($"GetAllHogs: {pretty}");
+    return output;
   }
 }

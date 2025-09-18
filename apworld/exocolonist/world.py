@@ -49,9 +49,30 @@ class ExocolonistWorld(World):
     "biology": ("Nursing Assistant", "Xenobotany", "Study Life Sciences", "Farming", "Forage in the Valley"),
 
     "toughness": ("Shovelling Dirt", "Farming"), # Not adding Rebuild as that is hard coded to year 15 only
-    "perception": ("Survey the Plains", "Forage in the Valley", "Survey the Ridge"),
+    "perception": ("Lookout Duty", "Survey the Plains", "Forage in the Valley", "Survey the Ridge"),
     "combat": ("Defense Training", "Guard Duty", "Hunt in the Swamps"),
     "animals": ("Hunt in the Swamps", "Tending Animals"),
+  }
+
+  safe_skills_to_job: dict[str, tuple[str, ...]] = {
+    # This removes exploration jobs to make some logic easier
+    "empathy": ("Babysitting", "Barista", "Tending Animals", "Nursing Assistant", "Cooking"),
+    "persuasion": ("Administration", "Leader", "Study Humanities", "Depot Clerk"),
+    "creativity": ("Play the Photophonor", "Cooking", "Study Humanities", "Barista", "Robot Repair"),
+    "bravery": ("Sportsball", "Guard Duty"), # Not adding Explore Glow as that can only happen once a year
+    # These jobs give bravery, but also require bravery, so excluding them:  "Sneak Out", "Explore Nearby",
+    
+    "reasoning": ("Tutoring", "Study Engineering"),
+    "organizing": ("Deliver Supplies", "Depot Clerk", "Xenobotany", "Administration"), # Not adding Rebuild as that is hard coded to year 15 only
+    # Some places in game code use "organizing", others use "organization"
+    "organization": ("Deliver Supplies", "Depot Clerk", "Xenobotany", "Administration"), # Not adding Rebuild as that is hard coded to year 15 only
+    "engineering": ("Robot Repair", "Study Engineering", "Construction"),
+    "biology": ("Nursing Assistant", "Xenobotany", "Study Life Sciences", "Farming"),
+
+    "toughness": ("Shovelling Dirt", "Farming"), # Not adding Rebuild as that is hard coded to year 15 only
+    "perception": ("Lookout Duty"),
+    "combat": ("Defense Training", "Guard Duty"),
+    "animals": ("Tending Animals"),
   }
 
   building_jobs: dict[str, tuple[str, ...]] = {

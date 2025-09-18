@@ -19,7 +19,7 @@ class Player_ExecutePatch
     Helpers.readyForItems = true;
     Plugin.Logger.LogInfo("Map loaded");
     if (Helpers.firstMapLoad){
-      Helpers.DisplayAPStory();
+      Helpers.DisplayConnectionMessage();
     }
     Helpers.firstMapLoad = false;
   }
