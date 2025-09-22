@@ -146,13 +146,14 @@ def set_job_rules(world: ExocolonistWorld) -> None:
       state.has_any(("Hunt in the Swamps", "Forage in the Valley", "Survey the plains"), world.player)
     }
   )
-  # Xenobotany requires 34 biology
-  set_rule(
-    world.get_location("Xenobotany"),
-    lambda state: (
-      state.has_any("Progressive Biology Perk", world.player)
-    ),
-  )
+  if not world.options.perksanity:
+    # Xenobotany requires 34 biology
+    set_rule(
+      world.get_location("Xenobotany"),
+      lambda state: (
+        state.has_any(world.skills_to_job["biology"], world.player)
+      ),
+    )
   # Relax in the Park is unlocked when you do geoponics jobs
   set_rule(
     world.get_location("Relax in the Park"),
@@ -402,11 +403,20 @@ def set_skills_rules(world):
     for i in range(2,4):
       set_rule(
         world.get_location(f"{skill} Perk {i}"),
-        lambda state, jobs=world.safe_skills_to_job[skill.lower()], i=i: (
-          state.has_any(jobs, world.player) and
+        lambda state, skill=skill, i=i: (
+          state.has_any(world.safe_skills_to_job[skill.lower()], world.player) and
           state.has(f"Progressive {skill} Perk", world.player, i-1)
         )
       )
+
+  # Xenobotany requires 1 biology perk
+  set_rule(
+    world.get_location("Xenobotany"),
+    lambda state: (
+      state.has("Progressive Biology Perk", world.player, 1)
+    )
+  )
+
 
 def set_victory_condition(world: ExocolonistWorld) -> None:
   world.multiworld.completion_condition[world.player] = lambda state: state.has("Ending", world.player)

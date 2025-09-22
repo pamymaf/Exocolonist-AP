@@ -63,16 +63,18 @@ class ExocolonistWorld(World):
     # These jobs give bravery, but also require bravery, so excluding them:  "Sneak Out", "Explore Nearby",
     
     "reasoning": ("Tutoring", "Study Engineering"),
-    "organizing": ("Deliver Supplies", "Depot Clerk", "Xenobotany", "Administration"), # Not adding Rebuild as that is hard coded to year 15 only
+    "organizing": ("Deliver Supplies", "Depot Clerk", "Xenobotany", "Administration", "Rebuild"),
     # Some places in game code use "organizing", others use "organization"
-    "organization": ("Deliver Supplies", "Depot Clerk", "Xenobotany", "Administration"), # Not adding Rebuild as that is hard coded to year 15 only
+    "organization": ("Deliver Supplies", "Depot Clerk", "Xenobotany", "Administration", "Rebuild"), 
     "engineering": ("Robot Repair", "Study Engineering", "Construction"),
     "biology": ("Nursing Assistant", "Xenobotany", "Study Life Sciences", "Farming"),
 
-    "toughness": ("Shovelling Dirt", "Farming"), # Not adding Rebuild as that is hard coded to year 15 only
-    "perception": ("Lookout Duty"),
+    "toughness": ("Shovelling Dirt", "Farming", "Rebuild"),
+    # Deliver Supplies only gives 1 perception, however causes fill issues without it
+    "perception": ("Lookout Duty", "Deliver Supplies"),
     "combat": ("Defense Training", "Guard Duty"),
-    "animals": ("Tending Animals"),
+    # Defense training only gives 1 animals, however causes fill issues without it
+    "animals": ("Tending Animals", "Defense Training"),
   }
 
   building_jobs: dict[str, tuple[str, ...]] = {

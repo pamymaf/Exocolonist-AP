@@ -388,7 +388,7 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
     age18.add_locations(age18_friends, ExocolonistLocation)
   
   if world.options.datesanity:
-    age15_dates: dict[str, int | None] = {
+    age16_dates: dict[str, int | None] = {
       "Date Marz": world.location_name_to_id["Date Marz"],
       "Date Dys": world.location_name_to_id["Date Dys"],
       "Date Cal": world.location_name_to_id["Date Cal"],
@@ -396,7 +396,7 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
       "Date Tang": world.location_name_to_id["Date Tang"],
       "Date Anemone": world.location_name_to_id["Date Anemone"],
     }
-    age15.add_locations(age15_dates, ExocolonistLocation)
+    age16.add_locations(age16_dates, ExocolonistLocation)
 
     age19_dates: dict[str, int | None] = {
       "Date Rex": world.location_name_to_id["Date Rex"],
