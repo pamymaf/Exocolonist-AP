@@ -33,7 +33,7 @@ def set_all_entrance_rules(world: ExocolonistWorld) -> None:
   set_rule(age11_to_age12, lambda state: state.has("Progressive Year", world.player, 2))
   set_rule(age12_to_age13, lambda state: state.has("Progressive Year", world.player, 3))
   set_rule(age13_to_age14, lambda state: state.has("Progressive Year", world.player, 4))
-  set_rule(age14_to_age15, lambda state: state.has("Progressive Year", world.player, 5))
+  set_rule(age14_to_age15, lambda state: state.has("Progressive Year", world.player, 5) and (state.has("Mourn", world.player) or state.has("Rebuild", world.player)))
   set_rule(age15_to_age16, lambda state: state.has("Progressive Year", world.player, 6))
   set_rule(age16_to_age17, lambda state: state.has("Progressive Year", world.player, 7))
   set_rule(age17_to_age18, lambda state: state.has("Progressive Year", world.player, 8))
@@ -150,7 +150,7 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   set_rule(
     world.get_location("Xenobotany"),
     lambda state: (
-      state.has_any(world.skills_to_job["biology"], world.player)
+      state.has_any("Progressive Biology Perk", world.player)
     ),
   )
   # Relax in the Park is unlocked when you do geoponics jobs

@@ -160,7 +160,6 @@ def create_all_items(world: ExocolonistWorld) -> None:
     world.create_item("Administration"),
     world.create_item("Survey the Ridge"),
     world.create_item("Rebuild"),
-    world.create_item("Mourn"),
     world.create_item("Barista"),
     world.create_item("Nursing Assistant"),
     world.create_item("Explore Glow"),
@@ -222,6 +221,7 @@ def create_all_items(world: ExocolonistWorld) -> None:
     world.create_item("Relax in the Lounge"),
     world.create_item("Relax on the Walls"),
     world.create_item("Relax in the Park"),
+    world.create_item("Mourn"),
     ]
   starting_relax = world.random.choice(relax_jobs)
   world.multiworld.push_precollected(starting_relax)
