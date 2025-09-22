@@ -23,10 +23,8 @@ class Story_ExecutePatch
     Plugin.Logger.LogInfo($"{storyID} story triggered");
     switch (storyID){
       case "gamestartintro":
-        JObject json = Helpers.GetConnectionInfoNewGame();
-        Plugin.Logger.LogInfo("New game, attempting connection");
-        Helpers.Connect(json);
-        Helpers.ReplaceHogs();
+        ArchipelagoClient.serverData.InitializeData();
+        ArchipelagoClient.RefreshUnlocks();
         break;
         
       case string x when x.Contains("explorecollectible"):
@@ -45,37 +43,28 @@ class Story_ExecutePatch
     
   }
 
-  [HarmonyPatch("Execute")]
-  [HarmonyPrefix]
-  public static bool Prefix(Story __instance, Result result, bool undoing = false, bool startStoryOnly = false, bool isEnding = false)
-  {
-    string storyID = __instance.storyID;
-    return true;   
-  }
-
-
-
   public static bool TriggerGoal(string ending)
   {
-    if (ending.Contains("archipelago") || ending == "ending_oldsol" || ending == "ending_end") {
-      return false;
-    } else if (ending.Contains("ending_")) {
-      string endingName = ending.Replace("ending_", "");
-      // Any ending
-      if (ArchipelagoClient.serverData.ending == "any") {
-        return true;
-      } 
-      // No hobbyist/rebel
-      else if (ArchipelagoClient.serverData.ending == "no_slacker" && endingName != "hobbyist" && endingName != "rebel") {
-        return true;
-      }
-      // Only special endings
-      else if (ArchipelagoClient.serverData.ending == "special" && endingName.Contains("special")) {
-        return true;
-      }
-      return false;
-    } else {
+    if (!ending.Contains("ending")) {
       return false;
     }
+    string endingName = ending.Replace("ending_", "");
+    Plugin.Logger.LogInfo($"TriggerGoal: {endingName}");
+    if (ending.Contains("archipelago") || ending == "ending_oldsol" || ending == "ending_end") {
+      // Any ending
+    } 
+    else if (ArchipelagoClient.serverData.ending == "any") {
+      return true;
+    } 
+    // No hobbyist/rebel
+    else if (ArchipelagoClient.serverData.ending == "no_slacker" && endingName != "hobbyist" && endingName != "rebel") {
+      Plugin.Logger.LogInfo("Should goal here");
+      return true;
+    }
+    // Only special endings
+    else if (ArchipelagoClient.serverData.ending == "special" && endingName.Contains("special")) {
+      return true;
+    }
+    return false;
   }
 }

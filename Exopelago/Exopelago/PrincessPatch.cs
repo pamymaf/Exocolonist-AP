@@ -10,10 +10,12 @@ using Exopelago.Archipelago;
 
 namespace Exopelago;
 
-[HarmonyPatch(typeof(PrincessMonth))]
-class Princess_PrincessMonthPatch
+
+[HarmonyPatch]
+class PrincessMonthPatch
 {
-  [HarmonyPatch("SetMonth")]
+  // Detect age up
+  [HarmonyPatch(typeof(PrincessMonth), "SetMonth")]
   [HarmonyPrefix]
   public static bool Prefix(int value)
   {
@@ -23,16 +25,20 @@ class Princess_PrincessMonthPatch
     if (value >= maxMonth) {
       Plugin.Logger.LogInfo($"Attempting to end the game");
       StoryCalls.endgame("archipelagoEnding");
-      ArchipelagoClient.Disconnect();
+    } else if (value == 66) {
+      // These jobs unlock automatically when you turn 15
+      ArchipelagoClient.ProcessLocation("Mourn");
+      ArchipelagoClient.ProcessLocation("Rebuild");
     }
     return true;
   }
 }
 
-[HarmonyPatch(typeof(Princess))]
-class Princess_SkillPatch
+[HarmonyPatch]
+class PrincessPatches
 {
-  [HarmonyPatch("SetSkill")]
+  // Intercept skill up and perk unlock attempts
+  [HarmonyPatch(typeof(Princess), "SetSkill")]
   [HarmonyPrefix]
   public static bool Prefix(string skillID, int value, Result result)
   {
@@ -80,12 +86,9 @@ class Princess_SkillPatch
     } 
     return true;
   }
-}
 
-[HarmonyPatch(typeof(Princess))]
-class Princess_LovePatch
-{
-  [HarmonyPatch("IncrementLove")]
+  // Detect love increment attempts
+  [HarmonyPatch(typeof(Princess), "IncrementLove")]
   [HarmonyPostfix]
   public static void Postfix(string charaID, int diffAmount, Result result)
   {
@@ -102,6 +105,7 @@ class Princess_LovePatch
 [HarmonyPatch(typeof(PrincessCards))]
 class Princess_PrincessCardPatch
 {
+  // Detect when a card is added to the deck
   [HarmonyPatch("AddCard")]
   [HarmonyPrefix]
   public static bool Prefix(CardData cardData, Result result)

@@ -8,15 +8,139 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.IO;
+using System.Globalization;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
+
 
 public class Helpers
 {
   public static bool readyForItems = false;
   public static bool firstMapLoad = true;
 
+
+  // ========== Connection ========== \\
+  // Get connection info
+  public static JObject GetConnectionInfoSaveGame()
+  {
+    try {
+      JObject json = new JObject();
+      json["ip"] = Princess.GetMemory("apServer");
+      json["port"] = Princess.GetMemory("apPort");
+      json["slot"] = Princess.GetMemory("apSlot");
+      json["pass"] = Princess.GetMemory("apPass");
+      json["seed"] = Princess.GetMemory("apSeed");
+      return json;
+    } catch {
+      return null;
+    }
+  }
+
+  // Set connection info
+  public static void AddSaveData()
+  {
+    Princess.SetMemory("apServer", ArchipelagoClient.serverData.uri);
+    Princess.SetMemory("apPort", ArchipelagoClient.serverData.port);
+    Princess.SetMemory("apSlot", ArchipelagoClient.serverData.slotName);
+    Princess.SetMemory("apPass", ArchipelagoClient.serverData.password);
+    Princess.SetMemory("apSeed", ArchipelagoClient.serverData.seed);
+  }
+
+  
+
+  // ========== Unlockers ========== \\
+  // We do this so we can intercept AddMemory and use a special prefix to detect it's AP unlocking it, not the game
+  public static void UnlockJob(string name)
+  {
+    Plugin.Logger.LogInfo($"Attempting to unlock job {name}");
+    Princess.SetMemory($"unlockjob_{name}");
+  }
+
+
+  // Gives collectible without popup
+  // Used for collectibles and jobs as gear cards
+  public static void GiveCard(string collectible) 
+  {
+    Plugin.Logger.LogInfo($"Attempting to give {collectible}");
+    CardData cardData = CardData.FromID(collectible);
+    PrincessCards.AddCard(cardData);
+    Princess.SetMemory("mem_foundCollectible");
+  }
+
+  // For some reason Perk unlocks don't go through SetMemory but instead AddMemory
+  public static void UnlockPerk(string skill)
+  {
+    Plugin.Logger.LogInfo($"UnlockPerk {skill}");
+    int maxPerk = ArchipelagoClient.serverData.receivedPerk[skill];
+    Plugin.Logger.LogInfo($"maxPerk {maxPerk}");
+    if (maxPerk == 1) {
+      Princess.AddMemory($"unlockskillperk_{skill}1");
+    } else if (maxPerk == 2) {
+      Princess.AddMemory($"unlockskillperk_{skill}2");
+    } else if (maxPerk == 3) {
+      Princess.AddMemory($"unlockskillperk_{skill}3");
+    }
+  }
+
+
+  // ========== Groundhogs ========== \\
+  // TODO LOCAL SAVES
+  public static void ReplaceHogs() {
+    var hogs = ArchipelagoClient.GetAllHogs();
+    Plugin.Logger.LogInfo($"Server hogs: {hogs}");
+    Plugin.Logger.LogInfo($"Old hogs: {PrettyDict(Groundhogs.instance.groundhogs)}");
+    Groundhogs.instance.groundhogs = new StringDictionary();
+    foreach (var hog in hogs) {
+      Groundhogs.instance.groundhogs.Set(hog.Key, hog.Value);
+    }
+  }
+
+
+  // ========== AP messages ========== \\
+  // Show AP hints
+  public static void DisplayAPHint(string sender, string receiver, string item, string location) {
+    if (readyForItems){
+      string slotName = ArchipelagoClient.serverData.slotName;
+      if (sender == slotName && receiver == slotName) {
+        PlayerText.Show($"Your {item} is at {location} in your world");
+      } else if (sender == slotName) {
+        PlayerText.Show($"{receiver}'s {item} is at {location} in your world");
+      } else if (receiver == slotName) {
+        PlayerText.Show($"Your {item} is at {location} in {sender}'s world");
+      }
+    }
+  }
+
+  // Show AP send/receive
+  public static void DisplayAPItem(string sender, string receiver, string item) {
+    if (readyForItems){
+      string slotName = ArchipelagoClient.serverData.slotName;
+      if (sender == slotName && receiver == slotName) {
+        PlayerText.Show($"You sent yourself {item}");
+      } else if (sender == slotName) {
+        PlayerText.Show($"You sent {receiver} {item}");
+      } else if (receiver == slotName) {
+        PlayerText.Show($"{sender} sent you {item}");
+      }
+    }
+  }
+
+  // Show AP connected
+  public static void DisplayConnectionMessage(string message = null) {
+    if (readyForItems){
+      if (message != null) {
+        PlayerText.Show(message);
+      } else if (ArchipelagoClient.authenticated){
+        PlayerText.Show("Archipelago connected");
+      } else {
+        PlayerText.Show("Archipelago not connected");
+      }
+    }
+  }
+
+
+  // Add skill points
   //Not used yet
   public static void AddSkillPoints(string skillID, int value)
   {
@@ -34,61 +158,46 @@ public class Helpers
     Plugin.Logger.LogInfo($"Added {value} to {skillID}. Old: {currentValue}. New: {newValue}");
   }
 
-  public static JObject GetConnectionInfoNewGame()
-  {
-    JObject json = JObject.Parse(File.ReadAllText("connectionInfo.json"));
-    return json;
-  }
+  // Add love points
 
-  public static JObject GetConnectionInfoSaveGame()
-  {
-    JObject json = new JObject();
-    json["ip"] = Princess.GetMemory("apServer");
-    json["port"] = Princess.GetMemory("apPort");
-    json["slot"] = Princess.GetMemory("apSlot");
-    json["pass"] = Princess.GetMemory("apPass");
-    json["seed"] = Princess.GetMemory("apSeed");
-    return json;
-  }
+
+
   
-  public static void Connect(JObject json) {
-    Plugin.Logger.LogInfo("Connection here");
-    Plugin.Logger.LogInfo(json.ToString(Formatting.None));
-    ArchipelagoClient.Connect((string)json["ip"], (string)json["port"], (string)json["slot"], (string)json["pass"]);
-    // TODO: Add ap info to main menu
-    Dictionary<string, string> apData = new () {
-      {"apServer", (string)json["ip"]},
-      {"apPort", (string)json["port"]},
-      {"apSlot", (string)json["slot"]},
-      {"apPass", (string)json["pass"]},
-      {"apSeed", ArchipelagoClient.session.RoomState.Seed},
-    };
-    Helpers.AddSaveData(apData);
-    Helpers.firstMapLoad = true;
-}
 
 
-  // We do this so we can intercept SetMemory and use a special prefix to detect it's AP unlocking it, not the game
-  public static void UnlockJob(string name)
-  {
-    Plugin.Logger.LogInfo($"Attempting to unlock job {name}");
-    Princess.SetMemory($"unlockjob_{name}");
-  }
-
-  // Called from SetMemory prefix, needs to return a bool on if the memory should be set
+  // ========== Bulk processing ========== \\
+  // Called from AddMemory prefix, needs to return a bool on if the memory should be set
   public static bool ProcessMemory(string id)
   {
     if (!ArchipelagoClient.authenticated) {
       return true;
     }
+
+    string perkID;
     switch (id) {
+      case string x when x.StartsWith("skillperk_") && ArchipelagoClient.serverData.perksanity:
+        perkID = id.Replace("skillperk_", "");
+        string perk = perkID.Insert(perkID.Length - 1, " Perk ");
+        string location = CultureInfo.CurrentCulture.TextInfo.ToTitleCase($"{perk}".ToLower());
+        Plugin.Logger.LogInfo($"AddMemory location {id}");
+        ArchipelagoClient.ProcessLocation(location);
+        return false;
+
+      case string x when x.StartsWith("unlockskillperk_"):
+        perkID = id.Replace("unlock", "");
+        Princess.memories.AddSafe(perkID, "true");
+        Plugin.Logger.LogInfo($"AddMemory AddSafe {perkID}");
+        Plugin.Logger.LogInfo($"Trying to unlock {perkID}");
+        Perk.UpdateCurrentPerks();
+        return false;
+
       case string x when x.StartsWith("unlockjob_"):
         string receivedJob = id.RemoveStart("unlockjob_");
         if (!Princess.cards.Contains(receivedJob.ToLower())){
           GiveCard(receivedJob);
         }
-        Princess.AddMemory($"job_{receivedJob}", "true");
-        Plugin.Logger.LogInfo($"{receivedJob} unlocked.");
+        Princess.memories.AddSafe($"job_{receivedJob}", "true");
+        Plugin.Logger.LogInfo($"{receivedJob} unlocked");
         return false;
 
       case string x when x.StartsWith("job_"):
@@ -118,115 +227,21 @@ public class Helpers
     }
   }
 
-  public static void GiveCard(string collectible) 
-  {
-    // Gives collectible without popup
-    Plugin.Logger.LogInfo($"Attempting to give {collectible}");
-    CardData cardData = CardData.FromID(collectible);
-    PrincessCards.AddCard(cardData);
-    Princess.SetMemory("mem_foundCollectible");
+
+  // ========== Misc ========== \\
+  public static string PrettyDict(Dictionary<string, string> input) {
+    string pretty = input.Aggregate(
+      "{", 
+      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
+      (str) => str += "}"
+    );
+    return pretty;
   }
 
-  public static void AddSaveData(Dictionary<string, string> data)
-  {
-    Princess.SetMemory("apServer", data["apServer"]);
-    Princess.SetMemory("apPort", data["apPort"]);
-    Princess.SetMemory("apSlot", data["apSlot"]);
-    Princess.SetMemory("apPass", data["apPass"]);
-    Princess.SetMemory("apSeed", data["apSeed"]);
-  }
-
+  // So that archipelagoData isn't talking to Princess directly
   public static int GetAge()
   {
     return Princess.age;
   }
 
-
-  public static void DisplayConnectionMessage() {
-    if (readyForItems){
-      if (ArchipelagoClient.authenticated){
-        PlayerText.Show("AP connected");
-      } else {
-        PlayerText.Show("AP not connected");
-      }
-    }
-  }
-
-
-  public static void DisplayAPHint(string sender, string receiver, string item, string location) {
-    if (readyForItems){
-      string slotName = ArchipelagoClient.serverData.slotName;
-      if (sender == slotName && receiver == slotName) {
-        PlayerText.Show($"Your {item} is at {location} in your world");
-      } else if (sender == slotName) {
-        PlayerText.Show($"{receiver}'s {item} is at {location} in your world");
-      } else if (receiver == slotName) {
-        PlayerText.Show($"Your {item} is at {location} in {sender}'s world");
-      }
-    }
-  }
-
-
-  public static void DisplayAPItem(string sender, string receiver, string item) {
-    if (readyForItems){
-      string slotName = ArchipelagoClient.serverData.slotName;
-      if (sender == slotName && receiver == slotName) {
-        PlayerText.Show($"You sent yourself {item}");
-      } else if (sender == slotName) {
-        PlayerText.Show($"You sent {receiver} {item}");
-      } else if (receiver == slotName) {
-        PlayerText.Show($"{sender} sent you {item}");
-      }
-    }
-  }
-
-  public static void UnlockPerk(string skill)
-  {
-    Plugin.Logger.LogInfo($"UnlockPerk {skill}");
-    int maxPerk = ArchipelagoClient.serverData.receivedPerk[skill];
-    Plugin.Logger.LogInfo($"maxPerk {maxPerk}");
-    if (maxPerk == 1) {
-      Princess.AddMemory($"unlockskillperk_{skill}1");
-    } else if (maxPerk == 2) {
-      Princess.AddMemory($"unlockskillperk_{skill}2");
-    } else if (maxPerk == 3) {
-      Princess.AddMemory($"unlockskillperk_{skill}3");
-    }
-  }
-
-
-  public static void ReplaceHogs() {
-    var hogs = ArchipelagoClient.GetAllHogs();
-
-    string pretty = Groundhogs.instance.groundhogs.Aggregate(
-      "{", 
-      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
-      (str) => str += "}"
-    );
-    Plugin.Logger.LogInfo($"ReplaceHogs: {pretty}");
-
-
-    Groundhogs.instance.groundhogs = new StringDictionary();
-
-
-    pretty = Groundhogs.instance.groundhogs.Aggregate(
-      "{", 
-      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
-      (str) => str += "}"
-    );
-    Plugin.Logger.LogInfo($"ReplaceHogs: {pretty}");
-
-
-    Plugin.Logger.LogInfo("Replacing all hogs");
-    foreach (var hog in hogs) {
-      Groundhogs.instance.groundhogs.Set(hog.Key, hog.Value);
-    }
-
-    pretty = Groundhogs.instance.groundhogs.Aggregate(
-      "{", 
-      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
-      (str) => str += "}"
-    );
-    Plugin.Logger.LogInfo($"ReplaceHogs: {pretty}");
-  }
 }

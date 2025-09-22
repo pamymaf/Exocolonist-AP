@@ -14,10 +14,10 @@ public class ArchipelagoData
 {
   public string uri = "archipelago.gg";
   public string port = "38281";
-  public string slotName = "";
+  public string slotName = "Player1";
   public string password = "";
+  public string seed;
   public int index;
-  public string seedName = "Unknown";
   public Dictionary<string, object> slotData;
   public static bool deathLink = false;
   public List<long> checkedLocations;
@@ -27,6 +27,7 @@ public class ArchipelagoData
   public bool friendsanity;
   public bool datesanity;
   public string ending;
+  public bool perksanity;
 
   public List<string> unlockedJobs;
   public List<string> receivedJobs;
@@ -35,11 +36,11 @@ public class ArchipelagoData
   public List<string> receivedBuildings;
   public Dictionary<string, int> receivedPerk;
   public int maxAge = 10;
-  public bool perksanity = false;
 
-  public void StartNewSeed()
+
+  public void InitializeData()
   {
-    Console.WriteLine("Creating new seed data");
+    seed = ArchipelagoClient.session.RoomState.Seed;
     index = ArchipelagoClient.offlineReceivedItems;
     receivedItems = new Dictionary<long, int>();
     unlockedJobs = new ();
@@ -91,7 +92,6 @@ public class ArchipelagoData
         {"animals", 0},
       };
     }
-
 
 
     var pretty = slotData.Aggregate(

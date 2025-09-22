@@ -1,5 +1,3 @@
-//PATCH RIDGE BOSS TO GIVE AN OUT
- 
 // chara_other
 @replace|dadMonth1|~set mem_job_relaxLounge = true||0|0
 {
@@ -183,6 +181,14 @@
 {
   ~if !mem_sendjob_studyPhysics
 }
+@replace|engineering|~if mem_rebuilding||0|0
+{
+  ~if mem_job_mourn
+}
+@replace|engineering|~if mem_rebuilding||0|0
+{
+  ~if mem_job_rebuild
+}
 @replace|engineering|~if !mem_job_tutoring||0|0
 {
   ~if !mem_sendjob_tutoring
@@ -320,6 +326,10 @@
 @replace|garrisonLookoutDutyUnlock|~if mem_job_lookoutDuty = false||0|0
 {
   ~if !mem_sendjob_lookoutDuty
+}
+@replace|garrisonGuardDutyUnlock|~if mem_job_guardDuty = false||0|0
+{
+  ~if mem_sendjob_guardDuty = false
 }
 @replace|garrison|~if !mem_job_lookoutDuty||0|0
 {
