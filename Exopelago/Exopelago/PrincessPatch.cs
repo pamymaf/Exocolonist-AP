@@ -79,7 +79,7 @@ class PrincessPatches
       // Magic try/catch block
       // The code works as intended with this here but never prints an error
       // Thanks Sae for the idea
-      Plugin.Logger.LogError($"SetSkill ID: {id} error: {e}");
+      Plugin.Logger.LogError($"SetSkill ID: {skillID} error: {e}");
       return true;
     } 
     return true;

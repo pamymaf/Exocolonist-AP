@@ -213,3 +213,4 @@ public class ArchipelagoClient
     Plugin.Logger.LogInfo($"Sending goal");
     session.SetGoalAchieved();
   }
+}
