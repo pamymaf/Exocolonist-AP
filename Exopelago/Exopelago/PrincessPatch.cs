@@ -125,6 +125,13 @@ class Princess_PrincessCardPatch
       case "Unisaur":
         ArchipelagoClient.ProcessLocation("Adopt Unisaur");
         break;
+
+      case "Photophonor":
+        // We want to block the player getting this card by normal means
+        if (ArchipelagoClient.serverData.receivedJobs.Contains("photophonor")) {
+          return true;
+        }
+        return false;
       
       default:
         break;

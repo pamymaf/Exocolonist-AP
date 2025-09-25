@@ -15,7 +15,7 @@ using Archipelago.MultiClient.Net.Models;
 using Exopelago;
 
 namespace Exopelago.Archipelago;
-public class ArchipelagoClient
+public static class ArchipelagoClient
 {
   public const string GameName = "Exocolonist";
   public const string ModName = "Exopelago";
@@ -47,13 +47,6 @@ public class ArchipelagoClient
     // Called whenever a new game starts
     session = ArchipelagoSessionFactory.CreateSession(server, Int32.Parse(port));
 
-    // Must go BEFORE a successful connection attempt
-    session.Items.ItemReceived += (receivedItemsHelper) => {
-      var itemReceivedName = receivedItemsHelper.PeekItem();
-      // ... Handle item receipt here
-      ProcessItemReceived(itemReceivedName);
-      receivedItemsHelper.DequeueItem();
-    };
 
     attemptingConnection = true;
     session.MessageLog.OnMessageReceived += OnMessageReceived;
@@ -68,6 +61,19 @@ public class ArchipelagoClient
       serverData.slotName = user;
       serverData.password = pass;
       serverData.InitializeData();
+
+      session.Items.ItemReceived += (receivedItemsHelper) => {
+        var itemReceivedName = receivedItemsHelper.PeekItem();
+        // ... Handle item receipt here
+        ProcessItemReceived(itemReceivedName);
+        receivedItemsHelper.DequeueItem();
+      };
+
+      while (session.Items.Any()) {
+        session.Items.DequeueItem();
+      }
+
+
     }
     catch (Exception e)
     {
@@ -147,6 +153,7 @@ public class ArchipelagoClient
 
     // Other cases to display the item received popup are handled in OnMessageReceived
     // But the server sending us an object never actually passes through that handler
+    // TODO Make this not pop up when you load a game
     if (item.Player.Name == "Server") {
       Exopelago.Helpers.DisplayAPItem("Server", serverData.slotName, itemName);
     }

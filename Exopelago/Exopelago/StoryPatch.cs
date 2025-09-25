@@ -26,6 +26,8 @@ class Story_ExecutePatch
         ArchipelagoClient.serverData.InitializeData();
         ArchipelagoClient.RefreshUnlocks();
         ExopelagoGroundhogs.instance.Load();
+        Helpers.firstMapLoad = true;
+        Helpers.AddSaveData();
         break;
         
       case string x when x.Contains("explorecollectible"):
