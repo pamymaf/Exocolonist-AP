@@ -28,6 +28,7 @@ class ExocolonistWorld(World):
   web = ExocolonistWebWorld()
   options: ExocolonistOptions
   options_dataclass = ExocolonistOptions
+  ut_can_gen_without_yaml = True
 
   location_name_to_id = locations.LOCATION_NAME_TO_ID
   item_name_to_id = items.ITEM_NAME_TO_ID
@@ -117,3 +118,17 @@ class ExocolonistWorld(World):
 
   def fill_slot_data(self) -> dict[str, Any]:
     return self.options.as_dict("friendsanity", "datesanity", "ending", "perksanity")
+
+  @staticmethod
+  def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:
+    return slot_data
+
+  def generate_early(self) -> None:
+    re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
+    if re_gen_passthrough and self.game in re_gen_passthrough:
+      slot_data: dict[str, Any] = re_gen_passthrough[self.game]
+      slot_options: dict[str, Any] = slot_data
+      for key, value in slot_options.items():
+        opt: Optional[Option] = getattr(self.options, key, None)
+        if opt is not None:
+          setattr(self.options, key, opt.from_any(value))
