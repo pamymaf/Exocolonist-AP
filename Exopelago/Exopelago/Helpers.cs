@@ -53,7 +53,6 @@ public class Helpers
   // We do this so we can intercept AddMemory and use a special prefix to detect it's AP unlocking it, not the game
   public static void UnlockJob(string name)
   {
-    Plugin.Logger.LogInfo($"Attempting to unlock job {name}");
     Princess.SetMemory($"unlockjob_{name}");
   }
 
@@ -80,19 +79,6 @@ public class Helpers
       Princess.AddMemory($"unlockskillperk_{skill}2");
     } else if (maxPerk == 3) {
       Princess.AddMemory($"unlockskillperk_{skill}3");
-    }
-  }
-
-
-  // ========== Groundhogs ========== \\
-  // TODO LOCAL SAVES
-  public static void ReplaceHogs() {
-    var hogs = ArchipelagoClient.GetAllHogs();
-    Plugin.Logger.LogInfo($"Server hogs: {hogs}");
-    Plugin.Logger.LogInfo($"Old hogs: {PrettyDict(Groundhogs.instance.groundhogs)}");
-    Groundhogs.instance.groundhogs = new StringDictionary();
-    foreach (var hog in hogs) {
-      Groundhogs.instance.groundhogs.Set(hog.Key, hog.Value);
     }
   }
 
@@ -158,12 +144,7 @@ public class Helpers
     Plugin.Logger.LogInfo($"Added {value} to {skillID}. Old: {currentValue}. New: {newValue}");
   }
 
-  // Add love points
-
-
-
-  
-
+  // TODO Add love points
 
   // ========== Bulk processing ========== \\
   // Called from AddMemory prefix, needs to return a bool on if the memory should be set
@@ -179,15 +160,14 @@ public class Helpers
         perkID = id.Replace("skillperk_", "");
         string perk = perkID.Insert(perkID.Length - 1, " Perk ");
         string location = CultureInfo.CurrentCulture.TextInfo.ToTitleCase($"{perk}".ToLower());
-        Plugin.Logger.LogInfo($"AddMemory location {id}");
+        Plugin.Logger.LogInfo($"Trying to send AP location {location}");
         ArchipelagoClient.ProcessLocation(location);
         return false;
 
       case string x when x.StartsWith("unlockskillperk_"):
         perkID = id.Replace("unlock", "");
         Princess.memories.AddSafe(perkID, "true");
-        Plugin.Logger.LogInfo($"AddMemory AddSafe {perkID}");
-        Plugin.Logger.LogInfo($"Trying to unlock {perkID}");
+        Plugin.Logger.LogInfo($"{perkID} unlocked");
         Perk.UpdateCurrentPerks();
         return false;
 

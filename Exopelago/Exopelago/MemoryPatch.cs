@@ -23,9 +23,7 @@ class Princess_AddMemoryPatch
       // Magic try/catch block
       // The code works as intended with this here but never prints an error
       // Thanks Sae for the idea
-      Plugin.Logger.LogInfo("ERROR in AddMemory");
-      Plugin.Logger.LogInfo(id);
-      Plugin.Logger.LogInfo(e);
+      Plugin.Logger.LogError($"AddMemory ID: {id} error: {e}");
       return true;
     } 
   }

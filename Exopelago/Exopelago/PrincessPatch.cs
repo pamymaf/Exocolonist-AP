@@ -21,7 +21,7 @@ class PrincessMonthPatch
   {
     int maxAge = ArchipelagoClient.serverData.maxAge;
     int maxMonth = (maxAge-10+1)*13+1;
-    Plugin.Logger.LogInfo($"SetMonth prefix maxAge {maxAge} maxMonth {maxMonth} value {value}");
+    Plugin.Logger.LogInfo($"SetMonth prefix: maxAge {maxAge} maxMonth {maxMonth} value {value}");
     if (value >= maxMonth) {
       Plugin.Logger.LogInfo($"Attempting to end the game");
       StoryCalls.endgame("archipelagoEnding");
@@ -79,9 +79,7 @@ class PrincessPatches
       // Magic try/catch block
       // The code works as intended with this here but never prints an error
       // Thanks Sae for the idea
-      Plugin.Logger.LogInfo("ERROR in SetSkill");
-      Plugin.Logger.LogInfo(skillID);
-      Plugin.Logger.LogInfo(e);
+      Plugin.Logger.LogError($"SetSkill ID: {id} error: {e}");
       return true;
     } 
     return true;
@@ -113,22 +111,18 @@ class Princess_PrincessCardPatch
     Plugin.Logger.LogInfo($"Adding {cardData.cardName} to the deck");
     switch (cardData.cardName) {
       case "Vriki":
-        Plugin.Logger.LogInfo("Received Vriki card");
         ArchipelagoClient.ProcessLocation("Adopt Vriki");
         break;
 
       case "Pet Bot":
-        Plugin.Logger.LogInfo("Received Robot card");
         ArchipelagoClient.ProcessLocation("Adopt Robot");
         break;
 
       case "Hopeye":
-        Plugin.Logger.LogInfo("Received Hopeye card");
         ArchipelagoClient.ProcessLocation("Adopt Hopeye");
         break;
 
       case "Unisaur":
-        Plugin.Logger.LogInfo("Received Unisaur card");
         ArchipelagoClient.ProcessLocation("Adopt Unisaur");
         break;
       

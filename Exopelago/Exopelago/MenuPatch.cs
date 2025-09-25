@@ -114,8 +114,6 @@ class MenuPatches
   }
 
 
-
-
 // ========== Things to make the pretty mod header button and spacer ========== \\
 // Taken from Exoloader
   private static NWButton CreateModHeader(SettingsMenu settingsMenu)

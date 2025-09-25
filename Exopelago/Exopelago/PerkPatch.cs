@@ -17,10 +17,8 @@ class Perk_MenuPatch
   public static bool Prefix(Skill skill, int perkLevel)
   {
     if (ArchipelagoClient.serverData.perksanity) {
-      Plugin.Logger.LogInfo("Blocking perk popup");
       return false;
     } else {
-      Plugin.Logger.LogInfo("Showing perk popup");
       return true;
     }
   }

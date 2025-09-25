@@ -19,7 +19,7 @@ public class ArchipelagoClient
 {
   public const string GameName = "Exocolonist";
   public const string ModName = "Exopelago";
-  public const string ModVersion = "0.1.1";
+  public const string ModVersion = "0.2.0";
 
   public static bool authenticated;
   private static bool attemptingConnection;
@@ -88,8 +88,7 @@ public class ArchipelagoClient
       {
           errorMessage += $"\n    {error}";
       }
-      Plugin.Logger.LogInfo("Connection error");
-      Plugin.Logger.LogInfo(errorMessage);
+      Plugin.Logger.LogInfo($"Connection error: {errorMessage}");
       return;
     } else {
       authenticated = true;
@@ -111,7 +110,7 @@ public class ArchipelagoClient
 // ========== Message handler ========== \\
   static void OnMessageReceived(LogMessage message)
   {
-    Plugin.Logger.LogInfo(message.ToString());
+    Plugin.Logger.LogInfo($"AP says: {message.ToString()}");
 
     switch (message) {
       case HintItemSendLogMessage hintItemSendLogMessage:
@@ -143,7 +142,7 @@ public class ArchipelagoClient
     //  object value = descriptor.GetValue(item);
     //  Plugin.Logger.LogInfo($"{name}={value}");
     //}
-    Plugin.Logger.LogInfo($"Item received {item.ItemDisplayName}");
+    Plugin.Logger.LogInfo($"AP item received: {item.ItemDisplayName}");
     var itemName = item.ItemName;
 
     // Other cases to display the item received popup are handled in OnMessageReceived
@@ -180,6 +179,7 @@ public class ArchipelagoClient
     else if (itemName.Contains("Perk")) {
       string skill = itemName.Replace("Progressive ", "").Replace(" Perk", "").ToLower();
       ArchipelagoClient.serverData.receivedPerk[skill]++;
+      Plugin.Logger.LogInfo($"Attempting to add a progressive {skill} perk");
       Exopelago.Helpers.UnlockPerk(skill);
     }
   }
@@ -210,73 +210,6 @@ public class ArchipelagoClient
   // Goal!
   public static void SendGoal()
   {
+    Plugin.Logger.LogInfo($"Sending goal");
     session.SetGoalAchieved();
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // Get groundhog variable from the server
-  public static string GetHog(string hog)
-  {
-    var output = session.DataStorage["hog"].To<Dictionary<string, string>>();
-    string pretty = output.Aggregate(
-      "{", 
-      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
-      (str) => str += "}"
-    );
-    Plugin.Logger.LogInfo($"GetHog: {pretty}");
-    if (output.ContainsKey(hog)) {
-      Plugin.Logger.LogInfo($"Returning! {output[hog]}");
-      return output[hog];
-    } else {
-      return null;
-    }
-  } 
-
-
-  public static void SetHog(string hog, string value)
-  {
-    //Plugin.Logger.LogInfo(session.DataStorage["hog"]);
-    var output = session.DataStorage["hog"].To<Dictionary<string, string>>();
-    if (output == null) {
-      session.DataStorage["hog"] = JObject.FromObject(new Dictionary<string, string>{});
-      output = session.DataStorage["hog"].To<Dictionary<string, string>>();
-    }
-    session.DataStorage["hog"] += Operation.Update(new Dictionary<string, string>{{hog, value}});
-    output = session.DataStorage["hog"].To<Dictionary<string, string>>();
-    string pretty = output.Aggregate(
-      "{", 
-      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
-      (str) => str += "}"
-    );
-    Plugin.Logger.LogInfo($"SetHog: {pretty}");
-  }
-
-
-  public static Dictionary<string, string> GetAllHogs()
-  {
-    var output = session.DataStorage["hog"].To<StringDictionary>();
-    if (output == null) {
-      session.DataStorage["hog"] = JObject.FromObject(new Dictionary<string, string>{});
-      output = session.DataStorage["hog"].To<StringDictionary>();
-    }
-    string pretty = output.Aggregate(
-      "{", 
-      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
-      (str) => str += "}"
-    );
-    Plugin.Logger.LogInfo($"GetAllHogs: {pretty}");
-    return output;
-  }
-}

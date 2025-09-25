@@ -31,7 +31,7 @@ class Story_ExecutePatch
       case string x when x.Contains("explorecollectible"):
         string id = __instance.storyID.Replace("explorecollectible", "");
         string apID = ItemsAndLocationsHandler.internalToAPcollectibles[id];
-        Plugin.Logger.LogInfo($"Collectible {storyID} ID: {id} AP ID: {apID}");
+        Plugin.Logger.LogInfo($"Collectible {storyID} gathered. ID: {id} AP ID: {apID}");
         ArchipelagoClient.ProcessLocation(apID);
         break;
 
@@ -50,9 +50,9 @@ class Story_ExecutePatch
       return false;
     }
     string endingName = ending.Replace("ending_", "");
-    Plugin.Logger.LogInfo($"TriggerGoal: {endingName}");
+    Plugin.Logger.LogInfo($"TriggerGoal scanning: {endingName}");
+    // AP ending
     if (ending.Contains("archipelago")) {
-      // AP ending
       string strNumLives = Princess.GetGroundhog("numLives");
       int intNumLives = Int32.Parse(strNumLives);
       intNumLives++;
@@ -64,8 +64,9 @@ class Story_ExecutePatch
     else if (ending == "ending_oldsol" || ending == "ending_end") {
       return false;
     }
+    // Any ending
     else if (ArchipelagoClient.serverData.ending == "any") {
-      // Any ending
+      Plugin.Logger.LogInfo("Should goal here");
       return true;
     } 
     // No hobbyist/rebel
@@ -75,6 +76,7 @@ class Story_ExecutePatch
     }
     // Only special endings
     else if (ArchipelagoClient.serverData.ending == "special" && endingName.Contains("special")) {
+      Plugin.Logger.LogInfo("Should goal here");
       return true;
     }
     return false;
