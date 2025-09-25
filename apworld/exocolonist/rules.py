@@ -73,7 +73,6 @@ def set_consumable_rules(world: ExocolonistWorld) -> None:
   set_rule(
     world.get_location("Strange Device"), 
     lambda state: (
-      state.has("Progressive Year", world.player, 1) and 
       state.has("Survey the Ridge", world.player) and 
       (
         state.has_any(world.skills_to_job["bravery"], world.player) or 
@@ -218,6 +217,36 @@ def set_job_rules(world: ExocolonistWorld) -> None:
         state.has_any(world.building_jobs[job["building"]], world.player) and
         state.has_any(world.skills_to_job[job["skill"]], world.player)
       ),
+    )
+  
+  if world.options.perksanity:
+    # If perksanity is enabled, Barista requires 2 empathy perks
+    set_rule(
+      world.get_location("Barista"),
+      lambda state: {
+        state.has("Progressive Empathy Perk", world.player, 2)
+      }
+    )
+    # Robot Repair requires 1 engineering perk
+    set_rule(
+      world.get_location("Robot Repair"),
+      lambda state: {
+        state.has("Progressive Engineering Perk", world.player, 1)
+      }
+    )
+    # Nursing Assistant requires 2 biology perks
+    set_rule(
+      world.get_location("Nursing Assistant"),
+      lambda state: {
+        state.has("Progressive Biology Perk", world.player, 2)
+      }
+    )
+    # Xenobotany requires 1 biology perk
+    set_rule(
+      world.get_location("Xenobotany"),
+      lambda state: (
+        state.has("Progressive Biology Perk", world.player, 1)
+      )
     )
 
 
@@ -365,12 +394,11 @@ def set_dates_rules(world: ExocolonistWorld) -> None:
   set_rule(
     world.get_location(f"Date Tammy"), 
     lambda state, chara=chara: (
-      state.has_any(world.chara_jobs["Tammy"], world.player) and
-      state.has_any(world.chara_jobs["Tammy"], world.player)
+      state.has_any(world.chara_jobs["Cal"], world.player)
     ),
   )
-  # Dys has an extra requirement, we need bravery or toughness 20 for his jobs
-  # Sym is found in exploration jobs, so combining the two
+  # Dys has an extra requirement, we need bravery or toughness 20 for most of his jobs
+  # Sym is found in exploration jobs which also require bravery or toughness, so combining the two
   for chara in ["Dys", "Sym"]:
     set_rule(
       world.get_location(f"Date {chara}"), 
@@ -382,6 +410,7 @@ def set_dates_rules(world: ExocolonistWorld) -> None:
         )
       ),
     )
+
   # These characters only appear year 5
   for chara in ["Nomi", "Rex", "Vace"]:
     set_rule(
@@ -409,13 +438,7 @@ def set_skills_rules(world):
         )
       )
 
-  # Xenobotany requires 1 biology perk
-  set_rule(
-    world.get_location("Xenobotany"),
-    lambda state: (
-      state.has("Progressive Biology Perk", world.player, 1)
-    )
-  )
+
 
 
 def set_victory_condition(world: ExocolonistWorld) -> None:
