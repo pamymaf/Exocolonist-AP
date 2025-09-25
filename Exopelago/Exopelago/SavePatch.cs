@@ -11,26 +11,20 @@ using Exopelago.Archipelago;
 
 namespace Exopelago;
 
-[HarmonyPatch(typeof(Savegame))]
-class Save_ExecutePatch
+[HarmonyPatch]
+class SavePatch
 {
-  [HarmonyPatch("Load")]
-  [HarmonyPrefix]
-  public static void Prefix(Savegame __instance)
-  {
-  }
-
-  [HarmonyPatch("Load2")]
+  [HarmonyPatch(typeof(Savegame), "Load2")]
   [HarmonyPostfix]
-  public static void Postfix(Savegame __instance)
+  public static void Load2Postfix(Savegame __instance)
   {
     string connectedSeed = ArchipelagoClient.serverData.seed;
     string connectedSlot = ArchipelagoClient.serverData.slotName;
     JObject saveJson = Helpers.GetConnectionInfoSaveGame();
+    Helpers.firstMapLoad = true;
     if (connectedSeed == (string)saveJson["apSeed"] && connectedSlot == (string)saveJson["apSlot"]){
-      Helpers.firstMapLoad = true;
       ArchipelagoClient.serverData.InitializeData();
-      Plugin.Logger.LogInfo("Refreshing unlocks");
+      Helpers.DisplayConnectionMessage("Refreshing unlocks");
       ArchipelagoClient.RefreshUnlocks(true);
     } else {
       Helpers.DisplayConnectionMessage("Invalid seed and slot name");

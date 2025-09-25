@@ -98,6 +98,7 @@ class MenuPatches
 
   private static void Connect()
   {
+    ExopelagoGroundhogs.Save();
     if (ArchipelagoClient.authenticated) {
       ArchipelagoClient.Disconnect();
       connectButtonText = "Connect";

@@ -25,6 +25,7 @@ class Story_ExecutePatch
       case "gamestartintro":
         ArchipelagoClient.serverData.InitializeData();
         ArchipelagoClient.RefreshUnlocks();
+        ExopelagoGroundhogs.instance.Load();
         break;
         
       case string x when x.Contains("explorecollectible"):

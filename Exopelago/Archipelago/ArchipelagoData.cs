@@ -41,6 +41,16 @@ public class ArchipelagoData
   public void InitializeData()
   {
     seed = ArchipelagoClient.session.RoomState.Seed;
+
+    ExopelagoGroundhogs.isLoaded = false;
+    ExopelagoGroundhogs.filename = $"{slotName}-{seed}.json";
+
+    Groundhogs.instance.groundhogs = new StringDictionary ();
+    ExopelagoGroundhogs.instance.groundhogs = new StringDictionary();
+
+    ExopelagoGroundhogs.isLoaded = true;
+    ExopelagoGroundhogs.instance.Load();
+
     index = ArchipelagoClient.offlineReceivedItems;
     receivedItems = new Dictionary<long, int>();
     unlockedJobs = new ();
