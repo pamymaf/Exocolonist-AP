@@ -51,10 +51,21 @@ class Story_ExecutePatch
     }
     string endingName = ending.Replace("ending_", "");
     Plugin.Logger.LogInfo($"TriggerGoal: {endingName}");
-    if (ending.Contains("archipelago") || ending == "ending_oldsol" || ending == "ending_end") {
-      // Any ending
+    if (ending.Contains("archipelago")) {
+      // AP ending
+      string strNumLives = Princess.GetGroundhog("numLives");
+      int intNumLives = Int32.Parse(strNumLives);
+      intNumLives++;
+      strNumLives = Convert.ToString(intNumLives);
+      Princess.SetGroundhog("numLives", strNumLives);
+      ExopelagoGroundhogs.Save();
+      return false;
     } 
+    else if (ending == "ending_oldsol" || ending == "ending_end") {
+      return false;
+    }
     else if (ArchipelagoClient.serverData.ending == "any") {
+      // Any ending
       return true;
     } 
     // No hobbyist/rebel
