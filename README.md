@@ -17,9 +17,9 @@ This is a mod that adds Archipelago support to I Was a Teenage Exocolonist. Both
 4. Copy the contents of the Exoloader folder into the CustomContent folder.
   The file structure should be `Exocolonist/CustomContent/Exopelago/`
 5. Copy `Exopelago.dll`, `Archipelago.Multiclient.net.dll`, and `Newtonsoft.json.dll` into the `BepInEx/plugins/` folder.
-6. Copy `connectionInfo.json` into your Exocolonist folder next to `Exocolonist.exe`.
-7. Edit `connectionInfo.json` with your server, port, slot name, and password.
-8. Launch the game and enjoy!
+6. Launch the game.
+7. Open the settings menu and click the buttons to set the Archipelago IP, port, slot, and password.
+8. Click connect and enjoy!
 
 ### Linux
 
@@ -83,3 +83,9 @@ You can receive job unlocks and consumables to use in card battles or as gifts f
 ### Progressive Years
 
 In order to age up you will need to receive a progressive year. For example, if you only have 3 progressive years the game will end (but not goal) when you age up to 14.
+
+# Thank you
+
+@prism019 for helping me learn C# and being my (rubber ducky)[https://en.wikipedia.org/wiki/Rubber_duck_debugging]
+
+@saerielle for answering my questions on modding Exocolonist and Exoloader
