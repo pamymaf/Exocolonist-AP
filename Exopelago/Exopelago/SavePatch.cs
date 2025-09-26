@@ -22,7 +22,10 @@ class SavePatch
     string connectedSlot = ArchipelagoClient.serverData.slotName;
     JObject saveJson = Helpers.GetConnectionInfoSaveGame();
     Helpers.firstMapLoad = true;
-    if (connectedSeed == (string)saveJson["apSeed"] && connectedSlot == (string)saveJson["apSlot"]){
+    Plugin.Logger.LogInfo($"Loaded save. Save info: {saveJson}");
+    if (saveJson == null) {
+      Helpers.DisplayConnectionMessage("This is a vanilla save");
+    } else if (connectedSeed == (string)saveJson["seed"] && connectedSlot == (string)saveJson["slot"]){
       ArchipelagoClient.serverData.InitializeData();
       Helpers.DisplayConnectionMessage("Refreshing unlocks");
       ArchipelagoClient.RefreshUnlocks(true);
