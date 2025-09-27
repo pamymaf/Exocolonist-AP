@@ -35,6 +35,14 @@ public class ArchipelagoData
   public Dictionary<string, int> receivedFriendship;
   public List<string> receivedBuildings;
   public Dictionary<string, int> receivedPerk;
+  public Dictionary<string, string> buildings = new () {
+    {"garrison", "garrison"},
+    {"engineering", "engineering"},
+    {"quarters", "quarters"},
+    {"command", "command"},
+    {"geoponics", "geoponics"},
+    {"expeditions", "expeditions"},
+  };
   public int maxAge = 10;
 
 
@@ -102,6 +110,9 @@ public class ArchipelagoData
         {"animals", 0},
       };
     }
+    if (Convert.ToString(slotData["building_rando"]) == "1") {
+      buildings = RandomizeBuildings();
+    }
 
 
     var pretty = slotData.Aggregate(
@@ -111,6 +122,14 @@ public class ArchipelagoData
     );
 
     Plugin.Logger.LogInfo($"Settings: {pretty}");
+
+    pretty = buildings.Aggregate(
+      "{", 
+      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
+      (str) => str += "}"
+    );
+
+    Plugin.Logger.LogInfo($"Buildings: {pretty}");
   }
 
   public void RaiseAge()
@@ -120,4 +139,34 @@ public class ArchipelagoData
     maxAge = newMaxAge;
   }
 
+  public Dictionary<string, string> RandomizeBuildings()
+  {
+    int hash;
+    hash = seed.GetHashCode() ^ slotName.GetHashCode();
+    System.Random rng = new System.Random(hash);
+    List<string> buildingList = new () {
+      "garrison",
+      "engineering",
+      "quarters",
+      "command",
+      "geoponics",
+      "expeditions",
+    };
+    int n = buildingList.Count;
+
+    while (n > 1) {
+      n--;
+      int k = rng.Next(n + 1);
+      string value = buildingList[k];
+      buildingList[k] = buildingList[n];
+      buildingList[n] = value;
+    }
+    Dictionary<string, string> buildingDict = new ();
+    for (int i = 0; i < buildingList.Count; i++) {
+      string key = buildings.ElementAt(i).Key;
+      buildingDict[key] = buildingList[i];
+    }
+
+    return buildingDict;
+  }
 }

@@ -34,12 +34,26 @@ class Ending(Choice):
 
   default = option_any
 
+class BuildingRando(Toggle):
+  """
+  Should buildings be randomized with each other?
+  """
+  display_name = "Building Randomization"
+
+class CharacterRando(Toggle):
+  """
+  Should character locations be randomized with each other?
+  """
+  display_name = "Character Randomization"
+
 @dataclass
 class ExocolonistOptions(PerGameCommonOptions):
   friendsanity: Friendsanity
   datesanity: Datesanity
   ending: Ending
   perksanity: Perksanity
+  building_rando: BuildingRando
+  character_rando: CharacterRando
 
 
 option_groups = [
@@ -56,11 +70,15 @@ option_presets = {
     "datesanity": True,
     "ending": Ending.option_no_slacker,
     "perksanity": True,
+    "building_rando": False,
+    "character_rando": False
   },
   "friendless": {
     "friendsanity": False,
     "datesanity": False,
     "ending": Ending.option_no_slacker,
     "perksanity": True,
+    "building_rando": False,
+    "character_rando": False
   },
 }

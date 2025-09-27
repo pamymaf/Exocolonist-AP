@@ -16,8 +16,21 @@ namespace Exopelago;
 class Story_ExecutePatch
 {
   [HarmonyPatch("Execute")]
+  [HarmonyPrefix]
+  public static bool Prefix(Story __instance)
+  {
+    string storyID = __instance.storyID;
+    if (ArchipelagoClient.serverData.buildings.ContainsKey(storyID)) {
+      string destID = ArchipelagoClient.serverData.buildings[storyID];
+      ExecutePatched(destID);
+      return false;
+    }
+    return true;
+  }
+
+  [HarmonyPatch("Execute")]
   [HarmonyPostfix]
-  public static void Postfix(Story __instance, Result result, bool undoing = false, bool startStoryOnly = false, bool isEnding = false)
+  public static void Postfix(ref Story __instance, Result result, bool undoing = false, bool startStoryOnly = false, bool isEnding = false)
   {
     string storyID = __instance.storyID;
     Plugin.Logger.LogInfo($"{storyID} story triggered");
@@ -44,6 +57,23 @@ class Story_ExecutePatch
     }
 
     
+  }
+
+  public static void ExecutePatched(string storyID)
+  {
+    Story story = Story.FromID(storyID);
+    Result result = new ();
+
+    Console.WriteLine($"Executing other story {storyID}");
+    story.Reset();
+    result.story = story;
+    Princess.SetResult(result);
+    Savegame.instance.Autosave(1);
+    result.SetDefaultImages();
+
+    story.entryChoice.Execute(result);
+    Singleton<PortraitMenu>.instance.UpdatePortraitAndSkills();
+    Singleton<ResultsMenu>.instance.ShowResult();
   }
 
   public static bool TriggerGoal(string ending)

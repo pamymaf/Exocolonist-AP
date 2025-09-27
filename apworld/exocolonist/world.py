@@ -71,11 +71,9 @@ class ExocolonistWorld(World):
     "biology": ("Nursing Assistant", "Xenobotany", "Study Life Sciences", "Farming"),
 
     "toughness": ("Shovelling Dirt", "Farming", "Rebuild"),
-    # Deliver Supplies only gives 1 perception, however causes fill issues without it
-    "perception": ("Lookout Duty", "Deliver Supplies"),
+    "perception": ("Lookout Duty"),
     "combat": ("Defense Training", "Guard Duty"),
-    # Defense training only gives 1 animals, however causes fill issues without it
-    "animals": ("Tending Animals", "Defense Training"),
+    "animals": ("Tending Animals"),
   }
 
   building_jobs: dict[str, tuple[str, ...]] = {
@@ -117,7 +115,7 @@ class ExocolonistWorld(World):
     return "Experience"
 
   def fill_slot_data(self) -> dict[str, Any]:
-    return self.options.as_dict("friendsanity", "datesanity", "ending", "perksanity")
+    return self.options.as_dict("friendsanity", "datesanity", "ending", "perksanity", "building_rando", "character_rando")
 
   @staticmethod
   def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:

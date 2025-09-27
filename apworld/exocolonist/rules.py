@@ -329,41 +329,38 @@ def set_special_event_rules(world: ExocolonistWorld) -> None:
       state.has("Tending Animals", world.player)
     ),
   )
+  # Governor events need at least one job in every building
+  for event in ["Marz Governor", "Become Governor"]:
+    set_rule(
+      world.get_location(event),
+      lambda state: (
+        state.has_any(world.building_jobs["garrison"], world.player) and
+        state.has_any(world.building_jobs["engineering"], world.player) and
+        state.has_any(world.building_jobs["quarters"], world.player) and
+        state.has_any(world.building_jobs["command"], world.player) and
+        state.has_any(world.building_jobs["geoponics"], world.player) and
+        state.has_any(world.building_jobs["expeditions"], world.player)
+      )
+    )
 
 
 def set_character_location_rules(world: ExocolonistWorld) -> None:
   for chara in ["Anemone", "Cal", "Marz", "Tammy", "Tang"]:
-    set_rule(
-      world.get_location(f"{chara} 20"), 
-      lambda state, chara=chara: (
-        state.has_any(world.chara_jobs[chara], world.player)
-      ),
-    )
-    for i in range(1,5):
+    for i in range(10,110,10):
       set_rule(
-        world.get_location(f"{chara} {(i+1)*20}"),
-        lambda state, chara=chara, i=i: (
-          state.has_any(world.chara_jobs[chara], world.player)
+        world.get_location(f"{chara} {i}"),
+        lambda state, jobs=world.chara_jobs[chara]: (
+          state.has_any(jobs, world.player)
         ),
       )
   # Dys has an extra requirement, we need bravery or toughness 20 for his jobs
   # Sym is found in exploration jobs, so combining the two
   for chara in ["Dys", "Sym"]:
-    set_rule(
-      world.get_location(f"{chara} 20"), 
-      lambda state: (
-        state.has_any(world.chara_jobs[chara], world.player) and 
-        (
-          state.has_any(world.skills_to_job["bravery"], world.player) or 
-          state.has_any(world.skills_to_job["toughness"], world.player)
-        )
-      ),
-    )
-    for i in range(1,5):
+    for i in range(10,110,10):
       set_rule(
-        world.get_location(f"{chara} {(i+1)*20}"),
-        lambda state, i=i: (
-          state.has_any(world.chara_jobs[chara], world.player) and
+        world.get_location(f"{chara} {i}"),
+        lambda state, jobs=world.chara_jobs[chara]: (
+          state.has_any(jobs, world.player) and
           (
             state.has_any(world.skills_to_job["bravery"], world.player) or 
             state.has_any(world.skills_to_job["toughness"], world.player)
@@ -372,28 +369,28 @@ def set_character_location_rules(world: ExocolonistWorld) -> None:
       )
   # These characters only appear year 5
   for chara in ["Nomi", "Rex", "Vace"]:
-    for i in range(0,5):
+    for i in range(10,110,10):
       set_rule(
-        world.get_location(f"{chara} {(i+1)*20}"),
-        lambda state, chara=chara, i=i: (
-          state.has_any(world.chara_jobs[chara], world.player)
+        world.get_location(f"{chara} {i}"),
+        lambda state, jobs=world.chara_jobs[chara]: (
+          state.has_any(jobs, world.player)
         ),
       )
 
 
 
 def set_dates_rules(world: ExocolonistWorld) -> None:
-  for chara in ["Anemone", "Cal", "Marz", "Tammy", "Tang"]:
+  for chara in ["Anemone", "Cal", "Marz", "Tammy", "Tang", "Nomi", "Rex", "Vace"]:
     set_rule(
       world.get_location(f"Date {chara}"), 
-      lambda state, chara=chara: (
-        state.has_any(world.chara_jobs[chara], world.player)
+      lambda state, jobs=world.chara_jobs[chara]: (
+        state.has_any(jobs, world.player)
       ),
     )
   # Tammy requires high friendship with Cal
   set_rule(
     world.get_location(f"Date Tammy"), 
-    lambda state, chara=chara: (
+    lambda state: (
       state.has_any(world.chara_jobs["Cal"], world.player)
     ),
   )
@@ -402,8 +399,8 @@ def set_dates_rules(world: ExocolonistWorld) -> None:
   for chara in ["Dys", "Sym"]:
     set_rule(
       world.get_location(f"Date {chara}"), 
-      lambda state: (
-        state.has_any(world.chara_jobs[chara], world.player) and
+      lambda state, jobs=world.chara_jobs[chara]: (
+        state.has_any(jobs, world.player) and
         (
           state.has_any(world.skills_to_job["bravery"], world.player) or 
           state.has_any(world.skills_to_job["toughness"], world.player)
@@ -411,18 +408,9 @@ def set_dates_rules(world: ExocolonistWorld) -> None:
       ),
     )
 
-  # These characters only appear year 5
-  for chara in ["Nomi", "Rex", "Vace"]:
-    set_rule(
-      world.get_location(f"Date {chara}"), 
-      lambda state, chara=chara: (
-        state.has_any(world.chara_jobs[chara], world.player)
-      ),
-    )
-
 
 def set_skills_rules(world):
-  for skill in ["Empathy", "Creativity", "Persuasion", "Bravery", "Reasoning", "Engineering", "Organization", "Biology", "Toughness", "Combat", "Perception", "Animals"]:
+  for skill in ["Empathy", "Creativity", "Persuasion", "Bravery", "Reasoning", "Engineering", "Organization", "Biology", "Toughness", "Combat"]:
     set_rule(
       world.get_location(f"{skill} Perk 1"),
       lambda state, skill=skill: (
@@ -437,6 +425,23 @@ def set_skills_rules(world):
           state.has(f"Progressive {skill} Perk", world.player, i-1)
         )
       )
+    
+    # Perception and Animals only have one job associated with them
+    for skill in ["Perception", "Animals"]:
+      set_rule(
+        world.get_location(f"{skill} Perk 1"),
+        lambda state, skill=skill: (
+          state.has(world.safe_skills_to_job[skill.lower()], world.player)
+        )
+      )
+      for i in range(2,4):
+        set_rule(
+          world.get_location(f"{skill} Perk {i}"),
+          lambda state, skill=skill, i=i: (
+            state.has(world.safe_skills_to_job[skill.lower()], world.player) and
+            state.has(f"Progressive {skill} Perk", world.player, i-1)
+          )
+        )
 
 
 

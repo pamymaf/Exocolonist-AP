@@ -6,7 +6,7 @@ reference/
 *.pdb
 Exopelago/obj
 settings.json
-Exoloader/Exopelago/Cards/*.xcf
+*.xcf
 Exoloader/Exopelago/Cards/*.py
-Exoloader/Exopelago/Cards/*.tsv
+*.tsv
 release/

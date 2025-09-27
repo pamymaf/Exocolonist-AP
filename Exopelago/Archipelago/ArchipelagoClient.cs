@@ -28,6 +28,7 @@ public static class ArchipelagoClient
   public static int offlineReceivedItems;
   public static ArchipelagoSession session;
 
+
   public static bool readyForItems = false;
 
 

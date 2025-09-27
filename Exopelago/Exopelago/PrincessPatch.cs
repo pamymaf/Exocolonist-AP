@@ -95,7 +95,7 @@ class PrincessPatches
   public static void Postfix(string charaID, int diffAmount, Result result)
   {
     if (ArchipelagoClient.serverData.friendsanity){
-      int loveInc = 20; // In case I make the increment user settable in the future
+      int loveInc = 10; // In case I make the increment user settable in the future
       int currentLove = Princess.GetLove(charaID);
       for (int i=1; i<=currentLove/loveInc; i++) {
         ArchipelagoClient.ProcessLocation($"{char.ToUpper(charaID[0]) + charaID.Substring(1)} {i*loveInc}");
