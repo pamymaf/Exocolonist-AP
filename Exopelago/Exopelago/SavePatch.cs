@@ -1,12 +1,5 @@
-using BepInEx;
-using BepInEx.Logging;
 using HarmonyLib;
-using Northway.Utils;
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.Linq;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
@@ -23,14 +16,8 @@ class SavePatch
     JObject saveJson = Helpers.GetConnectionInfoSaveGame();
     Helpers.firstMapLoad = true;
     Plugin.Logger.LogInfo($"Loaded save. Save info: {saveJson}");
-    if (saveJson == null) {
-      Helpers.DisplayConnectionMessage("This is a vanilla save");
-    } else if (connectedSeed == (string)saveJson["seed"] && connectedSlot == (string)saveJson["slot"]){
-      ArchipelagoClient.serverData.InitializeData();
-      Helpers.DisplayConnectionMessage("Refreshing unlocks");
+    if (connectedSeed == (string)saveJson["apseed"] && connectedSlot == (string)saveJson["apslot"]){
       ArchipelagoClient.RefreshUnlocks(true);
-    } else {
-      Helpers.DisplayConnectionMessage("Invalid seed and slot name");
     }
   }
 }

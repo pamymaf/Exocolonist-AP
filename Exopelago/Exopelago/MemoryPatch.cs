@@ -1,12 +1,5 @@
-using BepInEx;
-using BepInEx.Logging;
 using HarmonyLib;
-using Northway.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Globalization;
-using Exopelago.Archipelago;
 
 namespace Exopelago;
 
@@ -27,7 +20,4 @@ class Princess_AddMemoryPatch
       return true;
     } 
   }
-
-
-
 }

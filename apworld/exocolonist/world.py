@@ -115,7 +115,7 @@ class ExocolonistWorld(World):
     return "Experience"
 
   def fill_slot_data(self) -> dict[str, Any]:
-    return self.options.as_dict("friendsanity", "datesanity", "ending", "perksanity", "building_rando", "character_rando")
+    return self.options.as_dict("friendsanity", "datesanity", "ending", "perksanity", "building_rando")
 
   @staticmethod
   def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:

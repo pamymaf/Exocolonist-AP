@@ -1,12 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading;
 using System.Linq;
-using Archipelago.MultiClient.Net.Models;
-using Newtonsoft.Json;
-using UnityEngine;
-using Exopelago;
 
 namespace Exopelago.Archipelago;
 
@@ -17,8 +11,8 @@ public class ArchipelagoData
   public string slotName = "Player1";
   public string password = "";
   public string seed;
-  public int index;
-  public Dictionary<string, object> slotData;
+  public int index; // Never set?
+  public Dictionary<string, object> slotData; // Slot options
   public static bool deathLink = false;
   public List<long> checkedLocations;
   public Dictionary<long, int> receivedItems;
@@ -29,11 +23,10 @@ public class ArchipelagoData
   public string ending;
   public bool perksanity;
 
-  public List<string> unlockedJobs;
+  public List<string> unlockedJobs; 
   public List<string> receivedJobs;
-  public Dictionary<string, string> groundhogs;
-  public Dictionary<string, int> receivedFriendship;
-  public List<string> receivedBuildings;
+  public Dictionary<string, int> receivedFriendship; // Not used yet
+  public List<string> receivedBuildings; // Not used yet
   public Dictionary<string, int> receivedPerk;
   public Dictionary<string, string> buildings = new () {
     {"garrison", "garrison"},
@@ -45,26 +38,35 @@ public class ArchipelagoData
   };
   public int maxAge = 10;
 
+  public static string GroundhogsFileNameBase {
+    set;
+    private get;
+  } = "Groundhogs";
+  public static string GroundhogsFileName {
+    get {
+      return $"{GroundhogsFileNameBase}.json";
+    }
+  }
+  public static string GroundhogsFileNameBackup {
+    get {
+      return $"{GroundhogsFileNameBase}.bak";
+    }
+  }
+  public static string GroundhogsFileNameOld {
+    get {
+      return $"{GroundhogsFileNameBase}_old.json";
+    }
+  }
+
 
   public void InitializeData()
   {
     seed = ArchipelagoClient.session.RoomState.Seed;
-
-    ExopelagoGroundhogs.isLoaded = false;
-    ExopelagoGroundhogs.filename = $"{slotName}-{seed}.json";
-
-    Groundhogs.instance.groundhogs = new StringDictionary ();
-    ExopelagoGroundhogs.instance.groundhogs = new StringDictionary();
-
-    ExopelagoGroundhogs.isLoaded = true;
-    ExopelagoGroundhogs.instance.Load();
-
-    index = ArchipelagoClient.offlineReceivedItems;
+    index = ArchipelagoClient.offlineReceivedItems; // Need to use this for refreshunlocks consumables
     receivedItems = new Dictionary<long, int>();
     unlockedJobs = new ();
     receivedJobs = new ();
-    groundhogs = new ();
-    receivedFriendship = new ();
+    receivedFriendship = new (); // Not used yet
     maxAge = 10;
     var slotData = ArchipelagoClient.session.DataStorage.GetSlotData();
     if (Convert.ToString(slotData["friendsanity"]) == "1") {
@@ -134,15 +136,13 @@ public class ArchipelagoData
 
   public void RaiseAge()
   {
-    int currentAge = Exopelago.Helpers.GetAge();
-    int newMaxAge = maxAge + 1;
-    maxAge = newMaxAge;
+    maxAge++;
   }
 
   public Dictionary<string, string> RandomizeBuildings()
   {
     int hash;
-    hash = seed.GetHashCode() ^ slotName.GetHashCode();
+    hash = Tuple.Create(seed, slotName).GetHashCode()
     System.Random rng = new System.Random(hash);
     List<string> buildingList = new () {
       "garrison",
@@ -154,7 +154,7 @@ public class ArchipelagoData
     };
     int n = buildingList.Count;
 
-    while (n > 1) {
+    while (n > 1) { // TODO: Make this a for loop
       n--;
       int k = rng.Next(n + 1);
       string value = buildingList[k];

@@ -1,18 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Newtonsoft.Json.Linq;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
-using Archipelago.MultiClient.Net.Exceptions;
-using Archipelago.MultiClient.Net.Helpers;
+//using Archipelago.MultiClient.Net.Exceptions;
+//using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
-using Archipelago.MultiClient.Net.Packets;
+//using Archipelago.MultiClient.Net.Packets;
 using Archipelago.MultiClient.Net.Models;
-using Exopelago;
 
 namespace Exopelago.Archipelago;
 public static class ArchipelagoClient
@@ -22,12 +15,9 @@ public static class ArchipelagoClient
   public const string ModVersion = "0.2.0";
 
   public static bool authenticated;
-  private static bool attemptingConnection;
   public static bool offline;
   public static ArchipelagoData serverData = new ();
-  public static int offlineReceivedItems;
   public static ArchipelagoSession session;
-
 
   public static bool readyForItems = false;
 
@@ -45,18 +35,14 @@ public static class ArchipelagoClient
 
   public static void Connect(string server, string port, string user, string pass)
   {
-    // Called whenever a new game starts
-    session = ArchipelagoSessionFactory.CreateSession(server, Int32.Parse(port));
+    session = ArchipelagoSessionFactory.CreateSession(server, int.Parse(port));
 
-
-    attemptingConnection = true;
     session.MessageLog.OnMessageReceived += OnMessageReceived;
     LoginResult result;
     try
     {
       // handle TryConnectAndLogin attempt here and save the returned object to `result`
       result = session.TryConnectAndLogin("Exocolonist", user, ItemsHandlingFlags.AllItems);
-      attemptingConnection = true;
       serverData.uri = server;
       serverData.port = port;
       serverData.slotName = user;
@@ -73,17 +59,13 @@ public static class ArchipelagoClient
       while (session.Items.Any()) {
         session.Items.DequeueItem();
       }
-
-
     }
     catch (Exception e)
     {
       result = new LoginFailure(e.GetBaseException().Message);
     }
-
     if (!result.Successful)
     {
-      attemptingConnection = false;
       offline = true;
       LoginFailure failure = (LoginFailure)result;
       string errorMessage = $"Failed to Connect to {server} as {user}:";
@@ -99,10 +81,11 @@ public static class ArchipelagoClient
       return;
     } else {
       authenticated = true;
+      ArchipelagoData.GroundhogsFileNameBase = $"{serverData.slotName}-{serverData.seed}";
+      Plugin.Logger.LogInfo("Successfully connected!");
     }
 
     var loginSuccess = (LoginSuccessful)result;
-    Plugin.Logger.LogInfo("Successfully connected!");
   }
 
 
@@ -111,6 +94,7 @@ public static class ArchipelagoClient
   {
     authenticated = false;
     session.Socket.DisconnectAsync();
+    ArchipelagoData.GroundhogsFileNameBase = "Groundhogs";
   }
 
 
@@ -118,24 +102,8 @@ public static class ArchipelagoClient
   static void OnMessageReceived(LogMessage message)
   {
     Plugin.Logger.LogInfo($"AP says: {message.ToString()}");
-
-    switch (message) {
-      case HintItemSendLogMessage hintItemSendLogMessage:
-        var hintReceiver = hintItemSendLogMessage.Receiver;
-        var hintSender = hintItemSendLogMessage.Sender;
-        var hintNetworkItem = hintItemSendLogMessage.Item;
-        if (hintItemSendLogMessage.IsRelatedToActivePlayer) {
-          Exopelago.Helpers.DisplayAPHint(hintSender.Name, hintReceiver.Name, hintNetworkItem.ItemName,hintNetworkItem.LocationDisplayName);
-        }
-        break;
-      case ItemSendLogMessage itemSendLogMessage:
-        var receiver = itemSendLogMessage.Receiver;
-        var sender = itemSendLogMessage.Sender;
-        var networkItem = itemSendLogMessage.Item;
-        if (itemSendLogMessage.IsRelatedToActivePlayer) {
-          Exopelago.Helpers.DisplayAPItem(sender.Name, receiver.Name, networkItem.ItemName);
-        }
-        break;
+    if (message is ItemSendLogMessage itemSendLogMessage && itemSendLogMessage.IsRelatedToActivePlayer) {
+      Exopelago.Helpers.DisplayAPMessage(itemSendLogMessage);
     }
   }
 
@@ -154,9 +122,8 @@ public static class ArchipelagoClient
 
     // Other cases to display the item received popup are handled in OnMessageReceived
     // But the server sending us an object never actually passes through that handler
-    // TODO Make this not pop up when you load a game
     if (item.Player.Name == "Server") {
-      Exopelago.Helpers.DisplayAPItem("Server", serverData.slotName, itemName);
+      Helpers.DisplayAPMessage($"Server sent you {itemName}");
     }
 
     // Is it a job?
@@ -192,7 +159,9 @@ public static class ArchipelagoClient
     }
   }
   
-  public static void RefreshUnlocks(bool saveLoad = false) {
+  // TODO: Keep track of what index has already been processed in the save file
+  public static void RefreshUnlocks(bool saveLoad = false) 
+  {
     foreach (ItemInfo item in session.Items.AllItemsReceived) {
       if (saveLoad) {
         if (!ItemsAndLocationsHandler.apToInternalCollectibles.ContainsKey(item.ItemName) && !item.ItemName.Contains("Perk")) {

@@ -1,13 +1,5 @@
-using BepInEx;
-using BepInEx.Logging;
 using HarmonyLib;
-using Northway.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ComponentModel;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
@@ -17,15 +9,16 @@ class Story_ExecutePatch
 {
   [HarmonyPatch("Execute")]
   [HarmonyPrefix]
-  public static bool Prefix(Story __instance)
+  public static void Prefix(ref Story __instance)
   {
     string storyID = __instance.storyID;
     if (ArchipelagoClient.serverData.buildings.ContainsKey(storyID)) {
+      Plugin.Logger.LogInfo($"Attempting to enter {storyID}");
       string destID = ArchipelagoClient.serverData.buildings[storyID];
-      ExecutePatched(destID);
-      return false;
+      Plugin.Logger.LogInfo($"Actually entered {destID}");
+      Story story = Story.FromID(destID);
+      __instance = story;
     }
-    return true;
   }
 
   [HarmonyPatch("Execute")]
@@ -36,9 +29,8 @@ class Story_ExecutePatch
     Plugin.Logger.LogInfo($"{storyID} story triggered");
     switch (storyID){
       case "gamestartintro":
-        ArchipelagoClient.serverData.InitializeData();
+        //ArchipelagoClient.serverData.InitializeData();
         ArchipelagoClient.RefreshUnlocks();
-        ExopelagoGroundhogs.instance.Load();
         Helpers.firstMapLoad = true;
         Helpers.AddSaveData();
         break;
@@ -55,25 +47,6 @@ class Story_ExecutePatch
         ArchipelagoClient.SendGoal();
         break;
     }
-
-    
-  }
-
-  public static void ExecutePatched(string storyID)
-  {
-    Story story = Story.FromID(storyID);
-    Result result = new ();
-
-    Console.WriteLine($"Executing other story {storyID}");
-    story.Reset();
-    result.story = story;
-    Princess.SetResult(result);
-    Savegame.instance.Autosave(1);
-    result.SetDefaultImages();
-
-    story.entryChoice.Execute(result);
-    Singleton<PortraitMenu>.instance.UpdatePortraitAndSkills();
-    Singleton<ResultsMenu>.instance.ShowResult();
   }
 
   public static bool TriggerGoal(string ending)
@@ -86,11 +59,10 @@ class Story_ExecutePatch
     // AP ending
     if (ending.Contains("archipelago")) {
       string strNumLives = Princess.GetGroundhog("numLives");
-      int intNumLives = Int32.Parse(strNumLives);
+      int intNumLives = int.Parse(strNumLives);
       intNumLives++;
       strNumLives = Convert.ToString(intNumLives);
       Princess.SetGroundhog("numLives", strNumLives);
-      ExopelagoGroundhogs.Save();
       return false;
     } 
     else if (ending == "ending_oldsol" || ending == "ending_end") {

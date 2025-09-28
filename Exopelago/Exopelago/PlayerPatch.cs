@@ -1,10 +1,5 @@
-using BepInEx;
-using BepInEx.Logging;
 using HarmonyLib;
-using Northway.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Newtonsoft.Json.Linq;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
@@ -18,8 +13,17 @@ class Player_ExecutePatch
   {
     Helpers.readyForItems = true;
     Plugin.Logger.LogInfo("Map loaded");
+    string connectedSeed = ArchipelagoClient.serverData.seed;
+    string connectedSlot = ArchipelagoClient.serverData.slotName;
+    JObject saveJson = Helpers.GetConnectionInfoSaveGame();
     if (Helpers.firstMapLoad){
-      Helpers.DisplayConnectionMessage();
+      if ((string)saveJson["apseed"] == "") {
+        Helpers.DisplayAPMessage("This is a vanilla save");
+      } else if (connectedSeed != (string)saveJson["apseed"] || connectedSlot != (string)saveJson["apslot"]){
+        Helpers.DisplayAPMessage("Invalid seed and slot name");
+      }  else {
+        Helpers.DisplayAPMessage();
+      }
     }
     Helpers.firstMapLoad = false;
   }

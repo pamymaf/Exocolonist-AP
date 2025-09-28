@@ -1,11 +1,5 @@
-using BepInEx;
-using BepInEx.Logging;
 using HarmonyLib;
-using Northway.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Globalization;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
@@ -94,7 +88,7 @@ class PrincessPatches
   [HarmonyPostfix]
   public static void Postfix(string charaID, int diffAmount, Result result)
   {
-    if (ArchipelagoClient.serverData.friendsanity){
+    if (ArchipelagoClient.serverData.friendsanity) {
       int loveInc = 10; // In case I make the increment user settable in the future
       int currentLove = Princess.GetLove(charaID);
       for (int i=1; i<=currentLove/loveInc; i++) {
