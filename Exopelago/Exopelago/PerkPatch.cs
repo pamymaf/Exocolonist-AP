@@ -1,10 +1,4 @@
-using BepInEx;
-using BepInEx.Logging;
 using HarmonyLib;
-using Northway.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
@@ -17,7 +11,7 @@ class Perk_MenuPatch
   public static bool Prefix(Skill skill, int perkLevel)
   {
     if (ArchipelagoClient.serverData.perksanity) {
-      return false;
+      return false; // TODO: Show perk popup when AP check comes in
     } else {
       return true;
     }

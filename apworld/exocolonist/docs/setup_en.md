@@ -3,12 +3,16 @@
 ## Requirements
 
 [Exoloader](https://github.com/Pandemonium14/ExoLoader/releases)
+
 [Exopelago](https://github.com/pamymaf/Exocolonist-AP/releases)
 
-## Instructions
+## Exocolonist Mod Instructions
 
 ### Windows
 
+0. Back up your `Groundhogs.json` file located in `C:\users\steamuser\Documents\Exocolonist`. 
+  ***THIS FILE MAY BE OVERWRITTEN*** and contains what achievements and characters you have unlocked on the main menu.
+  This file is located in `/path/to/your/steamapps/compatdata/1148760/pfx/drive_c/users/steamuser/Documents/Exocolonist` in Linux.
 1. Download Exoloader and extract it.
 2. Copy the contents of the Exocolonist folder into your Exocolonist game directory.
 3. Download Exopelago and extract it.

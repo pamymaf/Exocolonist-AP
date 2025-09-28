@@ -1,20 +1,14 @@
-using BepInEx;
-using BepInEx.Logging;
-using HarmonyLib;
-using Northway.Utils;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.IO;
 using System.Globalization;
+using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
 
 
-public class Helpers
+public static class Helpers
 {
   public static bool readyForItems = false;
   public static bool firstMapLoad = true;
@@ -24,17 +18,14 @@ public class Helpers
   // Get connection info
   public static JObject GetConnectionInfoSaveGame()
   {
-    try {
-      JObject json = new JObject();
-      json["ip"] = Princess.GetMemory("apServer");
-      json["port"] = Princess.GetMemory("apPort");
-      json["slot"] = Princess.GetMemory("apSlot");
-      json["pass"] = Princess.GetMemory("apPass");
-      json["seed"] = Princess.GetMemory("apSeed");
-      return json;
-    } catch {
-      return null;
-    }
+    // If keys don't exist, the json entry will be empty. Ex: (string)json["apport"] = ""
+    JObject json = new JObject();
+    json["apserver"] = Princess.GetMemory("apServer");
+    json["apport"] = Princess.GetMemory("apPort");
+    json["apslot"] = Princess.GetMemory("apSlot");
+    json["appass"] = Princess.GetMemory("apPass");
+    json["apseed"] = Princess.GetMemory("apSeed");
+    return json;
   }
 
   // Set connection info
@@ -53,9 +44,8 @@ public class Helpers
   // We do this so we can intercept AddMemory and use a special prefix to detect it's AP unlocking it, not the game
   public static void UnlockJob(string name)
   {
-    Princess.SetMemory($"unlockjob_{name}");
+    Princess.AddMemory($"unlockjob_{name.ToLower()}");
   }
-
 
   // Gives collectible without popup
   // Used for collectibles and jobs as gear cards
@@ -84,47 +74,58 @@ public class Helpers
 
 
   // ========== AP messages ========== \\
-  // Show AP hints
-  public static void DisplayAPHint(string sender, string receiver, string item, string location) {
+  public static void DisplayAPMessage(string message)
+  {
     if (readyForItems){
-      string slotName = ArchipelagoClient.serverData.slotName;
-      if (sender == slotName && receiver == slotName) {
-        PlayerText.Show($"Your {item} is at {location} in your world");
-      } else if (sender == slotName) {
-        PlayerText.Show($"{receiver}'s {item} is at {location} in your world");
-      } else if (receiver == slotName) {
-        PlayerText.Show($"Your {item} is at {location} in {sender}'s world");
-      }
+      PlayerText.Show(message);
     }
   }
 
-  // Show AP send/receive
-  public static void DisplayAPItem(string sender, string receiver, string item) {
-    if (readyForItems){
-      string slotName = ArchipelagoClient.serverData.slotName;
-      if (sender == slotName && receiver == slotName) {
-        PlayerText.Show($"You sent yourself {item}");
-      } else if (sender == slotName) {
-        PlayerText.Show($"You sent {receiver} {item}");
-      } else if (receiver == slotName) {
-        PlayerText.Show($"{sender} sent you {item}");
-      }
+  public static void DisplayAPMessage(HintItemSendLogMessage message)
+  {
+    var receiver = message.Receiver.Name;
+    var sender = message.Sender.Name;
+    var networkItem = message.Item;
+    var item = networkItem.ItemName;
+    var location = networkItem.LocationDisplayName;
+    string slotName = ArchipelagoClient.serverData.slotName;
+    if (sender == slotName && receiver == slotName) {
+      DisplayAPMessage($"Your {item} is at {location} in your world");
+    } else if (sender == slotName) {
+      DisplayAPMessage($"{receiver}'s {item} is at {location} in your world");
+    } else if (receiver == slotName) {
+      DisplayAPMessage($"Your {item} is at {location} in {sender}'s world");
     }
   }
 
-  // Show AP connected
-  public static void DisplayConnectionMessage(string message = null) {
-    if (readyForItems){
-      if (message != null) {
-        PlayerText.Show(message);
-      } else if (ArchipelagoClient.authenticated){
-        PlayerText.Show("Archipelago connected");
-      } else {
-        PlayerText.Show("Archipelago not connected");
-      }
+  public static void DisplayAPMessage(ItemSendLogMessage message)
+  {
+    if (message is HintItemSendLogMessage hintMessage) {
+      DisplayAPMessage(hintMessage);
+      return;
+    }
+    var receiver = message.Receiver.Name;
+    var sender = message.Sender.Name;
+    var networkItem = message.Item;
+    var item = networkItem.ItemName;
+    string slotName = ArchipelagoClient.serverData.slotName;
+    if (sender == slotName && receiver == slotName) {
+      DisplayAPMessage($"You sent yourself {item}");
+    } else if (sender == slotName) {
+      DisplayAPMessage($"You sent {receiver} {item}");
+    } else if (receiver == slotName) {
+      DisplayAPMessage($"{sender} sent you {item}");
     }
   }
-
+  
+  public static void DisplayAPMessage()
+  {
+    if (ArchipelagoClient.authenticated){
+      DisplayAPMessage("Archipelago connected");
+    } else {
+      DisplayAPMessage("Archipelago not connected");
+    }
+  }
 
   // Add skill points
   //Not used yet
@@ -217,11 +218,4 @@ public class Helpers
     );
     return pretty;
   }
-
-  // So that archipelagoData isn't talking to Princess directly
-  public static int GetAge()
-  {
-    return Princess.age;
-  }
-
 }

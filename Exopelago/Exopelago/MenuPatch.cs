@@ -1,13 +1,13 @@
-using BepInEx;
-using BepInEx.Logging;
+//using BepInEx;
+//using BepInEx.Logging;
 using HarmonyLib;
 using Northway.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+//using System.Collections.Generic;
+//using System.Linq;
 using UnityEngine.UI;
-using Newtonsoft.Json.Linq;
-using UnityEngine;
+//using Newtonsoft.Json.Linq;
+//using UnityEngine;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
@@ -59,7 +59,7 @@ class MenuPatches
 
   private static void SetIP2(string ip)
   {
-    Console.WriteLine($"IP set to {ip}");
+    Plugin.Logger.LogInfo($"IP set to {ip}");
     ArchipelagoClient.serverData.uri = ip;
   }
 
@@ -70,7 +70,7 @@ class MenuPatches
 
   private static void SetPort2(string port)
   {
-    Console.WriteLine($"Port set to {port}");
+    Plugin.Logger.LogInfo($"Port set to {port}");
     ArchipelagoClient.serverData.port = port;
   }
 
@@ -81,7 +81,7 @@ class MenuPatches
 
   private static void SetSlot2(string slot)
   {
-    Console.WriteLine($"Slot set to {slot}");
+    Plugin.Logger.LogInfo($"Slot set to {slot}");
     ArchipelagoClient.serverData.slotName = slot;
   }
 
@@ -92,13 +92,12 @@ class MenuPatches
 
   private static void SetPassword2(string pass)
   {
-    Console.WriteLine($"Slot set to {pass}");
+    Plugin.Logger.LogInfo($"Slot set to {pass}");
     ArchipelagoClient.serverData.password = pass;
   }
 
   private static void Connect()
   {
-    ExopelagoGroundhogs.Save();
     if (ArchipelagoClient.authenticated) {
       ArchipelagoClient.Disconnect();
       connectButtonText = "Connect";

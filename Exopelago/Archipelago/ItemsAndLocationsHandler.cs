@@ -1,17 +1,5 @@
-using System;
-using System.ComponentModel;
-using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Archipelago.MultiClient.Net;
-using Archipelago.MultiClient.Net.Enums;
-using Archipelago.MultiClient.Net.Exceptions;
-using Archipelago.MultiClient.Net.Helpers;
-using Archipelago.MultiClient.Net.MessageLog.Messages;
-using Archipelago.MultiClient.Net.Packets;
-using Exopelago;
 
 namespace Exopelago.Archipelago;
 
@@ -93,7 +81,7 @@ public static class ItemsAndLocationsHandler
     {"mourn", "Mourn"},
   });
 
-  public static ReadOnlyDictionary<string, string> apToInternalCollectibles = new (new Dictionary<string, string>{
+  public static ReadOnlyDictionary<string, string> apToInternalCollectibles = new (new Dictionary<string, string> {
     {"Mushwood Log", "wood"},
     {"Xeno Egg", "egg"},
     {"Bobberfruit", "fruit"},
@@ -104,7 +92,7 @@ public static class ItemsAndLocationsHandler
     {"Cake", "cake"},
   });
 
-  public static ReadOnlyDictionary<string, string> internalToAPcollectibles = new (new Dictionary<string, string>{
+  public static ReadOnlyDictionary<string, string> internalToAPcollectibles = new (new Dictionary<string, string> {
     {"wood", "Mushwood Log"},
     {"egg", "Xeno Egg"},
     {"fruit", "Bobberfruit"},
@@ -115,7 +103,7 @@ public static class ItemsAndLocationsHandler
     {"cake", "Cake"},
   });
 
-  public static ReadOnlyDictionary<string, string> internalToAPBuildings = new (new Dictionary<string, string>{
+  public static ReadOnlyDictionary<string, string> internalToAPBuildings = new (new Dictionary<string, string> {
     {"garrison", "Garrison"},
     {"engineering", "Engineering"},
     {"quarters", "Living Quarters"},
@@ -124,7 +112,7 @@ public static class ItemsAndLocationsHandler
     {"expeditions", "Expeditions"},
   });
 
-  public static ReadOnlyDictionary<string, string> apToInternalBuildings = new (new Dictionary<string, string>{
+  public static ReadOnlyDictionary<string, string> apToInternalBuildings = new (new Dictionary<string, string> {
     {"Garrison", "garrison"},
     {"Engineering", "engineering"},
     {"Living Quarters", "quarters"},
