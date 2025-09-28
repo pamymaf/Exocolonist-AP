@@ -64,15 +64,13 @@ option_presets = {
     "datesanity": True,
     "ending": Ending.option_no_slacker,
     "perksanity": True,
-    "building_rando": False,
-    "character_rando": False
+    "building_rando": False
   },
   "friendless": {
     "friendsanity": False,
     "datesanity": False,
     "ending": Ending.option_no_slacker,
     "perksanity": True,
-    "building_rando": False,
-    "character_rando": False
+    "building_rando": False
   },
 }
