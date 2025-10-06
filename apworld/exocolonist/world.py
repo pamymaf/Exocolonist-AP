@@ -1,22 +1,13 @@
 from collections.abc import Mapping
 from typing import Any
 
-# Imports of base Archipelago modules must be absolute.
 from worlds.AutoWorld import World
 
-# Imports of your world's files must be relative.
 from . import items, locations, regions, rules
 from .options import ExocolonistOptions
 from .web_world import ExocolonistWebWorld
 
 
-# The world class is the heart and soul of an apworld implementation.
-# It holds all the data and functions required to build the world and submit it to the multiworld generator.
-# You could have all your world code in just this one class, but for readability and better structure,
-# it is common to split up world functionality into multiple files.
-# This implementation in particular has the following additional files, each covering one topic:
-# regions.py, locations.py, rules.py, items.py, options.py and web_world.py.
-# It is recommended that you read these in that specific order, then come back to the world class.
 class ExocolonistWorld(World):
   """
   Spend your teenage years on an alien planet in this narrative RPG with card-based battles. 
@@ -53,6 +44,8 @@ class ExocolonistWorld(World):
     "perception": ("Lookout Duty", "Survey the Plains", "Forage in the Valley", "Survey the Ridge"),
     "combat": ("Defense Training", "Guard Duty", "Hunt in the Swamps"),
     "animals": ("Hunt in the Swamps", "Tending Animals"),
+
+    "stress": ("Relax in the Lounge", "Relax on the Walls", "Relax in the Park", "Mourn"),
   }
 
   safe_skills_to_job: dict[str, tuple[str, ...]] = {
@@ -61,7 +54,6 @@ class ExocolonistWorld(World):
     "persuasion": ("Administration", "Leader", "Study Humanities", "Depot Clerk"),
     "creativity": ("Play the Photophonor", "Cooking", "Study Humanities", "Barista", "Robot Repair"),
     "bravery": ("Sportsball", "Guard Duty"), # Not adding Explore Glow as that can only happen once a year
-    # These jobs give bravery, but also require bravery, so excluding them:  "Sneak Out", "Explore Nearby",
     
     "reasoning": ("Tutoring", "Study Engineering"),
     "organizing": ("Deliver Supplies", "Depot Clerk", "Xenobotany", "Administration", "Rebuild"),
@@ -74,6 +66,8 @@ class ExocolonistWorld(World):
     "perception": ("Lookout Duty"),
     "combat": ("Defense Training", "Guard Duty"),
     "animals": ("Tending Animals"),
+
+    "stress": ("Relax in the Lounge", "Relax on the Walls", "Relax in the Park", "Mourn"),
   }
 
   building_jobs: dict[str, tuple[str, ...]] = {
@@ -115,7 +109,7 @@ class ExocolonistWorld(World):
     return "Experience"
 
   def fill_slot_data(self) -> dict[str, Any]:
-    return self.options.as_dict("friendsanity", "datesanity", "ending", "perksanity", "building_rando")
+    return self.options.as_dict("friendsanity", "datesanity", "ending", "perksanity", "building_rando", "character_rando", "force_battles")
 
   @staticmethod
   def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:

@@ -40,6 +40,18 @@ class BuildingRando(Toggle):
   """
   display_name = "Building Randomization"
 
+class CharaShuffle(Toggle):
+  """
+  Should characters be randomized with each other?
+  """
+  display_name = "Character Randomization"
+
+class ForceBattles(Toggle):
+  """
+  Should card battles be forced on?
+  """
+  display_name = "Force Card Battles"
+
 
 @dataclass
 class ExocolonistOptions(PerGameCommonOptions):
@@ -48,6 +60,8 @@ class ExocolonistOptions(PerGameCommonOptions):
   ending: Ending
   perksanity: Perksanity
   building_rando: BuildingRando
+  character_rando: CharaShuffle
+  force_battles: ForceBattles
 
 
 option_groups = [
@@ -64,13 +78,17 @@ option_presets = {
     "datesanity": True,
     "ending": Ending.option_no_slacker,
     "perksanity": True,
-    "building_rando": False
+    "building_rando": False,
+    "character_rando": False,
+    "force_battles": False,
   },
   "friendless": {
     "friendsanity": False,
     "datesanity": False,
     "ending": Ending.option_no_slacker,
     "perksanity": True,
-    "building_rando": False
+    "building_rando": False,
+    "character_rando": False,
+    "force_battles": False,
   },
 }

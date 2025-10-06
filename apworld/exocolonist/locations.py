@@ -9,6 +9,7 @@ from . import items
 if TYPE_CHECKING:
   from .world import ExocolonistWorld
 
+
 LOCATION_NAME_TO_ID = {
   "Shovelling Dirt": 1,
   "Farming": 2,
@@ -108,7 +109,6 @@ LOCATION_NAME_TO_ID = {
   "Animals Perk 3": 235,
   # Lots of space before this category
   "Anemone 10": 500,
-  "Anemone 100": 509,
   "Anemone 20": 501,
   "Anemone 30": 502,
   "Anemone 40": 503,
@@ -117,9 +117,9 @@ LOCATION_NAME_TO_ID = {
   "Anemone 70": 506,
   "Anemone 80": 507,
   "Anemone 90": 508,
+  "Anemone 100": 509,
   "Date Anemone": 510,
   "Cal 10": 511,
-  "Cal 100": 520,
   "Cal 20": 512,
   "Cal 30": 513,
   "Cal 40": 514,
@@ -128,9 +128,9 @@ LOCATION_NAME_TO_ID = {
   "Cal 70": 517,
   "Cal 80": 518,
   "Cal 90": 519,
+  "Cal 100": 520,
   "Date Cal": 521,
   "Dys 10": 555,
-  "Dys 100": 564,
   "Dys 20": 556,
   "Dys 30": 557,
   "Dys 40": 558,
@@ -139,9 +139,9 @@ LOCATION_NAME_TO_ID = {
   "Dys 70": 561,
   "Dys 80": 562,
   "Dys 90": 563,
+  "Dys 100": 564,
   "Date Dys": 565,
   "Marz 10": 522,
-  "Marz 100": 531,
   "Marz 20": 523,
   "Marz 30": 524,
   "Marz 40": 525,
@@ -150,9 +150,9 @@ LOCATION_NAME_TO_ID = {
   "Marz 70": 528,
   "Marz 80": 529,
   "Marz 90": 530,
+  "Marz 100": 531,
   "Date Marz": 532,
   "Nomi 10": 577,
-  "Nomi 100": 586,
   "Nomi 20": 578,
   "Nomi 30": 579,
   "Nomi 40": 580,
@@ -161,9 +161,9 @@ LOCATION_NAME_TO_ID = {
   "Nomi 70": 583,
   "Nomi 80": 584,
   "Nomi 90": 585,
+  "Nomi 100": 586,
   "Date Nomi": 587,
   "Rex 10": 588,
-  "Rex 100": 597,
   "Rex 20": 589,
   "Rex 30": 590,
   "Rex 40": 591,
@@ -172,20 +172,15 @@ LOCATION_NAME_TO_ID = {
   "Rex 70": 594,
   "Rex 80": 595,
   "Rex 90": 596,
+  "Rex 100": 597,
   "Date Rex": 598,
-  "Sym 10": 566,
-  "Sym 100": 575,
   "Sym 20": 567,
-  "Sym 30": 568,
   "Sym 40": 569,
-  "Sym 50": 570,
   "Sym 60": 571,
-  "Sym 70": 572,
   "Sym 80": 573,
-  "Sym 90": 574,
+  "Sym 100": 575,
   "Date Sym": 576,
   "Tammy 10": 533,
-  "Tammy 100": 542,
   "Tammy 20": 534,
   "Tammy 30": 535,
   "Tammy 40": 536,
@@ -194,9 +189,9 @@ LOCATION_NAME_TO_ID = {
   "Tammy 70": 539,
   "Tammy 80": 540,
   "Tammy 90": 541,
+  "Tammy 100": 542,
   "Date Tammy": 543,
   "Tang 10": 544,
-  "Tang 100": 553,
   "Tang 20": 545,
   "Tang 30": 546,
   "Tang 40": 547,
@@ -205,9 +200,9 @@ LOCATION_NAME_TO_ID = {
   "Tang 70": 550,
   "Tang 80": 551,
   "Tang 90": 552,
+  "Tang 100": 553,
   "Date Tang": 554,
   "Vace 10": 599,
-  "Vace 100": 608,
   "Vace 20": 600,
   "Vace 30": 601,
   "Vace 40": 602,
@@ -216,6 +211,7 @@ LOCATION_NAME_TO_ID = {
   "Vace 70": 605,
   "Vace 80": 606,
   "Vace 90": 607,
+  "Vace 100": 608,
   "Date Vace": 609
 }
 
@@ -433,7 +429,6 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
       "Rex 10": world.location_name_to_id["Rex 10"],
       "Nomi 10": world.location_name_to_id["Nomi 10"],
       "Vace 10": world.location_name_to_id["Vace 10"],
-      "Sym 10": world.location_name_to_id["Sym 10"],
       "Rex 20": world.location_name_to_id["Rex 20"],
       "Nomi 20": world.location_name_to_id["Nomi 20"],
       "Vace 20": world.location_name_to_id["Vace 20"],
@@ -445,7 +440,6 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
       "Rex 30": world.location_name_to_id["Rex 30"],
       "Nomi 30": world.location_name_to_id["Nomi 30"],
       "Vace 30": world.location_name_to_id["Vace 30"],
-      "Sym 30": world.location_name_to_id["Sym 30"],
       "Rex 40": world.location_name_to_id["Rex 40"],
       "Nomi 40": world.location_name_to_id["Nomi 40"],
       "Vace 40": world.location_name_to_id["Vace 40"],
@@ -457,7 +451,6 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
       "Rex 50": world.location_name_to_id["Rex 50"],
       "Nomi 50": world.location_name_to_id["Nomi 50"],
       "Vace 50": world.location_name_to_id["Vace 50"],
-      "Sym 50": world.location_name_to_id["Sym 50"],
       "Rex 60": world.location_name_to_id["Rex 60"],
       "Nomi 60": world.location_name_to_id["Nomi 60"],
       "Vace 60": world.location_name_to_id["Vace 60"],
@@ -469,7 +462,6 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
       "Rex 70": world.location_name_to_id["Rex 70"],
       "Nomi 70": world.location_name_to_id["Nomi 70"],
       "Vace 70": world.location_name_to_id["Vace 70"],
-      "Sym 70": world.location_name_to_id["Sym 70"],
       "Rex 80": world.location_name_to_id["Rex 80"],
       "Nomi 80": world.location_name_to_id["Nomi 80"],
       "Vace 80": world.location_name_to_id["Vace 80"],
@@ -481,7 +473,6 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
       "Rex 90": world.location_name_to_id["Rex 90"],
       "Nomi 90": world.location_name_to_id["Nomi 90"],
       "Vace 90": world.location_name_to_id["Vace 90"],
-      "Sym 90": world.location_name_to_id["Sym 90"],
       "Rex 100": world.location_name_to_id["Rex 100"],
       "Nomi 100": world.location_name_to_id["Nomi 100"],
       "Vace 100": world.location_name_to_id["Vace 100"],
@@ -490,7 +481,7 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
     age18.add_locations(age18_friends, ExocolonistLocation)
   
   if world.options.datesanity:
-    age16_dates: dict[str, int | None] = {
+    age17_dates: dict[str, int | None] = {
       "Date Marz": world.location_name_to_id["Date Marz"],
       "Date Dys": world.location_name_to_id["Date Dys"],
       "Date Cal": world.location_name_to_id["Date Cal"],
@@ -498,7 +489,7 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
       "Date Tang": world.location_name_to_id["Date Tang"],
       "Date Anemone": world.location_name_to_id["Date Anemone"],
     }
-    age16.add_locations(age16_dates, ExocolonistLocation)
+    age17.add_locations(age17_dates, ExocolonistLocation)
 
     age19_dates: dict[str, int | None] = {
       "Date Rex": world.location_name_to_id["Date Rex"],

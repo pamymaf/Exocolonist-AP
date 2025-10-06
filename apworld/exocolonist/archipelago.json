@@ -1,1 +1,5 @@
-{"compatible_version": 5, "version": 6, "game": "Exocolonist"}
+{
+  "game": "I Was a Teenage Exocolonist",
+  "world_version": "0.3.0",
+  "authors": ["pamymaf"]
+}

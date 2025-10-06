@@ -60,23 +60,23 @@ def set_consumable_rules(world: ExocolonistWorld) -> None:
   for consumable in ["Bobberfruit", "Medicinal Roots", "Yellow Flower"]:
     set_rule(
       world.get_location(consumable), 
-      lambda state: (
+      lambda state, explore_jobs=explore_jobs, bravery=world.skills_to_job["bravery"], toughness=world.skills_to_job["toughness"]: (
         state.has("Progressive Year", world.player, 1) and 
         state.has_any(explore_jobs, world.player) and 
         (
-          state.has_any(world.skills_to_job["bravery"], world.player) or 
-          state.has_any(world.skills_to_job["toughness"], world.player)
+          state.has_any(bravery, world.player) or 
+          state.has_any(toughness, world.player)
         )
       ),
     )
 
   set_rule(
     world.get_location("Strange Device"), 
-    lambda state: (
+    lambda state, bravery=world.skills_to_job["bravery"], toughness=world.skills_to_job["toughness"]: (
       state.has("Survey the Ridge", world.player) and 
       (
-        state.has_any(world.skills_to_job["bravery"], world.player) or 
-        state.has_any(world.skills_to_job["toughness"], world.player)
+        state.has_any(bravery, world.player) or 
+        state.has_any(toughness, world.player)
       )
     ),
   )
@@ -89,17 +89,17 @@ def set_job_rules(world: ExocolonistWorld) -> None:
     if job == "Explore Glow":
       set_rule(
         world.get_location("Explore Glow"),
-        lambda state: (
+        lambda state, bravery=world.skills_to_job["bravery"]: (
           state.has("Survey the Ridge", world.player) and
-          state.has_any(world.skills_to_job["bravery"], world.player)
+          state.has_any(bravery, world.player)
         )
       )
     else:
       set_rule(
         world.get_location(job),
-        lambda state: (
-          state.has_any(world.skills_to_job["bravery"], world.player) or 
-          state.has_any(world.skills_to_job["toughness"], world.player)
+        lambda state, bravery=world.skills_to_job["bravery"], toughness=world.skills_to_job["toughness"]: (
+          state.has_any(bravery, world.player) or 
+          state.has_any(toughness, world.player)
         ),
       )
   ###
@@ -108,7 +108,7 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   basic_engineering_jobs = ("Study Life Sciences", "Study Humanities")
   set_rule(
     world.get_location("Study Engineering"),
-    lambda state: (
+    lambda state, basic_engineering_jobs=basic_engineering_jobs: (
       state.has_any(basic_engineering_jobs, world.player)
     ),
   )
@@ -118,9 +118,16 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   # Requires 30 friendship with Marz
   set_rule(
     world.get_location("Depot Clerk"),
-    lambda state: (
-      state.has_any(world.chara_jobs["Marz"], world.player)
+    lambda state, chara_jobs=world.chara_jobs["Marz"]: (
+      state.has_any(chara_jobs, world.player)
     ),
+  )
+  # Construction requires 10 friendship with Rex
+  set_rule(
+    world.get_location("Construction"),
+    lambda state, chara_jobs=world.chara_jobs["Rex"]: {
+      state.has_any(chara_jobs, world.player)
+    }
   )
   ###
   ###
@@ -128,10 +135,10 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   # Guard Duty requires 10 bravery and 30 combat
   set_rule(
     world.get_location("Guard Duty"),
-    lambda state: (
-      state.has_any(world.building_jobs["garrison"], world.player) and
-      state.has_any(world.skills_to_job["bravery"], world.player) and
-      state.has_any(world.skills_to_job["combat"], world.player)
+    lambda state, building_jobs=world.building_jobs, skills_to_job=world.skills_to_job: (
+      state.has_any(building_jobs["garrison"], world.player) and
+      state.has_any(skills_to_job["bravery"], world.player) and
+      state.has_any(skills_to_job["combat"], world.player)
     )
   )
   ###
@@ -140,8 +147,8 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   # Tending Animals needs an explore job
   set_rule(
     world.get_location("Tending Animals"),
-    lambda state: {
-      state.has_any(world.building_jobs["geoponics"], world.player) and
+    lambda state, building_jobs=world.building_jobs: {
+      state.has_any(building_jobs["geoponics"], world.player) and
       state.has_any(("Hunt in the Swamps", "Forage in the Valley", "Survey the plains"), world.player)
     }
   )
@@ -149,15 +156,15 @@ def set_job_rules(world: ExocolonistWorld) -> None:
     # Xenobotany requires 34 biology
     set_rule(
       world.get_location("Xenobotany"),
-      lambda state: (
-        state.has_any(world.skills_to_job["biology"], world.player)
+      lambda state, building_jobs=world.building_jobs: (
+        state.has_any(skills_to_job["biology"], world.player)
       ),
     )
   # Relax in the Park is unlocked when you do geoponics jobs
   set_rule(
     world.get_location("Relax in the Park"),
-    lambda state: (
-      state.has_any(world.building_jobs["geoponics"], world.player)
+    lambda state, building_jobs=world.building_jobs: (
+      state.has_any(building_jobs["geoponics"], world.player)
     ),
   )
   job_reqs = [
@@ -213,9 +220,9 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   for job in job_reqs:
     set_rule(
       world.get_location(job["name"]),
-      lambda state: (
-        state.has_any(world.building_jobs[job["building"]], world.player) and
-        state.has_any(world.skills_to_job[job["skill"]], world.player)
+      lambda state, building_jobs=world.building_jobs[job["building"]], skill_jobs=world.skills_to_job[job["skill"]]: (
+        state.has_any(building_jobs, world.player) and
+        state.has_any(skill_jobs, world.player)
       ),
     )
   
@@ -248,6 +255,7 @@ def set_job_rules(world: ExocolonistWorld) -> None:
         state.has("Progressive Biology Perk", world.player, 1)
       )
     )
+    
 
 
 def set_special_event_rules(world: ExocolonistWorld) -> None:
@@ -256,11 +264,11 @@ def set_special_event_rules(world: ExocolonistWorld) -> None:
   # If you win it, you save him. If you lose you can reload or begin again
   set_rule(
     world.get_location("Save Tonin"),
-    lambda state: (
+    lambda state, bravery=world.skills_to_job["bravery"], toughness=world.skills_to_job["toughness"]: (
       state.has("Sneak Out", world.player) and 
       (
-        state.has_any(world.skills_to_job["bravery"], world.player) or 
-        state.has_any(world.skills_to_job["toughness"], world.player)
+        state.has_any(bravery, world.player) or 
+        state.has_any(toughness, world.player)
       )
     ),
   )
@@ -269,8 +277,8 @@ def set_special_event_rules(world: ExocolonistWorld) -> None:
   # By passing combat check while sneaking out age 11
   set_rule(
     world.get_location("Save Hal"),
-    lambda state: (
-      state.has_any(world.skills_to_job["combat"], world.player) and
+    lambda state, combat=world.skills_to_job["combat"]: (
+      state.has_any(combat, world.player) and
       state.has("Sneak Out", world.player)
     ),
   )
@@ -279,9 +287,24 @@ def set_special_event_rules(world: ExocolonistWorld) -> None:
   # Or passing 25 bravery check and combat battle
   set_rule(
     world.get_location("Save Eudicot"),
+    lambda state, combat=world.skills_to_job["combat"], bravery=world.skills_to_job["bravery"]: (
+      state.has_any(combat, world.player) and 
+      state.has_any(bravery, world.player)
+    ),
+  )
+  # Mom and Dad
+  # Dad requires Forage in the Valley
+  # Mom requires a high food count, best place is Forage in the Valley
+  set_rule(
+    world.get_location("Save Mom"),
     lambda state: (
-      state.has_any(world.skills_to_job["combat"], world.player) and 
-      state.has_any(world.skills_to_job["bravery"], world.player)
+      state.has("Forage in the Valley", world.player)
+    ),
+  )
+  set_rule(
+    world.get_location("Save Dad"),
+    lambda state: (
+      state.has("Forage in the Valley", world.player)
     ),
   )
   # Vriki
@@ -289,23 +312,23 @@ def set_special_event_rules(world: ExocolonistWorld) -> None:
   # Requires bravery 15 and perception 10 in year 12
   set_rule(
     world.get_location("Adopt Vriki"),
-    lambda state: (
-      state.has_any(world.skills_to_job["perception"], world.player) and 
-      state.has_any(world.skills_to_job["bravery"], world.player)
+    lambda state, bravery=world.skills_to_job["bravery"], perception=world.skills_to_job["perception"]: (
+      state.has_any(perception, world.player) and 
+      state.has_any(bravery, world.player)
     ),
   )
   # Hopeye
   set_rule(
     world.get_location("Adopt Hopeye"),
-    lambda state: (
+    lambda state, bravery=world.skills_to_job["bravery"], toughness=world.skills_to_job["toughness"], animals=world.skills_to_job["animals"]: (
       (
         state.has("Sneak Out", world.player) or 
         state.has("Explore Nearby", world.player)
       ) and (
-        state.has_any(world.skills_to_job["bravery"], world.player) or 
-        state.has_any(world.skills_to_job["toughness"], world.player)
+        state.has_any(bravery, world.player) or 
+        state.has_any(toughness, world.player)
       ) and 
-      state.has_any(world.skills_to_job["animals"], world.player) 
+      state.has_any(animals, world.player) 
     ),
   )
   # Robot
@@ -319,34 +342,43 @@ def set_special_event_rules(world: ExocolonistWorld) -> None:
   # Need to capture one while hunting (animals 40 check), then tend animals to tame it
   set_rule(
     world.get_location("Adopt Unisaur"),
-    lambda state: (
+    lambda state, bravery=world.skills_to_job["bravery"], toughness=world.skills_to_job["toughness"], animals=world.skills_to_job["animals"]: (
       (
-        state.has_any(world.skills_to_job["bravery"], world.player) or 
-        state.has_any(world.skills_to_job["toughness"], world.player)
+        state.has_any(bravery, world.player) or 
+        state.has_any(toughness, world.player)
       ) and
-      state.has_any(world.skills_to_job["animals"], world.player) and
+      state.has_any(animals, world.player) and
       state.has("Hunt in the Swamps", world.player) and
       state.has("Tending Animals", world.player)
     ),
   )
   # Governor events need at least one job in every building
-  for event in ["Marz Governor", "Become Governor"]:
+  for event in ["Marz Governor", "Become Governor", "Leader"]:
     set_rule(
       world.get_location(event),
-      lambda state: (
-        state.has_any(world.building_jobs["garrison"], world.player) and
-        state.has_any(world.building_jobs["engineering"], world.player) and
-        state.has_any(world.building_jobs["quarters"], world.player) and
-        state.has_any(world.building_jobs["command"], world.player) and
-        state.has_any(world.building_jobs["geoponics"], world.player) and
-        state.has_any(world.building_jobs["expeditions"], world.player)
+      lambda state, building_jobs=world.building_jobs: (
+        state.has_any(building_jobs["garrison"], world.player) and
+        state.has_any(building_jobs["engineering"], world.player) and
+        state.has_any(building_jobs["quarters"], world.player) and
+        state.has_any(building_jobs["command"], world.player) and
+        state.has_any(building_jobs["geoponics"], world.player) and
+        state.has_any(building_jobs["expeditions"], world.player)
       )
     )
+  # Requires 100 persuasion, which you can only get with the third persuasion perk
+  if world.options.perksanity:
+    for event in ["Become Governor", "Leader"]:
+      set_rule(
+        world.get_location(event),
+        lambda state: (
+          state.has("Progressive Persuasion Perk", world.player, 3)
+        )
+      )
 
 
 def set_character_location_rules(world: ExocolonistWorld) -> None:
   for chara in ["Anemone", "Cal", "Marz", "Tammy", "Tang"]:
-    for i in range(10,110,10):
+    for i in range(20,110,10):
       set_rule(
         world.get_location(f"{chara} {i}"),
         lambda state, jobs=world.chara_jobs[chara]: (
@@ -354,21 +386,31 @@ def set_character_location_rules(world: ExocolonistWorld) -> None:
         ),
       )
   # Dys has an extra requirement, we need bravery or toughness 20 for his jobs
-  # Sym is found in exploration jobs, so combining the two
-  for chara in ["Dys", "Sym"]:
-    for i in range(10,110,10):
-      set_rule(
-        world.get_location(f"{chara} {i}"),
-        lambda state, jobs=world.chara_jobs[chara]: (
-          state.has_any(jobs, world.player) and
-          (
-            state.has_any(world.skills_to_job["bravery"], world.player) or 
-            state.has_any(world.skills_to_job["toughness"], world.player)
-          )
-        ),
-      )
-  # These characters only appear year 5
-  for chara in ["Nomi", "Rex", "Vace"]:
+  for i in range(20,110,10):
+    set_rule(
+      world.get_location(f"Dys {i}"),
+      lambda state, jobs=world.chara_jobs["Dys"]: (
+        state.has_any(jobs, world.player) and
+        (
+          state.has_any(world.skills_to_job["bravery"], world.player) or 
+          state.has_any(world.skills_to_job["toughness"], world.player)
+        )
+      ),
+    )
+  # Sym is found in exploration jobs and only gains friendship in increments of 20
+  for i in range(20,120,20):
+    set_rule(
+      world.get_location(f"Sym {i}"),
+      lambda state, jobs=world.chara_jobs["Sym"]: (
+        state.has_any(jobs, world.player) and
+        (
+          state.has_any(world.skills_to_job["bravery"], world.player) or 
+          state.has_any(world.skills_to_job["toughness"], world.player)
+        )
+      ),
+    )
+  # These characters only appear year 5 and might have special rules
+  for chara in ["Nomi", "Vace"]:
     for i in range(10,110,10):
       set_rule(
         world.get_location(f"{chara} {i}"),
@@ -376,6 +418,15 @@ def set_character_location_rules(world: ExocolonistWorld) -> None:
           state.has_any(jobs, world.player)
         ),
       )
+  
+  # I could not get to Rex 60 in logic with only Deliver Supplies, might need Construction for extra points
+  for i in range(10,110,10):
+    set_rule(
+      world.get_location(f"Rex {i}"),
+      lambda state: (
+        state.has("Construction", world.player)
+      ),
+    )
 
 
 
@@ -390,8 +441,8 @@ def set_dates_rules(world: ExocolonistWorld) -> None:
   # Tammy requires high friendship with Cal
   set_rule(
     world.get_location(f"Date Tammy"), 
-    lambda state: (
-      state.has_any(world.chara_jobs["Cal"], world.player)
+    lambda state, chara_jobs=world.chara_jobs: (
+      state.has_any(chara_jobs["Cal"], world.player)
     ),
   )
   # Dys has an extra requirement, we need bravery or toughness 20 for most of his jobs
@@ -399,11 +450,11 @@ def set_dates_rules(world: ExocolonistWorld) -> None:
   for chara in ["Dys", "Sym"]:
     set_rule(
       world.get_location(f"Date {chara}"), 
-      lambda state, jobs=world.chara_jobs[chara]: (
+      lambda state, jobs=world.chara_jobs[chara], bravery=world.skills_to_job["bravery"], toughness=world.skills_to_job["toughness"]: (
         state.has_any(jobs, world.player) and
         (
-          state.has_any(world.skills_to_job["bravery"], world.player) or 
-          state.has_any(world.skills_to_job["toughness"], world.player)
+          state.has_any(bravery, world.player) or 
+          state.has_any(toughness, world.player)
         )
       ),
     )
