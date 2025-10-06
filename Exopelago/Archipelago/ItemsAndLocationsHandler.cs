@@ -139,9 +139,10 @@ public static class ItemsAndLocationsHandler
     {"date_marz", "Date Marz"},
     {"date_nomi", "Date Nomi"},
     {"date_tammy", "Date Tammy"},
-    {"date_tangent", "Date Tangent"},
+    {"date_tang", "Date Tang"},
     {"date_rex", "Date Rex"},
     {"date_vace", "Date Vace"},
+    {"date_sym", "Date Sym"},
   };
 
   public static ReadOnlyDictionary<string, string> storyEvents = new (new Dictionary<string, string>());

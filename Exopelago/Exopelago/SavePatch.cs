@@ -17,6 +17,7 @@ class SavePatch
     Helpers.firstMapLoad = true;
     Plugin.Logger.LogInfo($"Loaded save. Save info: {saveJson}");
     if (connectedSeed == (string)saveJson["apseed"] && connectedSlot == (string)saveJson["apslot"]){
+      ArchipelagoClient.serverData.InitializeData();
       ArchipelagoClient.RefreshUnlocks(true);
     }
   }

@@ -193,6 +193,10 @@
 {
   ~if !mem_sendjob_tutoring
 }
+@replace|engineering|~if !mem_job_tutoring||0|0
+{
+  ~if !mem_sendjob_tutoring
+}
 @replace|engineering|~if !mem_job_robotRepair||0|0
 {
   ~if !mem_sendjob_robotRepair

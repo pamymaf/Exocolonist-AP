@@ -12,7 +12,7 @@ class Story_ExecutePatch
   public static void Prefix(ref Story __instance)
   {
     string storyID = __instance.storyID;
-    if (ArchipelagoClient.serverData.buildings.ContainsKey(storyID)) {
+    if (ArchipelagoClient.serverData.buildings.ContainsKey(storyID) && Princess.monthOfGame != 66 && Princess.monthOfGame != 67) {
       Plugin.Logger.LogInfo($"Attempting to enter {storyID}");
       string destID = ArchipelagoClient.serverData.buildings[storyID];
       Plugin.Logger.LogInfo($"Actually entered {destID}");
@@ -29,7 +29,7 @@ class Story_ExecutePatch
     Plugin.Logger.LogInfo($"{storyID} story triggered");
     switch (storyID){
       case "gamestartintro":
-        //ArchipelagoClient.serverData.InitializeData();
+        ArchipelagoClient.serverData.InitializeData();
         ArchipelagoClient.RefreshUnlocks();
         Helpers.firstMapLoad = true;
         Helpers.AddSaveData();

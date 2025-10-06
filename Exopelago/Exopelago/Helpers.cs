@@ -149,7 +149,7 @@ public static class Helpers
 
   // ========== Bulk processing ========== \\
   // Called from AddMemory prefix, needs to return a bool on if the memory should be set
-  public static bool ProcessMemory(string id)
+  public static bool ProcessMemory(string id, object value)
   {
     if (!ArchipelagoClient.authenticated) {
       return true;
@@ -196,6 +196,14 @@ public static class Helpers
         Plugin.Logger.LogInfo($"Trying to send AP location {locationName} with id {id}");
         ArchipelagoClient.ProcessLocation(locationName);
         return true;
+      
+      case "leader":
+        if (value as string == "marz") {
+          ArchipelagoClient.ProcessLocation("Marz Governor");
+        } else if (value as string == "player") {
+          ArchipelagoClient.ProcessLocation("Become Governor");
+        }
+        return true;
 
       case "couldsurvey":
         string specialLocation = ItemsAndLocationsHandler.internalToAPJobs["explorenearby"];
@@ -210,12 +218,38 @@ public static class Helpers
 
 
   // ========== Misc ========== \\
-  public static string PrettyDict(Dictionary<string, string> input) {
+  public static string PrettyDict<T,U>(Dictionary<T, U> input) {
     string pretty = input.Aggregate(
       "{", 
-      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
+      (str, kv) => str += $"\"{kv.Key.ToString()}\": \"{kv.Value.ToString()}\", ", 
       (str) => str += "}"
     );
     return pretty;
   }
+
+
+
+
+  public static Dictionary<string, string> RandomizeDict(Dictionary<string, string> refDict, int seed)
+  {
+    System.Random rng = new System.Random(seed);
+    List<string> randoList = new (refDict.Keys);
+    int n = randoList.Count;
+
+    while (n > 1) { // TODO: Make this a for loop
+      n--;
+      int k = rng.Next(n + 1);
+      string value = randoList[k];
+      randoList[k] = randoList[n];
+      randoList[n] = value;
+    }
+    Dictionary<string, string> randoDict = new ();
+    for (int i = 0; i < randoList.Count; i++) {
+      string key = refDict.ElementAt(i).Key;
+      randoDict[key] = randoList[i];
+    }
+
+    return randoDict;
+  }
+
 }

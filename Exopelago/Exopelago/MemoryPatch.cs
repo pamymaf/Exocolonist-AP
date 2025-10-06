@@ -11,7 +11,7 @@ class Princess_AddMemoryPatch
   public static bool Prefix(string id, object value = null)
   {
     try {
-      return Helpers.ProcessMemory(id);
+      return Helpers.ProcessMemory(id, value);
     } catch (Exception e) {
       // Magic try/catch block
       // The code works as intended with this here but never prints an error

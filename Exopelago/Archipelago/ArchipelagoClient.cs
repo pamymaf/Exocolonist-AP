@@ -12,12 +12,13 @@ public static class ArchipelagoClient
 {
   public const string GameName = "Exocolonist";
   public const string ModName = "Exopelago";
-  public const string ModVersion = "0.2.0";
+  public const string ModVersion = "0.3.0";
 
   public static bool authenticated;
   public static bool offline;
   public static ArchipelagoData serverData = new ();
   public static ArchipelagoSession session;
+  public static int offlineReceivedItems;
 
   public static bool readyForItems = false;
 
@@ -81,6 +82,7 @@ public static class ArchipelagoClient
       return;
     } else {
       authenticated = true;
+      //Groundhogs.instance.groundhogs.ClearDictionary();
       ArchipelagoData.GroundhogsFileNameBase = $"{serverData.slotName}-{serverData.seed}";
       Plugin.Logger.LogInfo("Successfully connected!");
     }

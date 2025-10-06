@@ -17,6 +17,19 @@ class MenuPatches
 {
   static string connectButtonText = "Connect";
 
+  [HarmonyPatch(typeof(SettingsMenu), "SetSetting")]
+  [HarmonyPrefix]
+  public static bool SettingsMenuSetSettingsPrefix(SettingsMenu __instance, string settingName, object value, NWButton buttonToUpdate = null)
+  {
+    if (ArchipelagoClient.serverData.forceBattles && settingName == "skipCardChallenges") {
+      buttonToUpdate.text = "Skip Card Challenges disabled by Archipelago";
+      Settings.instance.skipCardChallenges = false;
+      return false;
+    }
+    return true;
+  }
+  
+
   [HarmonyPatch(typeof(SettingsMenu), "CreateButton")]
   [HarmonyPostfix]
   public static void SettingsMenuCreateButtonPostfix(SettingsMenu __instance, Selectable __result, string settingName, Selectable aboveButton)
@@ -109,8 +122,13 @@ class MenuPatches
         connectButtonText = "Invalid details";
       }
     }
+    if (ArchipelagoClient.serverData.forceBattles) {
+      Settings.instance.skipCardChallenges = false;
+    }
     Singleton<SettingsMenu>.instance.UpdateButtons();
   }
+
+
 
 
 // ========== Things to make the pretty mod header button and spacer ========== \\

@@ -11,7 +11,7 @@ public class ArchipelagoData
   public string slotName = "Player1";
   public string password = "";
   public string seed;
-  public int index; // Never set?
+  public int index;
   public Dictionary<string, object> slotData; // Slot options
   public static bool deathLink = false;
   public List<long> checkedLocations;
@@ -36,7 +36,33 @@ public class ArchipelagoData
     {"geoponics", "geoponics"},
     {"expeditions", "expeditions"},
   };
+  public Dictionary<string, string> stratosCharacters = new () {
+    {"tang", "tang"},
+    {"tammy", "tammy"},
+    {"cal", "cal"},
+    {"dys", "dys"},
+    {"anemone", "anemone"},
+    {"mom", "mom"},
+    {"dad", "dad"},
+    {"marz", "marz"},
+  };
+  public Dictionary<string, string> allCharacters = new() {
+    {"tang", "tang"},
+    {"tammy", "tammy"},
+    {"cal", "cal"},
+    {"dys", "dys"},
+    {"anemone", "anemone"},
+    {"mom", "mom"},
+    {"dad", "dad"},
+    {"marz", "marz"},
+    {"vace", "vace"},
+    {"rex", "rex"},
+    {"nomi", "nomi"},
+  };
+  public bool forceBattles = false;
   public int maxAge = 10;
+  public bool character_rando;
+  public bool building_rando;
 
   public static string GroundhogsFileNameBase {
     set;
@@ -113,7 +139,21 @@ public class ArchipelagoData
       };
     }
     if (Convert.ToString(slotData["building_rando"]) == "1") {
+      building_rando = true;
       buildings = RandomizeBuildings();
+    }
+    if (Convert.ToString(slotData["character_rando"]) == "1") {
+      character_rando = true;
+      stratosCharacters = RandomizeCharacters(stratosCharacters);
+      allCharacters = RandomizeCharacters(allCharacters);
+    }
+
+    if (slotData.ContainsKey("force_battles")) { // Remove after no release async is done
+      if (Convert.ToString(slotData["force_battles"]) == "1") {
+        forceBattles = true;
+      } else {
+        forceBattles = false;
+      }
     }
 
 
@@ -142,7 +182,7 @@ public class ArchipelagoData
   public Dictionary<string, string> RandomizeBuildings()
   {
     int hash;
-    hash = Tuple.Create(seed, slotName).GetHashCode()
+    hash = Tuple.Create(seed, slotName).GetHashCode();
     System.Random rng = new System.Random(hash);
     List<string> buildingList = new () {
       "garrison",
@@ -168,5 +208,29 @@ public class ArchipelagoData
     }
 
     return buildingDict;
+  }
+
+  public Dictionary<string, string> RandomizeCharacters(Dictionary<string, string> characters)
+  {
+    int hash;
+    hash = Tuple.Create(seed, slotName).GetHashCode();
+    System.Random rng = new System.Random(hash);
+    List<string> charaList = new (characters.Keys);
+    int n = charaList.Count;
+
+    while (n > 1) { // TODO: Make this a for loop
+      n--;
+      int k = rng.Next(n + 1);
+      string value = charaList[k];
+      charaList[k] = charaList[n];
+      charaList[n] = value;
+    }
+    Dictionary<string, string> charaDict = new ();
+    for (int i = 0; i < charaList.Count; i++) {
+      string key = characters.ElementAt(i).Key;
+      charaDict[key] = charaList[i];
+    }
+
+    return charaDict;
   }
 }
