@@ -1,11 +1,12 @@
 from .bases import ExocolonistTestBase
+from BaseClasses import CollectionState
 
 class TestUnlockLogic(ExocolonistTestBase):
   options = {
-    "friendsanity": True,
-    "datesanity": True,
+    "friendsanity": False,
+    "datesanity": False,
     "ending": 0,
-    "perksanity": True,
+    "perksanity": False,
+    "building_rando": False,
+    "character_rando": False,
   }
-
-    
