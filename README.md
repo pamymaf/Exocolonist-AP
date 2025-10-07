@@ -1,6 +1,6 @@
 This is a mod that adds Archipelago support to I Was a Teenage Exocolonist. Both the apworld and game mod are included on the [releases page](https://github.com/pamymaf/Exocolonist-AP/releases).
 
-Thank you @prism019 for helping me learn C#, being my (rubber ducky)[https://en.wikipedia.org/wiki/Rubber_duck_debugging], and constantly reviewing my code.
+Thank you @prism019 for helping me learn C#, being my [rubber ducky](https://en.wikipedia.org/wiki/Rubber_duck_debugging), and constantly reviewing my code. This mod would not exist without them.
 
 # Exocolonist Setup Guide
 
@@ -15,7 +15,7 @@ Thank you @prism019 for helping me learn C#, being my (rubber ducky)[https://en.
 ### Windows
 
 0. Back up your `Groundhogs.json` file located in `C:\users\steamuser\Documents\Exocolonist`. 
-  ***THIS FILE MAY BE OVERWRITTEN*** and contains what achievements and characters you have unlocked on the main menu.
+  ***THIS FILE WILL BE OVERWRITTEN*** and contains what achievements and characters you have unlocked on the main menu.
   This file is located in `/path/to/your/steamapps/compatdata/1148760/pfx/drive_c/users/steamuser/Documents/Exocolonist` in Linux.
 1. Download Exoloader and extract it.
 2. Copy the contents of the Exocolonist folder into your Exocolonist game directory.
@@ -81,7 +81,6 @@ Right now the special events are
   - Become Governor
   - Help Marz become Governor
 
-
 ## Items
 
 You can receive job unlocks and consumables to use in card battles or as gifts for characters. If perksanity is enabled, you will also receive progressive skill perks.
@@ -89,6 +88,14 @@ You can receive job unlocks and consumables to use in card battles or as gifts f
 ### Progressive Years
 
 In order to age up you will need to receive a progressive year. For example, if you only have 3 progressive years the game will end (but not goal) when you age up to 14.
+
+## Other features
+
+Building rando will randomize which building's jobs you see when you interact with a building.
+
+Character shuffle will shuffle everybody's locations on the main maps.
+
+Works with Universal Tracker with no yaml needed.
 
 # Build locally
 
