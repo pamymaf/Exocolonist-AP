@@ -114,6 +114,11 @@
   ~set mem_sendjob_babysitting = true
 }
 
+// This line forces one piece of dialogue the firsth month of the year and prevents you from completing the Marz soysweet task early
+@replace|tammyWeek1b|~if month == 10-quiet-1||0|0
+{
+
+}
 
 // command
 @replace|commandDeliveryUnlock|~set mem_job_delivery||0|0
