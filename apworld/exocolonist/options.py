@@ -5,7 +5,7 @@ from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle
 class Friendsanity(Toggle):
   """
   Add checks for befriending each character.
-  Each multiple of 20 friendship points is a check.
+  Each multiple of 10 friendship points is a check.
   """
   display_name = "Friendsanity"
 
