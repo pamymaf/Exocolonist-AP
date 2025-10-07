@@ -148,30 +148,14 @@ public class ArchipelagoData
       allCharacters = RandomizeCharacters(allCharacters);
     }
 
-    if (slotData.ContainsKey("force_battles")) { // Remove after no release async is done
-      if (Convert.ToString(slotData["force_battles"]) == "1") {
-        forceBattles = true;
-      } else {
-        forceBattles = false;
-      }
+    if (Convert.ToString(slotData["force_battles"]) == "1") {
+      forceBattles = true;
+    } else {
+      forceBattles = false;
     }
 
-
-    var pretty = slotData.Aggregate(
-      "{", 
-      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
-      (str) => str += "}"
-    );
-
-    Plugin.Logger.LogInfo($"Settings: {pretty}");
-
-    pretty = buildings.Aggregate(
-      "{", 
-      (str, kv) => str += $"\"{kv.Key}\": \"{kv.Value}\", ", 
-      (str) => str += "}"
-    );
-
-    Plugin.Logger.LogInfo($"Buildings: {pretty}");
+    Plugin.Logger.LogInfo($"Settings: {Helpers.PrettyDict(slotData)}");
+    Plugin.Logger.LogInfo($"Buildings: {Helpers.PrettyDict(buildings)}");
   }
 
   public void RaiseAge()

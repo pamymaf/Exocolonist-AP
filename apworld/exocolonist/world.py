@@ -15,7 +15,7 @@ class ExocolonistWorld(World):
   """
   # TODO Write my own desciption
 
-  game = "Exocolonist"
+  game = "I Was a Teenage Exocolonist"
   web = ExocolonistWebWorld()
   options: ExocolonistOptions
   options_dataclass = ExocolonistOptions

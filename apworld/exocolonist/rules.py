@@ -156,7 +156,7 @@ def set_job_rules(world: ExocolonistWorld) -> None:
     # Xenobotany requires 34 biology
     set_rule(
       world.get_location("Xenobotany"),
-      lambda state, building_jobs=world.building_jobs: (
+      lambda state, skills_to_job=world.skills_to_job: (
         state.has_any(skills_to_job["biology"], world.player)
       ),
     )

@@ -105,18 +105,22 @@ class MenuPatches
 
   private static void SetPassword2(string pass)
   {
-    Plugin.Logger.LogInfo($"Slot set to {pass}");
+    Plugin.Logger.LogInfo($"Password set to {pass}");
     ArchipelagoClient.serverData.password = pass;
   }
 
   private static void Connect()
   {
     if (ArchipelagoClient.authenticated) {
+      Groundhogs.Save();
       ArchipelagoClient.Disconnect();
+      Groundhogs.instance.groundhogs = new StringDictionary();
       connectButtonText = "Connect";
     } else {
+      Groundhogs.instance.groundhogs = new StringDictionary();
       bool connected = ArchipelagoClient.ConnectSavedInfo();
       if (connected) {
+        Groundhogs.instance.Load();
         connectButtonText = "Disconnect";
       } else {
         connectButtonText = "Invalid details";

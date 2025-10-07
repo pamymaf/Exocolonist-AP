@@ -10,7 +10,7 @@ using Archipelago.MultiClient.Net.Models;
 namespace Exopelago.Archipelago;
 public static class ArchipelagoClient
 {
-  public const string GameName = "Exocolonist";
+  public const string GameName = "I Was a Teenage Exocolonist";
   public const string ModName = "Exopelago";
   public const string ModVersion = "0.3.0";
 
@@ -43,7 +43,7 @@ public static class ArchipelagoClient
     try
     {
       // handle TryConnectAndLogin attempt here and save the returned object to `result`
-      result = session.TryConnectAndLogin("Exocolonist", user, ItemsHandlingFlags.AllItems);
+      result = session.TryConnectAndLogin(GameName, user, ItemsHandlingFlags.AllItems);
       serverData.uri = server;
       serverData.port = port;
       serverData.slotName = user;
@@ -82,7 +82,6 @@ public static class ArchipelagoClient
       return;
     } else {
       authenticated = true;
-      //Groundhogs.instance.groundhogs.ClearDictionary();
       ArchipelagoData.GroundhogsFileNameBase = $"{serverData.slotName}-{serverData.seed}";
       Plugin.Logger.LogInfo("Successfully connected!");
     }
@@ -182,7 +181,7 @@ public static class ArchipelagoClient
   // For sending locations out
   public static void ProcessLocation(string location) 
   {
-    var locationId = session.Locations.GetLocationIdFromName("Exocolonist", location);
+    var locationId = session.Locations.GetLocationIdFromName("I Was a Teenage Exocolonist", location);
     session.Locations.CompleteLocationChecks(locationId);
   }
 

@@ -145,6 +145,12 @@
 {
   ~if !mem_sendjob_construction
 }
+// The assistant job checks if  you're already the government
+// So we remove that line
+@replace|command|~if !mem_job_leader||0|0
+{
+  
+}
 @replace|commandConstructionUnlock|~if !mem_job_construction||0|0
 {
   ~if !mem_sendjob_construction
@@ -446,7 +452,7 @@
 {
   ~set mem_sendjob_forage = true
 }
-@replace|main_vertumnalia09|~set mem_job_leader = true||0|0
+@replace|main_vertumnalia19|~set mem_job_leader = true||0|0
 {
   ~set mem_sendjob_leader = true
 }
