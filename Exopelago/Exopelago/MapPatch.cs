@@ -157,12 +157,62 @@ class MapPatch
       }
     }
   };
+
+  public static Dictionary<string, Vector3> stratosBuldingEntrancePos = new() {
+    {"quarters", new Vector3(5f, -1f, 8f)},
+    {"engineering", new Vector3(-9f, -1f, -2f)},
+    {"garrison", new Vector3(-14f, -1f, -17f)},
+    {"expeditions", new Vector3(11f, -1f, -24f)},
+    {"geoponics", new Vector3(32f, 3.33f, -17f)},
+    {"command", new Vector3(31f, 11f, 12f)},
+  };
   
   [HarmonyPatch("OnMonthChanged")]
   [HarmonyPrefix]
   public static void MonthChangePrefix(MapManager __instance)
   {
-    Console.WriteLine($"In MonthChanged Prefix");
+    Console.WriteLine($"In MonthChange Prefix");
+
+    // Flag rando
+    if (ArchipelagoClient.serverData.building_rando) {
+      string scene = MapManager.currentScene;
+      Vector3 warpDest;
+      if (scene.ToLower() != "colonystratodestroyed") {
+        foreach (string building in ArchipelagoClient.serverData.buildings.Keys) {
+          string targetBuilding = ArchipelagoClient.serverData.buildings[building];
+          targetBuilding = char.ToUpper(targetBuilding[0]) + targetBuilding.Substring(1);
+          string origBuilding = char.ToUpper(building[0]) + building.Substring(1);
+          Console.WriteLine($"{targetBuilding}");
+          Console.WriteLine($"{origBuilding}");
+
+          string targetFlag = $"/Interactives/FlagMarkers/FlagMarker{origBuilding}/{targetBuilding}FlagSprite";
+          string origFlag = $"/Interactives/FlagMarkers/FlagMarker{origBuilding}/{origBuilding}FlagSprite";
+          if (building == "expeditions" && scene.ToLower() == "colonystrato") {
+            targetFlag = $"/Interactives/Expeditions/month3plusGazebo/FlagMarkerExpeditions/{targetBuilding}FlagSprite";
+            origFlag = $"/Interactives/Expeditions/month3plusGazebo/FlagMarkerExpeditions/{origBuilding}FlagSprite";
+          }
+          GameObject targetFlagSprite = GameObject.Find(targetFlag);
+          GameObject origFlagSprite = GameObject.Find(origFlag);
+          origFlagSprite.SetActive(false);
+          targetFlagSprite.SetActive(true);
+
+          if (targetBuilding == "Expeditions") {
+            warpDest = stratosBuldingEntrancePos[building];
+            if (scene.ToLower() == "colonystrato") {
+              GameObject gameObject = GameObject.Find("/Interactives/entranceReturnFromExploreGlow");
+              gameObject.transform.position = warpDest;
+              gameObject = GameObject.Find("/Interactives/entranceReturnFromExpedition");
+              gameObject.transform.position = warpDest;
+              gameObject = GameObject.Find("/Interactives/entranceReturnFromSneak");
+              gameObject.transform.position = warpDest;
+            }
+          }
+        }
+      }
+    }
+
+
+
     if (ArchipelagoClient.serverData.character_rando) {
       //Chara rando logic here
       string season = Princess.season.seasonID;
@@ -172,9 +222,10 @@ class MapPatch
       string path;
       GameObject gameObject;
 
+      // Flag switching here too
+
       // Normal colony
       if (scene.ToLower() == "colonystrato") {
-        Console.WriteLine($"Randomizing ColonyStrato positions");
         
         Dictionary<string, string> refDict = new ();
         foreach (var chara in stratosPos[season]) {
@@ -184,8 +235,6 @@ class MapPatch
         Console.WriteLine($"RefDict: {Helpers.PrettyDict(refDict)}");
         foreach (var chara in stratosPos[season]) {
           string charaID = chara.Key;
-          Console.WriteLine($"Placing {charaID}");
-          
           string newCharaID = refDict[charaID];
           Vector3 newLoc = stratosPos[season][newCharaID];
           
@@ -224,17 +273,16 @@ class MapPatch
             }
           }
         }
+
+        
       }
       // Ruined colony
       else if (scene.ToLower() == "colonystratodestroyed") {
-        Console.WriteLine($"Randomizing ColonyStratoDestroyed locations");
-        
         Dictionary<string, string> refDict = new ();
         foreach (var chara in ruinedPos[season]) {
           refDict[chara.Key] = chara.Key;
         }
         refDict = Helpers.RandomizeDict(refDict, seed);
-        Console.WriteLine($"RefDict: {Helpers.PrettyDict(refDict)}");
         foreach (var chara in ruinedPos[season]) {
           string charaID = chara.Key;
           Console.WriteLine($"Placing {charaID}");
@@ -254,8 +302,6 @@ class MapPatch
       }
       // Helio
       else if (scene.ToLower() == "colonyhelio") {
-        Console.WriteLine($"Randomizing ColonyHelio locations");
-        
         Dictionary<string, string> refDict = new ();
         foreach (var chara in helioPos[season]) {
           refDict[chara.Key] = chara.Key;

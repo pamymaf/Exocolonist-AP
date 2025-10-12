@@ -70,17 +70,29 @@ public class ArchipelagoData
   } = "Groundhogs";
   public static string GroundhogsFileName {
     get {
-      return $"{GroundhogsFileNameBase}.json";
+      if (ArchipelagoClient.authenticated) {
+        return $"{GroundhogsFileNameBase}.json";
+      } else {
+        return "Groundhogs.json";
+      }
     }
   }
   public static string GroundhogsFileNameBackup {
     get {
-      return $"{GroundhogsFileNameBase}.bak";
+      if (ArchipelagoClient.authenticated) {
+        return $"{GroundhogsFileNameBase}.bak";
+      } else {
+        return "Groundhogs.bak";
+      }
     }
   }
   public static string GroundhogsFileNameOld {
     get {
-      return $"{GroundhogsFileNameBase}_old.json";
+      if (ArchipelagoClient.authenticated) {
+        return $"{GroundhogsFileNameBase}_old.json";
+      } else {
+        return "Groundhogs_old.json";
+      }
     }
   }
 
@@ -94,11 +106,13 @@ public class ArchipelagoData
     receivedJobs = new ();
     receivedFriendship = new (); // Not used yet
     maxAge = 10;
+    
+    object keyChecker;
     var slotData = ArchipelagoClient.session.DataStorage.GetSlotData();
-    if (Convert.ToString(slotData["friendsanity"]) == "1") {
+    if (slotData.TryGetValue("friendsanity", out keyChecker) && Convert.ToString(slotData["friendsanity"]) == "1") {
       friendsanity = true;
     }
-    if (Convert.ToString(slotData["datesanity"]) == "1") {
+    if (slotData.TryGetValue("datesanity", out keyChecker) && Convert.ToString(slotData["datesanity"]) == "1") {
       datesanity = true;
       ItemsAndLocationsHandler.storyEvents = new (
         ItemsAndLocationsHandler.nonDateEvents.Concat(ItemsAndLocationsHandler.dateEvents).ToDictionary(x=>x.Key, x=>x.Value)
@@ -108,20 +122,24 @@ public class ArchipelagoData
         ItemsAndLocationsHandler.nonDateEvents
       );
     }
-    switch (Convert.ToInt32(slotData["ending"])) {
-      case 1:
-        ending = "no_slacker";
-        break;
-      
-      case 2:
-        ending = "special";
-        break;
-      
-      default:
-        ending = "any";
-        break;
+
+    if (slotData.TryGetValue("ending", out keyChecker)) {
+      switch (Convert.ToInt32(slotData["ending"])) {
+        case 1:
+          ending = "no_slacker";
+          break;
+        
+        case 2:
+          ending = "special";
+          break;
+        
+        default:
+          ending = "any";
+          break;
+      }
     }
-    if (Convert.ToString(slotData["perksanity"]) == "1") {
+
+    if (slotData.TryGetValue("perksanity", out keyChecker) && Convert.ToString(slotData["perksanity"]) == "1") {
       perksanity = true;
       receivedPerk = new () {
         {"empathy", 0},
@@ -138,17 +156,19 @@ public class ArchipelagoData
         {"animals", 0},
       };
     }
-    if (Convert.ToString(slotData["building_rando"]) == "1") {
+
+    int hash = Tuple.Create(seed, slotName).GetHashCode();
+    if (slotData.TryGetValue("building_rando", out keyChecker) && Convert.ToString(slotData["building_rando"]) == "1") {
       building_rando = true;
-      buildings = RandomizeBuildings();
+      buildings = Helpers.RandomizeDict(buildings, hash);
     }
-    if (Convert.ToString(slotData["character_rando"]) == "1") {
+    if (slotData.TryGetValue("character_rando", out keyChecker) && Convert.ToString(slotData["character_rando"]) == "1") {
       character_rando = true;
-      stratosCharacters = RandomizeCharacters(stratosCharacters);
-      allCharacters = RandomizeCharacters(allCharacters);
+      stratosCharacters = Helpers.RandomizeDict(stratosCharacters, hash);
+      allCharacters = Helpers.RandomizeDict(allCharacters, hash);
     }
 
-    if (Convert.ToString(slotData["force_battles"]) == "1") {
+    if (slotData.TryGetValue("force_battles", out keyChecker) && Convert.ToString(slotData["force_battles"]) == "1") {
       forceBattles = true;
     } else {
       forceBattles = false;
@@ -161,60 +181,5 @@ public class ArchipelagoData
   public void RaiseAge()
   {
     maxAge++;
-  }
-
-  public Dictionary<string, string> RandomizeBuildings()
-  {
-    int hash;
-    hash = Tuple.Create(seed, slotName).GetHashCode();
-    System.Random rng = new System.Random(hash);
-    List<string> buildingList = new () {
-      "garrison",
-      "engineering",
-      "quarters",
-      "command",
-      "geoponics",
-      "expeditions",
-    };
-    int n = buildingList.Count;
-
-    while (n > 1) { // TODO: Make this a for loop
-      n--;
-      int k = rng.Next(n + 1);
-      string value = buildingList[k];
-      buildingList[k] = buildingList[n];
-      buildingList[n] = value;
-    }
-    Dictionary<string, string> buildingDict = new ();
-    for (int i = 0; i < buildingList.Count; i++) {
-      string key = buildings.ElementAt(i).Key;
-      buildingDict[key] = buildingList[i];
-    }
-
-    return buildingDict;
-  }
-
-  public Dictionary<string, string> RandomizeCharacters(Dictionary<string, string> characters)
-  {
-    int hash;
-    hash = Tuple.Create(seed, slotName).GetHashCode();
-    System.Random rng = new System.Random(hash);
-    List<string> charaList = new (characters.Keys);
-    int n = charaList.Count;
-
-    while (n > 1) { // TODO: Make this a for loop
-      n--;
-      int k = rng.Next(n + 1);
-      string value = charaList[k];
-      charaList[k] = charaList[n];
-      charaList[n] = value;
-    }
-    Dictionary<string, string> charaDict = new ();
-    for (int i = 0; i < charaList.Count; i++) {
-      string key = characters.ElementAt(i).Key;
-      charaDict[key] = charaList[i];
-    }
-
-    return charaDict;
   }
 }
