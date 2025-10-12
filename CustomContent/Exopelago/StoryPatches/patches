@@ -119,6 +119,14 @@
 {
 
 }
+@replace|tammyWeek1b|~if repeat||0|0
+{
+
+}
+@replace|tammyWeek1|~if month == 10-quiet-1||0|0
+{
+  
+}
 
 // command
 @replace|commandDeliveryUnlock|~set mem_job_delivery||0|0
