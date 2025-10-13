@@ -36,7 +36,7 @@ public class ArchipelagoData
     {"geoponics", "geoponics"},
     {"expeditions", "expeditions"},
   };
-  public Dictionary<string, string> stratosCharacters = new () {
+  public Dictionary<string, string> stratoCharacters = new () {
     {"tang", "tang"},
     {"tammy", "tammy"},
     {"cal", "cal"},
@@ -164,7 +164,7 @@ public class ArchipelagoData
     }
     if (slotData.TryGetValue("character_rando", out keyChecker) && Convert.ToString(slotData["character_rando"]) == "1") {
       character_rando = true;
-      stratosCharacters = Helpers.RandomizeDict(stratosCharacters, hash);
+      stratoCharacters = Helpers.RandomizeDict(stratoCharacters, hash);
       allCharacters = Helpers.RandomizeDict(allCharacters, hash);
     }
 

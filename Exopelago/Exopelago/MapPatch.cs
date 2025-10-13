@@ -11,7 +11,7 @@ namespace Exopelago;
 class MapPatch
 {
   // The locations of everyone in every season on every map
-  public static Dictionary<string, Dictionary<string, Vector3>> stratosPos = new (){
+  public static Dictionary<string, Dictionary<string, Vector3>> stratoPos = new (){
     {"quiet", new ()
       {
         {"tammy", new Vector3(11.79f, -0.37f, 4.45f)},
@@ -158,13 +158,22 @@ class MapPatch
     }
   };
 
-  public static Dictionary<string, Vector3> stratosBuldingEntrancePos = new() {
+  public static Dictionary<string, Vector3> stratoBuldingEntrancePos = new() {
     {"quarters", new Vector3(5f, -1f, 8f)},
     {"engineering", new Vector3(-9f, -1f, -2f)},
     {"garrison", new Vector3(-14f, -1f, -17f)},
     {"expeditions", new Vector3(11f, -1f, -24f)},
     {"geoponics", new Vector3(32f, 3.33f, -17f)},
     {"command", new Vector3(31f, 11f, 12f)},
+  };
+
+  public static Dictionary<string, Vector3> helioBuildingEntrancePos = new () {
+    {"quarters", new Vector3(10f, -3f, 25f)},
+    {"engineering", new Vector3(39f, 1f, -5f)},
+    {"garrison", new Vector3(-6f, 0f, -38f)},
+    {"expeditions", new Vector3(-58f, 8.5f, -48f)},
+    {"geoponics", new Vector3(-65f, -1f, 34f)},
+    {"command", new Vector3(-20f, 9f, 5f)},
   };
   
   [HarmonyPatch("OnMonthChanged")]
@@ -179,39 +188,43 @@ class MapPatch
       Vector3 warpDest;
       if (scene.ToLower() != "colonystratodestroyed") {
         foreach (string building in ArchipelagoClient.serverData.buildings.Keys) {
-          string targetBuilding = ArchipelagoClient.serverData.buildings[building];
-          targetBuilding = char.ToUpper(targetBuilding[0]) + targetBuilding.Substring(1);
-          string origBuilding = char.ToUpper(building[0]) + building.Substring(1);
-          Console.WriteLine($"{targetBuilding}");
-          Console.WriteLine($"{origBuilding}");
-
-          string targetFlag = $"/Interactives/FlagMarkers/FlagMarker{origBuilding}/{targetBuilding}FlagSprite";
-          string origFlag = $"/Interactives/FlagMarkers/FlagMarker{origBuilding}/{origBuilding}FlagSprite";
-          if (building == "expeditions" && scene.ToLower() == "colonystrato") {
-            targetFlag = $"/Interactives/Expeditions/month3plusGazebo/FlagMarkerExpeditions/{targetBuilding}FlagSprite";
-            origFlag = $"/Interactives/Expeditions/month3plusGazebo/FlagMarkerExpeditions/{origBuilding}FlagSprite";
+          if (ExopelagoSettings.settingBools["matchFlags"]) {
+            string targetBuilding = ArchipelagoClient.serverData.buildings[building];
+            targetBuilding = char.ToUpper(targetBuilding[0]) + targetBuilding.Substring(1);
+            string origBuilding = char.ToUpper(building[0]) + building.Substring(1);
+            string targetFlag = $"/Interactives/FlagMarkers/FlagMarker{origBuilding}/{targetBuilding}FlagSprite";
+            string origFlag = $"/Interactives/FlagMarkers/FlagMarker{origBuilding}/{origBuilding}FlagSprite";
+            if (building == "expeditions" && scene.ToLower() == "colonystrato") {
+              targetFlag = $"/Interactives/Expeditions/month3plusGazebo/FlagMarkerExpeditions/{targetBuilding}FlagSprite";
+              origFlag = $"/Interactives/Expeditions/month3plusGazebo/FlagMarkerExpeditions/{origBuilding}FlagSprite";
+            }
+            GameObject targetFlagSprite = GameObject.Find(targetFlag);
+            GameObject origFlagSprite = GameObject.Find(origFlag);
+            origFlagSprite.SetActive(false);
+            targetFlagSprite.SetActive(true);
           }
-          GameObject targetFlagSprite = GameObject.Find(targetFlag);
-          GameObject origFlagSprite = GameObject.Find(origFlag);
-          origFlagSprite.SetActive(false);
-          targetFlagSprite.SetActive(true);
 
-          if (targetBuilding == "Expeditions") {
-            warpDest = stratosBuldingEntrancePos[building];
+          // Warp spot fix
+          if (ArchipelagoClient.serverData.buildings[building] == "expeditions") {
             if (scene.ToLower() == "colonystrato") {
+              warpDest = stratoBuldingEntrancePos[building];
               GameObject gameObject = GameObject.Find("/Interactives/entranceReturnFromExploreGlow");
               gameObject.transform.position = warpDest;
               gameObject = GameObject.Find("/Interactives/entranceReturnFromExpedition");
               gameObject.transform.position = warpDest;
               gameObject = GameObject.Find("/Interactives/entranceReturnFromSneak");
               gameObject.transform.position = warpDest;
+            } else if (scene.ToLower() == "colonyhelio") {
+              warpDest = helioBuildingEntrancePos[building];
+              GameObject gameObject = GameObject.Find("/Interactives/entranceReturnFromExploreGlow");
+              gameObject.transform.position = warpDest;
+              gameObject = GameObject.Find("/Interactives/entranceReturnFromExpedition");
+              gameObject.transform.position = warpDest;
             }
           }
         }
       }
     }
-
-
 
     if (ArchipelagoClient.serverData.character_rando) {
       //Chara rando logic here
@@ -222,22 +235,18 @@ class MapPatch
       string path;
       GameObject gameObject;
 
-      // Flag switching here too
-
       // Normal colony
       if (scene.ToLower() == "colonystrato") {
-        
         Dictionary<string, string> refDict = new ();
-        foreach (var chara in stratosPos[season]) {
+        foreach (var chara in stratoPos[season]) {
           refDict[chara.Key] = chara.Key;
         }
         refDict = Helpers.RandomizeDict(refDict, seed);
         Console.WriteLine($"RefDict: {Helpers.PrettyDict(refDict)}");
-        foreach (var chara in stratosPos[season]) {
+        foreach (var chara in stratoPos[season]) {
           string charaID = chara.Key;
           string newCharaID = refDict[charaID];
-          Vector3 newLoc = stratosPos[season][newCharaID];
-          
+          Vector3 newLoc = stratoPos[season][newCharaID];
           if (season == "quiet") {
             path = $"/Seasonal/quiet/inner/week3plus/chara_{charaID}/";
             gameObject = GameObject.Find(path);

@@ -1,13 +1,7 @@
-//using BepInEx;
-//using BepInEx.Logging;
 using HarmonyLib;
 using Northway.Utils;
 using System;
-//using System.Collections.Generic;
-//using System.Linq;
 using UnityEngine.UI;
-//using Newtonsoft.Json.Linq;
-//using UnityEngine;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
@@ -28,7 +22,6 @@ class MenuPatches
     }
     return true;
   }
-  
 
   [HarmonyPatch(typeof(SettingsMenu), "CreateButton")]
   [HarmonyPostfix]
@@ -62,8 +55,14 @@ class MenuPatches
     NWButton spawnSlotPopup = __instance.AddButton("Change Slot", SetSlot, "");
     NWButton spawnPassPopup = __instance.AddButton("Change Password", SetPassword, "");
     NWButton connectToAP = __instance.AddButton($"{connectButtonText}", Connect, "Connect to Archipelago");
+    NWButton matchFlags = __instance.AddButton(GetBoolButtonText("matchFlags"), matchFlagsToggle, ExopelagoSettings.settingDescriptions["matchFlags"]);
+    
   }
 
+  private static string GetBoolButtonText(string settingName)
+  {
+   return ExopelagoSettings.settingNames[settingName] + " " + (ExopelagoSettings.settingBools[settingName] ? TextLocalized.Localize("button_on") : TextLocalized.Localize("button_off"));
+  }
 
   private static void SetIP()
   {
@@ -134,6 +133,12 @@ class MenuPatches
     Singleton<SettingsMenu>.instance.UpdateButtons();
   }
 
+  public static void matchFlagsToggle()
+  {
+    ExopelagoSettings.settingBools["matchFlags"] = !ExopelagoSettings.settingBools["matchFlags"];
+    Console.WriteLine($"Match flags {ExopelagoSettings.settingBools["matchFlags"]}");
+    Singleton<SettingsMenu>.instance.UpdateButtons();
+  }
 
 
 
