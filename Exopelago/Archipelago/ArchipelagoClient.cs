@@ -165,7 +165,7 @@ public static class ArchipelagoClient
   {
     foreach (ItemInfo item in session.Items.AllItemsReceived) {
       if (saveLoad) {
-        if (!ItemsAndLocationsHandler.apToInternalCollectibles.ContainsKey(item.ItemName) && !item.ItemName.Contains("Perk")) {
+        if (!ItemsAndLocationsHandler.apToInternalCollectibles.ContainsKey(item.ItemName)){// && !item.ItemName.Contains("Perk")) {
           Plugin.Logger.LogInfo($"RefreshUnlocks from save: {item.ItemName}");
           ProcessItemReceived(item);
         }

@@ -1,5 +1,6 @@
 using HarmonyLib;
 using Newtonsoft.Json.Linq;
+using Northway.Utils;
 using Exopelago.Archipelago;
 
 namespace Exopelago;
@@ -23,6 +24,7 @@ class Player_ExecutePatch
         Helpers.DisplayAPMessage("Invalid seed and slot name");
       }  else {
         Helpers.DisplayAPMessage();
+        Singleton<SkillsMenu>.instance.ResetFillbarProgress();
       }
     }
     Helpers.firstMapLoad = false;

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
+using Northway.Utils;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Exopelago.Archipelago;
 
@@ -63,13 +64,17 @@ public static class Helpers
     Plugin.Logger.LogInfo($"UnlockPerk {skill}");
     int maxPerk = ArchipelagoClient.serverData.receivedPerk[skill];
     Plugin.Logger.LogInfo($"maxPerk {maxPerk}");
-    if (maxPerk == 1) {
+    if (maxPerk >= 1) {
       Princess.AddMemory($"unlockskillperk_{skill}1");
-    } else if (maxPerk == 2) {
+    }
+    if (maxPerk >= 2) {
       Princess.AddMemory($"unlockskillperk_{skill}2");
-    } else if (maxPerk == 3) {
+    }
+    if (maxPerk == 3) {
       Princess.AddMemory($"unlockskillperk_{skill}3");
     }
+    Perk.UpdateCurrentPerks();
+    Singleton<SkillsMenu>.instance.ResetFillbarProgress();
   }
 
 
