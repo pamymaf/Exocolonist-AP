@@ -180,7 +180,7 @@ class MapPatch
   [HarmonyPrefix]
   public static void MonthChangePrefix(MapManager __instance)
   {
-    Console.WriteLine($"In MonthChange Prefix");
+    Plugin.Logger.LogInfo($"In MonthChange Prefix");
 
     // Flag rando
     if (ArchipelagoClient.serverData.building_rando) {
@@ -242,7 +242,6 @@ class MapPatch
           refDict[chara.Key] = chara.Key;
         }
         refDict = Helpers.RandomizeDict(refDict, seed);
-        Console.WriteLine($"RefDict: {Helpers.PrettyDict(refDict)}");
         foreach (var chara in stratoPos[season]) {
           string charaID = chara.Key;
           string newCharaID = refDict[charaID];
@@ -294,7 +293,6 @@ class MapPatch
         refDict = Helpers.RandomizeDict(refDict, seed);
         foreach (var chara in ruinedPos[season]) {
           string charaID = chara.Key;
-          Console.WriteLine($"Placing {charaID}");
           string newCharaID = refDict[charaID];
           Vector3 newLoc = ruinedPos[season][newCharaID];
           if (charaID == "anemone" || charaID == "tammy") {
@@ -316,10 +314,8 @@ class MapPatch
           refDict[chara.Key] = chara.Key;
         }
         refDict = Helpers.RandomizeDict(refDict, seed);
-        Console.WriteLine($"RefDict: {Helpers.PrettyDict(refDict)}");
         foreach (var chara in helioPos[season]) {
           string charaID = chara.Key;
-          Console.WriteLine($"Placing {charaID}");
           string newCharaID = refDict[charaID];
           Vector3 newLoc = helioPos[season][newCharaID];
           

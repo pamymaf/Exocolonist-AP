@@ -136,7 +136,6 @@ class MenuPatches
   public static void matchFlagsToggle()
   {
     ExopelagoSettings.settingBools["matchFlags"] = !ExopelagoSettings.settingBools["matchFlags"];
-    Console.WriteLine($"Match flags {ExopelagoSettings.settingBools["matchFlags"]}");
     Singleton<SettingsMenu>.instance.UpdateButtons();
   }
 

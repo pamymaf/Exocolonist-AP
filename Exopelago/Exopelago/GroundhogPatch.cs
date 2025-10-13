@@ -21,7 +21,6 @@ public static class GroundhogsPatch
 		if (!File.Exists(path)) {
 			using (StreamWriter sw = File.AppendText(path)) {
 				sw.WriteLine("{}");
-				Console.WriteLine($"Writing file");
 			}
 		}
 		path = Path.Combine(documents, ArchipelagoData.GroundhogsFileNameBackup);
