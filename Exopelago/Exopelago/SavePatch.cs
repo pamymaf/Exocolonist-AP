@@ -16,6 +16,10 @@ class SavePatch
     JObject saveJson = Helpers.GetConnectionInfoSaveGame();
     Helpers.firstMapLoad = true;
     Plugin.Logger.LogInfo($"Loaded save. Save info: {saveJson}");
+    if (!ArchipelagoClient.authenticated) {
+      ArchipelagoClient.Connect((string)saveJson["apserver"], (string)saveJson["apport"], (string)saveJson["apslot"], (string)saveJson["appass"]);
+      ArchipelagoClient.RefreshUnlocks(true, (int)saveJson["apItemIndex"]);
+    }
     if (connectedSeed == (string)saveJson["apseed"] && connectedSlot == (string)saveJson["apslot"]){
       ArchipelagoClient.serverData.InitializeData();
       ArchipelagoClient.RefreshUnlocks(true, (int)saveJson["apItemIndex"]);

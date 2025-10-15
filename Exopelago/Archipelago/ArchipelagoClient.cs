@@ -168,10 +168,10 @@ public static class ArchipelagoClient
     foreach (ItemInfo item in session.Items.AllItemsReceived) {
       if (saveLoad) {
         if (!ItemsAndLocationsHandler.apToInternalCollectibles.ContainsKey(item.ItemName)){// && !item.ItemName.Contains("Perk")) {
-          Plugin.Logger.LogInfo($"RefreshUnlocks from save: {item.ItemName}");
+          Plugin.Logger.LogInfo($"RefreshUnlocks from save: {item.ItemName} - {c}");
           ProcessItemReceived(item);
         } else if (c > index) {
-          Plugin.Logger.LogInfo($"Giving offline consumable: {item.ItemName}");
+          Plugin.Logger.LogInfo($"Giving offline consumable: {item.ItemName} - {c}");
           ProcessItemReceived(item);
         }
       } else {
