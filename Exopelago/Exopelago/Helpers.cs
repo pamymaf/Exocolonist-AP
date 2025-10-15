@@ -26,6 +26,7 @@ public static class Helpers
     json["apslot"] = Princess.GetMemory("apSlot");
     json["appass"] = Princess.GetMemory("apPass");
     json["apseed"] = Princess.GetMemory("apSeed");
+    json["apItemIndex"] = Princess.GetMemory("apItemIndex");
     return json;
   }
 
@@ -37,6 +38,7 @@ public static class Helpers
     Princess.SetMemory("apSlot", ArchipelagoClient.serverData.slotName);
     Princess.SetMemory("apPass", ArchipelagoClient.serverData.password);
     Princess.SetMemory("apSeed", ArchipelagoClient.serverData.seed);
+    Princess.SetMemory("apItemIndex", ArchipelagoClient.serverData.receivedItemIndex);
   }
 
   

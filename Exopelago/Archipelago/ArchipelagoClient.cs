@@ -18,7 +18,7 @@ public static class ArchipelagoClient
   public static bool offline;
   public static ArchipelagoData serverData = new ();
   public static ArchipelagoSession session;
-  public static int offlineReceivedItems;
+  public static int receivedItemIndex;
 
   public static bool readyForItems = false;
 
@@ -83,6 +83,7 @@ public static class ArchipelagoClient
     } else {
       authenticated = true;
       ArchipelagoData.GroundhogsFileNameBase = $"{serverData.slotName}-{serverData.seed}";
+      serverData.receivedItemIndex = session.Items.Index;
       Plugin.Logger.LogInfo("Successfully connected!");
     }
 
@@ -161,19 +162,25 @@ public static class ArchipelagoClient
   }
   
   // TODO: Keep track of what index has already been processed in the save file
-  public static void RefreshUnlocks(bool saveLoad = false) 
+  public static void RefreshUnlocks(bool saveLoad = false, int index = 1) 
   {
+    int c = 1;
     foreach (ItemInfo item in session.Items.AllItemsReceived) {
       if (saveLoad) {
         if (!ItemsAndLocationsHandler.apToInternalCollectibles.ContainsKey(item.ItemName)){// && !item.ItemName.Contains("Perk")) {
           Plugin.Logger.LogInfo($"RefreshUnlocks from save: {item.ItemName}");
+          ProcessItemReceived(item);
+        } else if (c > index) {
+          Plugin.Logger.LogInfo($"Giving offline consumable: {item.ItemName}");
           ProcessItemReceived(item);
         }
       } else {
         Plugin.Logger.LogInfo($"RefreshUnlocks from new game: {item.ItemName}");
         ProcessItemReceived(item);
       }
+      c++;
     }
+    Helpers.AddSaveData();
   }
 
 

@@ -11,7 +11,7 @@ public class ArchipelagoData
   public string slotName = "Player1";
   public string password = "";
   public string seed;
-  public int index;
+  public int receivedItemIndex;
   public Dictionary<string, object> slotData; // Slot options
   public static bool deathLink = false;
   public List<long> checkedLocations;
@@ -100,7 +100,6 @@ public class ArchipelagoData
   public void InitializeData()
   {
     seed = ArchipelagoClient.session.RoomState.Seed;
-    index = ArchipelagoClient.offlineReceivedItems; // Need to use this for refreshunlocks consumables
     receivedItems = new Dictionary<long, int>();
     unlockedJobs = new ();
     receivedJobs = new ();

@@ -115,17 +115,9 @@
 }
 
 // This line forces one piece of dialogue the firsth month of the year and prevents you from completing the Marz soysweet task early
-@replace|tammyWeek1b|~if month == 10-quiet-1||0|0
-{
-
-}
 @replace|tammyWeek1b|~if repeat||0|0
 {
 
-}
-@replace|tammyWeek1|~if month == 10-quiet-1||0|0
-{
-  
 }
 
 // command
