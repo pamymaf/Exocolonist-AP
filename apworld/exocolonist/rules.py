@@ -57,7 +57,7 @@ def set_consumable_rules(world: ExocolonistWorld) -> None:
   explore_jobs = ("Sneak Out", "Explore Nearby", "Survey the Plains", "Forage in the Valley")
   
   # First year is xeno egg, log, crystal with no explore
-  for consumable in ["Bobberfruit", "Medicinal Roots", "Yellow Flower"]:
+  for consumable in ["Pick up Bobberfruit", "Pick up Medicinal Roots", "Pick up Yellow Flower"]:
     set_rule(
       world.get_location(consumable), 
       lambda state, explore_jobs=explore_jobs, bravery=world.skills_to_job["bravery"], toughness=world.skills_to_job["toughness"]: (
@@ -71,7 +71,7 @@ def set_consumable_rules(world: ExocolonistWorld) -> None:
     )
 
   set_rule(
-    world.get_location("Strange Device"), 
+    world.get_location("Pick up Strange Device"), 
     lambda state, bravery=world.skills_to_job["bravery"], toughness=world.skills_to_job["toughness"]: (
       state.has("Survey the Ridge", world.player) and 
       (
@@ -88,7 +88,7 @@ def set_job_rules(world: ExocolonistWorld) -> None:
     # Explore Glow requires the ridge and 30 bravery
     if job == "Explore Glow":
       set_rule(
-        world.get_location("Explore Glow"),
+        world.get_location("Unlock Explore Glow"),
         lambda state, bravery=world.skills_to_job["bravery"]: (
           state.has("Survey the Ridge", world.player) and
           state.has_any(bravery, world.player)
@@ -96,7 +96,7 @@ def set_job_rules(world: ExocolonistWorld) -> None:
       )
     else:
       set_rule(
-        world.get_location(job),
+        world.get_location(f"Unlock {job}"),
         lambda state, bravery=world.skills_to_job["bravery"], toughness=world.skills_to_job["toughness"]: (
           state.has_any(bravery, world.player) or 
           state.has_any(toughness, world.player)
@@ -107,7 +107,7 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   # Study Engineering needs you to work one basic job there to unlock it
   basic_engineering_jobs = ("Study Life Sciences", "Study Humanities")
   set_rule(
-    world.get_location("Study Engineering"),
+    world.get_location("Unlock Study Engineering"),
     lambda state, basic_engineering_jobs=basic_engineering_jobs: (
       state.has_any(basic_engineering_jobs, world.player)
     ),
@@ -117,14 +117,14 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   # Command
   # Requires 30 friendship with Marz
   set_rule(
-    world.get_location("Depot Clerk"),
+    world.get_location("Unlock Depot Clerk"),
     lambda state, chara_jobs=world.chara_jobs["Marz"]: (
       state.has_any(chara_jobs, world.player)
     ),
   )
   # Construction requires 10 friendship with Rex
   set_rule(
-    world.get_location("Construction"),
+    world.get_location("Unlock Construction"),
     lambda state, chara_jobs=world.chara_jobs["Rex"]: {
       state.has_any(chara_jobs, world.player)
     }
@@ -134,7 +134,7 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   # Garrison
   # Guard Duty requires 10 bravery and 30 combat
   set_rule(
-    world.get_location("Guard Duty"),
+    world.get_location("Unlock Guard Duty"),
     lambda state, building_jobs=world.building_jobs, skills_to_job=world.skills_to_job: (
       state.has_any(building_jobs["garrison"], world.player) and
       state.has_any(skills_to_job["bravery"], world.player) and
@@ -146,7 +146,7 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   # Geoponics
   # Tending Animals needs an explore job
   set_rule(
-    world.get_location("Tending Animals"),
+    world.get_location("Unlock Tending Animals"),
     lambda state, building_jobs=world.building_jobs: {
       state.has_any(building_jobs["geoponics"], world.player) and
       state.has_any(("Hunt in the Swamps", "Forage in the Valley", "Survey the plains"), world.player)
@@ -155,14 +155,14 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   if not world.options.perksanity:
     # Xenobotany requires 34 biology
     set_rule(
-      world.get_location("Xenobotany"),
+      world.get_location("Unlock Xenobotany"),
       lambda state, skills_to_job=world.skills_to_job: (
         state.has_any(skills_to_job["biology"], world.player)
       ),
     )
   # Relax in the Park is unlocked when you do geoponics jobs
   set_rule(
-    world.get_location("Relax in the Park"),
+    world.get_location("Unlock Relax in the Park"),
     lambda state, building_jobs=world.building_jobs: (
       state.has_any(building_jobs["geoponics"], world.player)
     ),
@@ -219,7 +219,7 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   ]
   for job in job_reqs:
     set_rule(
-      world.get_location(job["name"]),
+      world.get_location(f"Unlock {job['name']}"),
       lambda state, building_jobs=world.building_jobs[job["building"]], skill_jobs=world.skills_to_job[job["skill"]]: (
         state.has_any(building_jobs, world.player) and
         state.has_any(skill_jobs, world.player)
@@ -229,28 +229,28 @@ def set_job_rules(world: ExocolonistWorld) -> None:
   if world.options.perksanity:
     # If perksanity is enabled, Barista requires 2 empathy perks
     set_rule(
-      world.get_location("Barista"),
+      world.get_location("Unlock Barista"),
       lambda state: {
         state.has("Progressive Empathy Perk", world.player, 2)
       }
     )
     # Robot Repair requires 1 engineering perk
     set_rule(
-      world.get_location("Robot Repair"),
+      world.get_location("Unlock Robot Repair"),
       lambda state: {
         state.has("Progressive Engineering Perk", world.player, 1)
       }
     )
     # Nursing Assistant requires 2 biology perks
     set_rule(
-      world.get_location("Nursing Assistant"),
+      world.get_location("Unlock Nursing Assistant"),
       lambda state: {
         state.has("Progressive Biology Perk", world.player, 2)
       }
     )
     # Xenobotany requires 1 biology perk
     set_rule(
-      world.get_location("Xenobotany"),
+      world.get_location("Unlock Xenobotany"),
       lambda state: (
         state.has("Progressive Biology Perk", world.player, 1)
       )
@@ -353,7 +353,7 @@ def set_special_event_rules(world: ExocolonistWorld) -> None:
     ),
   )
   # Governor events need at least one job in every building
-  for event in ["Marz Governor", "Become Governor", "Leader"]:
+  for event in ["Marz Governor", "Become Governor", "Unlock Leader"]:
     set_rule(
       world.get_location(event),
       lambda state, building_jobs=world.building_jobs: (
@@ -367,7 +367,7 @@ def set_special_event_rules(world: ExocolonistWorld) -> None:
     )
   # Requires 100 persuasion, which you can only get with the third persuasion perk
   if world.options.perksanity:
-    for event in ["Become Governor", "Leader"]:
+    for event in ["Become Governor", "Unlock Leader"]:
       set_rule(
         world.get_location(event),
         lambda state: (
