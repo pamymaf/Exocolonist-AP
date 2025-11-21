@@ -113,11 +113,11 @@ class MenuPatches
     if (ArchipelagoClient.authenticated) {
       Groundhogs.Save();
       ArchipelagoClient.Disconnect();
-      Groundhogs.instance.groundhogs = new StringDictionary();
+      //Groundhogs.instance.groundhogs = new StringDictionary();
       Groundhogs.Save();
       connectButtonText = "Connect";
     } else {
-      Groundhogs.instance.groundhogs = new StringDictionary();
+      //Groundhogs.instance.groundhogs = new StringDictionary();
       Groundhogs.Save();
       bool connected = ArchipelagoClient.ConnectSavedInfo();
       if (connected) {

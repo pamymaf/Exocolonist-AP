@@ -186,7 +186,7 @@ class MapPatch
     if (ArchipelagoClient.serverData.building_rando) {
       string scene = MapManager.currentScene;
       Vector3 warpDest;
-      if (scene.ToLower() != "colonystratodestroyed") {
+      if (scene.ToLower() == "colonystrato" || scene.ToLower() == "colonyhelio") {
         foreach (string building in ArchipelagoClient.serverData.buildings.Keys) {
           if (ExopelagoSettings.settingBools["matchFlags"]) {
             string targetBuilding = ArchipelagoClient.serverData.buildings[building];
