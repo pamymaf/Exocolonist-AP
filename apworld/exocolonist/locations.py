@@ -11,51 +11,51 @@ if TYPE_CHECKING:
 
 
 LOCATION_NAME_TO_ID = {
-  "Shovelling Dirt": 1,
-  "Farming": 2,
-  "Xenobotany": 3,
-  "Tending Animals": 4,
-  "Relax in the Park": 5,
-  "Babysitting": 6,
-  "Cooking": 7,
-  "Barista": 8,
-  "Play the Photophonor": 9,
-  "Relax in the Lounge": 10,
-  "Study Life Sciences": 11,
-  "Study Engineering": 12,
-  "Study Humanities": 13,
-  "Tutoring": 14,
-  "Robot Repair": 15,
-  "Nursing Assistant": 16,
-  "Sportsball": 17,
-  "Defense Training": 18,
-  "Lookout Duty": 19,
-  "Guard Duty": 20,
-  "Relax on the Walls": 21,
-  "Deliver Supplies": 22,
-  "Depot Clerk": 23,
-  "Construction": 24,
-  "Administration": 25,
-  "Leader": 26,
-  "Sneak Out": 27,
-  "Explore Nearby": 28,
-  "Survey the Plains": 29,
-  "Forage in the Valley": 30,
-  "Survey the Ridge": 31,
-  "Hunt in the Swamps": 32,
-  "Explore Glow": 33,
-  "Rebuild": 34,
-  "Mourn": 35,
+  "Unlock Shovelling Dirt": 1,
+  "Unlock Farming": 2,
+  "Unlock Xenobotany": 3,
+  "Unlock Tending Animals": 4,
+  "Unlock Relax in the Park": 5,
+  "Unlock Babysitting": 6,
+  "Unlock Cooking": 7,
+  "Unlock Barista": 8,
+  "Unlock Play the Photophonor": 9,
+  "Unlock Relax in the Lounge": 10,
+  "Unlock Study Life Sciences": 11,
+  "Unlock Study Engineering": 12,
+  "Unlock Study Humanities": 13,
+  "Unlock Tutoring": 14,
+  "Unlock Robot Repair": 15,
+  "Unlock Nursing Assistant": 16,
+  "Unlock Sportsball": 17,
+  "Unlock Defense Training": 18,
+  "Unlock Lookout Duty": 19,
+  "Unlock Guard Duty": 20,
+  "Unlock Relax on the Walls": 21,
+  "Unlock Deliver Supplies": 22,
+  "Unlock Depot Clerk": 23,
+  "Unlock Construction": 24,
+  "Unlock Administration": 25,
+  "Unlock Leader": 26,
+  "Unlock Sneak Out": 27,
+  "Unlock Explore Nearby": 28,
+  "Unlock Survey the Plains": 29,
+  "Unlock Forage in the Valley": 30,
+  "Unlock Survey the Ridge": 31,
+  "Unlock Hunt in the Swamps": 32,
+  "Unlock Explore Glow": 33,
+  "Unlock Rebuild": 34,
+  "Unlock Mourn": 35,
   # Add space between categories just in case
   "Ending": 56,
-  "Bobberfruit": 57,
-  "Medicinal Roots": 58,
-  "Xeno Egg": 59,
-  "Yellow Flower": 60,
-  "Mushwood Log": 61,
-  "Crystal Cluster": 62,
-  "Strange Device": 63,
-  "Cake": 64,
+  "Pick up Bobberfruit": 57,
+  "Pick up Medicinal Roots": 58,
+  "Pick up Xeno Egg": 59,
+  "Pick up Yellow Flower": 60,
+  "Pick up Mushwood Log": 61,
+  "Pick up Crystal Cluster": 62,
+  "Pick up Strange Device": 63,
+  # "Buy Cake": 64, Haven't written logic for this yet
   # Add space between categories just in case
   "Save Tammy": 154,
   "Save Tonin": 156,
@@ -240,35 +240,35 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
   age20 = world.get_region("Age 20")
 
   start_locations: dict[str, int | None] = {
-    "Relax in the Lounge": world.location_name_to_id["Relax in the Lounge"],
-    "Study Life Sciences": world.location_name_to_id["Study Life Sciences"],
-    "Study Humanities": world.location_name_to_id["Study Humanities"],
+    "Unlock Relax in the Lounge": world.location_name_to_id["Unlock Relax in the Lounge"],
+    "Unlock Study Life Sciences": world.location_name_to_id["Unlock Study Life Sciences"],
+    "Unlock Study Humanities": world.location_name_to_id["Unlock Study Humanities"],
   }
   start.add_locations(start_locations, ExocolonistLocation)
 
   age10_locations: dict[str, int | None] = {
-    "Shovelling Dirt": world.location_name_to_id["Shovelling Dirt"],
-    "Xenobotany": world.location_name_to_id["Xenobotany"],
-    "Babysitting": world.location_name_to_id["Babysitting"],
-    "Study Engineering": world.location_name_to_id["Study Engineering"],
-    "Sportsball": world.location_name_to_id["Sportsball"],
-    "Deliver Supplies": world.location_name_to_id["Deliver Supplies"],
-    "Sneak Out": world.location_name_to_id["Sneak Out"],
+    "Unlock Shovelling Dirt": world.location_name_to_id["Unlock Shovelling Dirt"],
+    "Unlock Xenobotany": world.location_name_to_id["Unlock Xenobotany"],
+    "Unlock Babysitting": world.location_name_to_id["Unlock Babysitting"],
+    "Unlock Study Engineering": world.location_name_to_id["Unlock Study Engineering"],
+    "Unlock Sportsball": world.location_name_to_id["Unlock Sportsball"],
+    "Unlock Deliver Supplies": world.location_name_to_id["Unlock Deliver Supplies"],
+    "Unlock Sneak Out": world.location_name_to_id["Unlock Sneak Out"],
     "Save Tammy": world.location_name_to_id["Save Tammy"],
-    "Bobberfruit": world.location_name_to_id["Bobberfruit"],
-    "Medicinal Roots": world.location_name_to_id["Medicinal Roots"],
-    "Xeno Egg": world.location_name_to_id["Xeno Egg"],
-    "Yellow Flower": world.location_name_to_id["Yellow Flower"],
-    "Mushwood Log": world.location_name_to_id["Mushwood Log"],
-    "Crystal Cluster": world.location_name_to_id["Crystal Cluster"],
-    "Strange Device": world.location_name_to_id["Strange Device"],
+    "Pick up Bobberfruit": world.location_name_to_id["Pick up Bobberfruit"],
+    "Pick up Medicinal Roots": world.location_name_to_id["Pick up Medicinal Roots"],
+    "Pick up Xeno Egg": world.location_name_to_id["Pick up Xeno Egg"],
+    "Pick up Yellow Flower": world.location_name_to_id["Pick up Yellow Flower"],
+    "Pick up Mushwood Log": world.location_name_to_id["Pick up Mushwood Log"],
+    "Pick up Crystal Cluster": world.location_name_to_id["Pick up Crystal Cluster"],
+    "Pick up Strange Device": world.location_name_to_id["Pick up Strange Device"],
     "Adopt Robot": world.location_name_to_id["Adopt Robot"],
   }
   age10.add_locations(age10_locations, ExocolonistLocation)
 
   age11_locations: dict[str, int | None] = {
-    "Defense Training": world.location_name_to_id["Defense Training"],
-    "Relax on the Walls": world.location_name_to_id["Relax on the Walls"],
+    "Unlock Defense Training": world.location_name_to_id["Unlock Defense Training"],
+    "Unlock Relax on the Walls": world.location_name_to_id["Unlock Relax on the Walls"],
     "Save Tonin": world.location_name_to_id["Save Tonin"],
     "Save Hal": world.location_name_to_id["Save Hal"],
     "Adopt Hopeye": world.location_name_to_id["Adopt Hopeye"],
@@ -276,54 +276,54 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
   age11.add_locations(age11_locations, ExocolonistLocation)
 
   age12_locations: dict[str, int | None] = {
-    "Play the Photophonor": world.location_name_to_id["Play the Photophonor"],
-    "Farming": world.location_name_to_id["Farming"],
-    "Relax in the Park": world.location_name_to_id["Relax in the Park"],
-    "Depot Clerk": world.location_name_to_id["Depot Clerk"],
+    "Unlock Play the Photophonor": world.location_name_to_id["Unlock Play the Photophonor"],
+    "Unlock Farming": world.location_name_to_id["Unlock Farming"],
+    "Unlock Relax in the Park": world.location_name_to_id["Unlock Relax in the Park"],
+    "Unlock Depot Clerk": world.location_name_to_id["Unlock Depot Clerk"],
     "Adopt Vriki": world.location_name_to_id["Adopt Vriki"],
     "Adopt Unisaur": world.location_name_to_id["Adopt Unisaur"],
   }
   age12.add_locations(age12_locations, ExocolonistLocation)
 
   age13_locations: dict[str, int | None] = {
-    "Cooking": world.location_name_to_id["Cooking"],
-    "Tutoring": world.location_name_to_id["Tutoring"],
-    "Lookout Duty": world.location_name_to_id["Lookout Duty"],
-    "Explore Nearby": world.location_name_to_id["Explore Nearby"],
-    "Survey the Plains": world.location_name_to_id["Survey the Plains"],
-    "Forage in the Valley": world.location_name_to_id["Forage in the Valley"],
+    "Unlock Cooking": world.location_name_to_id["Unlock Cooking"],
+    "Unlock Tutoring": world.location_name_to_id["Unlock Tutoring"],
+    "Unlock Lookout Duty": world.location_name_to_id["Unlock Lookout Duty"],
+    "Unlock Explore Nearby": world.location_name_to_id["Unlock Explore Nearby"],
+    "Unlock Survey the Plains": world.location_name_to_id["Unlock Survey the Plains"],
+    "Unlock Forage in the Valley": world.location_name_to_id["Unlock Forage in the Valley"],
   }
   age13.add_locations(age13_locations, ExocolonistLocation)
 
   age14_locations: dict[str, int | None] = {
-    "Tending Animals": world.location_name_to_id["Tending Animals"],
+    "Unlock Tending Animals": world.location_name_to_id["Unlock Tending Animals"],
     "Save Mom": world.location_name_to_id["Save Mom"],
     "Save Eudicot": world.location_name_to_id["Save Eudicot"],
   }
   age14.add_locations(age14_locations, ExocolonistLocation)
 
   age15_locations: dict[str, int | None] = {
-    "Robot Repair": world.location_name_to_id["Robot Repair"],
-    "Guard Duty": world.location_name_to_id["Guard Duty"],
-    "Construction": world.location_name_to_id["Construction"],
-    "Administration": world.location_name_to_id["Administration"],
-    "Survey the Ridge": world.location_name_to_id["Survey the Ridge"],
-    "Rebuild": world.location_name_to_id["Rebuild"],
-    "Mourn": world.location_name_to_id["Mourn"],
+    "Unlock Robot Repair": world.location_name_to_id["Unlock Robot Repair"],
+    "Unlock Guard Duty": world.location_name_to_id["Unlock Guard Duty"],
+    "Unlock Construction": world.location_name_to_id["Unlock Construction"],
+    "Unlock Administration": world.location_name_to_id["Unlock Administration"],
+    "Unlock Survey the Ridge": world.location_name_to_id["Unlock Survey the Ridge"],
+    "Unlock Rebuild": world.location_name_to_id["Unlock Rebuild"],
+    "Unlock Mourn": world.location_name_to_id["Unlock Mourn"],
     "Save Dad": world.location_name_to_id["Save Dad"],
   }
   age15.add_locations(age15_locations, ExocolonistLocation)
 
   age16_locations: dict[str, int | None] = {
-    "Barista": world.location_name_to_id["Barista"],
-    "Nursing Assistant": world.location_name_to_id["Nursing Assistant"],
-    "Explore Glow": world.location_name_to_id["Explore Glow"],
+    "Unlock Barista": world.location_name_to_id["Unlock Barista"],
+    "Unlock Nursing Assistant": world.location_name_to_id["Unlock Nursing Assistant"],
+    "Unlock Explore Glow": world.location_name_to_id["Unlock Explore Glow"],
 
   }
   age16.add_locations(age16_locations, ExocolonistLocation)
 
   age17_locations: dict[str, int | None] = {
-    "Hunt in the Swamps": world.location_name_to_id["Hunt in the Swamps"],
+    "Unlock Hunt in the Swamps": world.location_name_to_id["Unlock Hunt in the Swamps"],
   }
   age17.add_locations(age17_locations, ExocolonistLocation)
 
@@ -333,7 +333,7 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
   age18.add_locations(age18_locations, ExocolonistLocation)
 
   age19_locations: dict[str, int | None] = {
-    "Leader": world.location_name_to_id["Leader"],
+    "Unlock Leader": world.location_name_to_id["Unlock Leader"],
     "Become Governor": world.location_name_to_id["Become Governor"],
     "Marz Governor": world.location_name_to_id["Marz Governor"],
   }
