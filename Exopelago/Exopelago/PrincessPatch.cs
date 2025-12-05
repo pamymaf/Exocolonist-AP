@@ -21,12 +21,12 @@ class PrincessMonthPatch
       StoryCalls.endgame("archipelagoEnding");
     } else if (value == 66) {
       // These jobs unlock automatically when you turn 15
-      ArchipelagoClient.ProcessLocation("Mourn");
-      ArchipelagoClient.ProcessLocation("Rebuild");
+      ArchipelagoClient.ProcessLocation("Unlock Mourn");
+      ArchipelagoClient.ProcessLocation("Unlock Rebuild");
     } else if (value == 41) {
       // These jobs unlock at age 13
-      ArchipelagoClient.ProcessLocation("Forage in the Valley");
-      ArchipelagoClient.ProcessLocation("Survey the Plains");
+      ArchipelagoClient.ProcessLocation("Unlock Forage in the Valley");
+      ArchipelagoClient.ProcessLocation("Unlock Survey the Plains");
     }
     return true;
   }

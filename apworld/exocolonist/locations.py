@@ -368,6 +368,10 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
       "Tammy 30": world.location_name_to_id["Tammy 30"],
       "Tang 30": world.location_name_to_id["Tang 30"],
       "Anemone 30": world.location_name_to_id["Anemone 30"],
+    }
+    age11.add_locations(age11_friends, ExocolonistLocation)
+
+    age12_friends: dict[str, int | None] = {
       "Marz 40": world.location_name_to_id["Marz 40"],
       "Dys 40": world.location_name_to_id["Dys 40"],
       "Cal 40": world.location_name_to_id["Cal 40"],
@@ -375,15 +379,19 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
       "Tang 40": world.location_name_to_id["Tang 40"],
       "Anemone 40": world.location_name_to_id["Anemone 40"],
     }
-    age11.add_locations(age11_friends, ExocolonistLocation)
+    age12.add_locations(age12_friends, ExocolonistLocation)
 
-    age12_friends: dict[str, int | None] = {
+    age13_friends: dict[str, int | None] = {
       "Marz 50": world.location_name_to_id["Marz 50"],
       "Dys 50": world.location_name_to_id["Dys 50"],
       "Cal 50": world.location_name_to_id["Cal 50"],
       "Tammy 50": world.location_name_to_id["Tammy 50"],
       "Tang 50": world.location_name_to_id["Tang 50"],
       "Anemone 50": world.location_name_to_id["Anemone 50"],
+    }
+    age13.add_locations(age13_friends, ExocolonistLocation)
+
+    age14_friends: dict[str, int | None] = {
       "Marz 60": world.location_name_to_id["Marz 60"],
       "Dys 60": world.location_name_to_id["Dys 60"],
       "Cal 60": world.location_name_to_id["Cal 60"],
@@ -391,41 +399,15 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
       "Tang 60": world.location_name_to_id["Tang 60"],
       "Anemone 60": world.location_name_to_id["Anemone 60"],
     }
-    age12.add_locations(age12_friends, ExocolonistLocation)
+    age14.add_locations(age14_friends, ExocolonistLocation)
 
-    age13_friends: dict[str, int | None] = {
+    age15_friends: dict[str, int | None] = {
       "Marz 70": world.location_name_to_id["Marz 70"],
       "Dys 70": world.location_name_to_id["Dys 70"],
       "Cal 70": world.location_name_to_id["Cal 70"],
       "Tammy 70": world.location_name_to_id["Tammy 70"],
       "Tang 70": world.location_name_to_id["Tang 70"],
       "Anemone 70": world.location_name_to_id["Anemone 70"],
-      "Marz 80": world.location_name_to_id["Marz 80"],
-      "Dys 80": world.location_name_to_id["Dys 80"],
-      "Cal 80": world.location_name_to_id["Cal 80"],
-      "Tammy 80": world.location_name_to_id["Tammy 80"],
-      "Tang 80": world.location_name_to_id["Tang 80"],
-      "Anemone 80": world.location_name_to_id["Anemone 80"],
-    }
-    age13.add_locations(age13_friends, ExocolonistLocation)
-
-    age14_friends: dict[str, int | None] = {
-      "Marz 90": world.location_name_to_id["Marz 90"],
-      "Dys 90": world.location_name_to_id["Dys 90"],
-      "Cal 90": world.location_name_to_id["Cal 90"],
-      "Tammy 90": world.location_name_to_id["Tammy 90"],
-      "Tang 90": world.location_name_to_id["Tang 90"],
-      "Anemone 90": world.location_name_to_id["Anemone 90"],
-      "Marz 100": world.location_name_to_id["Marz 100"],
-      "Dys 100": world.location_name_to_id["Dys 100"],
-      "Cal 100": world.location_name_to_id["Cal 100"],
-      "Tammy 100": world.location_name_to_id["Tammy 100"],
-      "Tang 100": world.location_name_to_id["Tang 100"],
-      "Anemone 100": world.location_name_to_id["Anemone 100"],
-    }
-    age14.add_locations(age14_friends, ExocolonistLocation)
-
-    age15_friends: dict[str, int | None] = {
       "Rex 10": world.location_name_to_id["Rex 10"],
       "Nomi 10": world.location_name_to_id["Nomi 10"],
       "Vace 10": world.location_name_to_id["Vace 10"],
@@ -437,6 +419,12 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
     age15.add_locations(age15_friends, ExocolonistLocation)
 
     age16_friends: dict[str, int | None] = {
+      "Marz 80": world.location_name_to_id["Marz 80"],
+      "Dys 80": world.location_name_to_id["Dys 80"],
+      "Cal 80": world.location_name_to_id["Cal 80"],
+      "Tammy 80": world.location_name_to_id["Tammy 80"],
+      "Tang 80": world.location_name_to_id["Tang 80"],
+      "Anemone 80": world.location_name_to_id["Anemone 80"],
       "Rex 30": world.location_name_to_id["Rex 30"],
       "Nomi 30": world.location_name_to_id["Nomi 30"],
       "Vace 30": world.location_name_to_id["Vace 30"],
@@ -448,6 +436,12 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
     age16.add_locations(age16_friends, ExocolonistLocation)
 
     age16_friends: dict[str, int | None] = {
+      "Marz 90": world.location_name_to_id["Marz 90"],
+      "Dys 90": world.location_name_to_id["Dys 90"],
+      "Cal 90": world.location_name_to_id["Cal 90"],
+      "Tammy 90": world.location_name_to_id["Tammy 90"],
+      "Tang 90": world.location_name_to_id["Tang 90"],
+      "Anemone 90": world.location_name_to_id["Anemone 90"],
       "Rex 50": world.location_name_to_id["Rex 50"],
       "Nomi 50": world.location_name_to_id["Nomi 50"],
       "Vace 50": world.location_name_to_id["Vace 50"],
@@ -459,6 +453,12 @@ def create_regular_locations(world: ExocolonistWorld) -> None:
     age16.add_locations(age16_friends, ExocolonistLocation)
 
     age17_friends: dict[str, int | None] = {
+      "Marz 100": world.location_name_to_id["Marz 100"],
+      "Dys 100": world.location_name_to_id["Dys 100"],
+      "Cal 100": world.location_name_to_id["Cal 100"],
+      "Tammy 100": world.location_name_to_id["Tammy 100"],
+      "Tang 100": world.location_name_to_id["Tang 100"],
+      "Anemone 100": world.location_name_to_id["Anemone 100"],
       "Rex 70": world.location_name_to_id["Rex 70"],
       "Nomi 70": world.location_name_to_id["Nomi 70"],
       "Vace 70": world.location_name_to_id["Vace 70"],

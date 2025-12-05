@@ -69,6 +69,10 @@ option_groups = [
     "Friendship Options",
     [Friendsanity, Datesanity],
   ),
+  OptionGroup(
+    "Rando Options",
+    [BuildingRando, CharaShuffle]
+  )
 ]
 
 
