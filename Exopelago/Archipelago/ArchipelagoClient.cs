@@ -12,7 +12,7 @@ public static class ArchipelagoClient
 {
   public const string GameName = "I Was a Teenage Exocolonist";
   public const string ModName = "Exopelago";
-  public const string ModVersion = "1.0";
+  public const string ModVersion = "1.1";
 
   public static bool authenticated;
   public static bool offline;
